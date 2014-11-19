@@ -7,9 +7,9 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <base href="http://yujinqiu.github.io">
+    <base href="http://yujinqiu.github.io:1313">
     <title> Docker </title>
-    <link rel="canonical" href="http://yujinqiu.github.io/categories/docker/">
+    <link rel="canonical" href="http://yujinqiu.github.io:1313/categories/docker/">
     
 
 <link rel="stylesheet" href="/css/poole.css">
@@ -69,13 +69,13 @@
 
 <article class="post">
     <header>
-      <h2><a href='http://yujinqiu.github.io/posts/streak/'> 30 days of hacking Docker</a> </h2>
+      <h2><a href='http://yujinqiu.github.io:1313/posts/streak/'> 30 days of hacking Docker</a> </h2>
       <div class="meta">Wed, Jun 11, 2014</div>
     </header>
 
     Prelude Yesterday I finished my first 30-day streak on GitHub. Most of contributions were to Docker &ndash; the biggest opensource project on Go. I learned a lot in this month, and it was really cool. I think that this is mostly because of Go language. I&rsquo;ve been programming on Python for five years and I was never so excited about open source, because Python is not even half so fun as Go.
     <footer>
-        <a href='http://yujinqiu.github.io/posts/streak/'><nobr>Read more →</nobr></a>
+        <a href='http://yujinqiu.github.io:1313/posts/streak/'><nobr>Read more →</nobr></a>
     </footer>
 </article>
 
@@ -84,13 +84,13 @@
 
 <article class="post">
     <header>
-      <h2><a href='http://yujinqiu.github.io/posts/hugoblog/'> Deploying blog with docker and hugo</a> </h2>
+      <h2><a href='http://yujinqiu.github.io:1313/posts/hugoblog/'> Deploying blog with docker and hugo</a> </h2>
       <div class="meta">Sun, May 4, 2014</div>
     </header>
 
     Prelude Recently I moved my jabber-server to DigitalOcean VPS. Run Prosody in docker was so easy, that I decided create this blog. And of course deploy it with docker! Content At first we need container with templates and content for blog generation. I used next dockerfile: FROM debian:jessie RUN apt-get update &amp;&amp; apt-get install --no-install-recommends -y ca-certificates git-core RUN git clone http://github.com/LK4D4/lk4d4.darth.io.git /src VOLUME [&quot;/src&quot;] WORKDIR /src ENTRYPOINT [&quot;git&quot;] CMD [&quot;pull&quot;] There is no magic here: just clone repo to /src (it will be used below), and update it on container start.
     <footer>
-        <a href='http://yujinqiu.github.io/posts/hugoblog/'><nobr>Read more →</nobr></a>
+        <a href='http://yujinqiu.github.io:1313/posts/hugoblog/'><nobr>Read more →</nobr></a>
     </footer>
 </article>
 

@@ -3,7 +3,7 @@
   <channel>
       <title>Golang on Engineer&#39;s Draft </title>
       <generator uri="https://hugo.spf13.com">Hugo</generator>
-    <link>http://yujinqiu.github.io/categories/golang/index.xml/</link>
+    <link>http://yujinqiu.github.io:1313/categories/golang/index.xml/</link>
     
     
     
@@ -11,10 +11,10 @@
     
     <item>
       <title>Moving to Hugo</title>
-      <link>http://yujinqiu.github.io/posts/hugo_based_blog/</link>
+      <link>http://yujinqiu.github.io:1313/posts/hugo_based_blog/</link>
       <pubDate>Thu, 29 May 2014 00:00:00 UTC</pubDate>
       
-      <guid>http://yujinqiu.github.io/posts/hugo_based_blog/</guid>
+      <guid>http://yujinqiu.github.io:1313/posts/hugo_based_blog/</guid>
       <description>
 
 &lt;p&gt;I decided that I should blog under my danmux.com domain - I often use danmux around the internet, sometimes danmull, but normally danmux for tech type things, so it makes sense.&lt;/p&gt;

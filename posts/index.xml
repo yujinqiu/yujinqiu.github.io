@@ -3,7 +3,7 @@
   <channel>
       <title>Posts on Engineer&#39;s Draft </title>
       <generator uri="https://hugo.spf13.com">Hugo</generator>
-    <link>http://yujinqiu.github.io/posts/index.xml/</link>
+    <link>http://yujinqiu.github.io:1313/posts/index.xml/</link>
     
     
     
@@ -11,10 +11,10 @@
     
     <item>
       <title>CliDraft</title>
-      <link>http://yujinqiu.github.io/posts/CliDraft/</link>
+      <link>http://yujinqiu.github.io:1313/posts/CliDraft/</link>
       <pubDate>Wed, 19 Nov 2014 21:36:12 CST</pubDate>
       
-      <guid>http://yujinqiu.github.io/posts/CliDraft/</guid>
+      <guid>http://yujinqiu.github.io:1313/posts/CliDraft/</guid>
       <description>
 
 &lt;h1 id=&#34;toc_0&#34;&gt;命令行控&lt;/h1&gt;
@@ -49,6 +49,8 @@
 {-q | --rQuality} QUALITY
     set the quality used for rate-scaled playback (default is 0 - low quality, 1 - high quality)
 &lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&amp;lt;!-more-&amp;gt;&lt;/p&gt;
 
 &lt;h3 id=&#34;toc_6&#34;&gt;简单流式计算&lt;/h3&gt;
 
@@ -173,10 +175,10 @@ autojump ZSH 需要&lt;strong&gt;compinit&lt;/strong&gt;模块来支持, 配置�
     
     <item>
       <title>Embedded Gists</title>
-      <link>http://yujinqiu.github.io/posts/embedded_gists/</link>
+      <link>http://yujinqiu.github.io:1313/posts/embedded_gists/</link>
       <pubDate>Sat, 05 Jul 2014 00:00:00 UTC</pubDate>
       
-      <guid>http://yujinqiu.github.io/posts/embedded_gists/</guid>
+      <guid>http://yujinqiu.github.io:1313/posts/embedded_gists/</guid>
       <description>
 
 &lt;h2 id=&#34;toc_0&#34;&gt;Syntax Highlighting - or Embedded Gists&lt;/h2&gt;
@@ -252,10 +254,10 @@ autojump ZSH 需要&lt;strong&gt;compinit&lt;/strong&gt;模块来支持, 配置�
     
     <item>
       <title>Making Your Own Summary</title>
-      <link>http://yujinqiu.github.io/posts/hugo_summary/</link>
+      <link>http://yujinqiu.github.io:1313/posts/hugo_summary/</link>
       <pubDate>Sat, 28 Jun 2014 00:00:00 UTC</pubDate>
       
-      <guid>http://yujinqiu.github.io/posts/hugo_summary/</guid>
+      <guid>http://yujinqiu.github.io:1313/posts/hugo_summary/</guid>
       <description>&lt;p&gt;Hugo allows you to specify where the summary stops - and allows the full markdown including shortcodes.&lt;/p&gt;
 
 &lt;p&gt;You just need to construct the first bit of your article so that it makes a nice summary and then end it with&amp;hellip;&lt;/p&gt;
@@ -273,10 +275,10 @@ autojump ZSH 需要&lt;strong&gt;compinit&lt;/strong&gt;模块来支持, 配置�
     
     <item>
       <title>30 days of hacking Docker</title>
-      <link>http://yujinqiu.github.io/posts/streak/</link>
+      <link>http://yujinqiu.github.io:1313/posts/streak/</link>
       <pubDate>Wed, 11 Jun 2014 00:00:00 UTC</pubDate>
       
-      <guid>http://yujinqiu.github.io/posts/streak/</guid>
+      <guid>http://yujinqiu.github.io:1313/posts/streak/</guid>
       <description>
 
 &lt;h3 id=&#34;toc_0&#34;&gt;Prelude&lt;/h3&gt;
@@ -459,10 +461,10 @@ of course, Docker.&lt;/p&gt;
     
     <item>
       <title>Moving to Hugo</title>
-      <link>http://yujinqiu.github.io/posts/hugo_based_blog/</link>
+      <link>http://yujinqiu.github.io:1313/posts/hugo_based_blog/</link>
       <pubDate>Thu, 29 May 2014 00:00:00 UTC</pubDate>
       
-      <guid>http://yujinqiu.github.io/posts/hugo_based_blog/</guid>
+      <guid>http://yujinqiu.github.io:1313/posts/hugo_based_blog/</guid>
       <description>
 
 &lt;p&gt;I decided that I should blog under my danmux.com domain - I often use danmux around the internet, sometimes danmull, but normally danmux for tech type things, so it makes sense.&lt;/p&gt;
@@ -481,10 +483,10 @@ of course, Docker.&lt;/p&gt;
     
     <item>
       <title>Defer overhead in go</title>
-      <link>http://yujinqiu.github.io/posts/defer/</link>
+      <link>http://yujinqiu.github.io:1313/posts/defer/</link>
       <pubDate>Wed, 14 May 2014 00:00:00 UTC</pubDate>
       
-      <guid>http://yujinqiu.github.io/posts/defer/</guid>
+      <guid>http://yujinqiu.github.io:1313/posts/defer/</guid>
       <description>
 
 &lt;h4 id=&#34;toc_0&#34;&gt;Prelude&lt;/h4&gt;
@@ -637,10 +639,10 @@ BenchmarkGetDefer          10000            180839 ns/op
     
     <item>
       <title>Coverage for multiple packages in go</title>
-      <link>http://yujinqiu.github.io/posts/multicover/</link>
+      <link>http://yujinqiu.github.io:1313/posts/multicover/</link>
       <pubDate>Tue, 06 May 2014 00:00:00 UTC</pubDate>
       
-      <guid>http://yujinqiu.github.io/posts/multicover/</guid>
+      <guid>http://yujinqiu.github.io:1313/posts/multicover/</guid>
       <description>
 
 &lt;h4 id=&#34;toc_0&#34;&gt;Prelude&lt;/h4&gt;
@@ -735,10 +737,10 @@ will be able to run&lt;/p&gt;
     
     <item>
       <title>Deploying blog with docker and hugo</title>
-      <link>http://yujinqiu.github.io/posts/hugoblog/</link>
+      <link>http://yujinqiu.github.io:1313/posts/hugoblog/</link>
       <pubDate>Sun, 04 May 2014 00:00:00 UTC</pubDate>
       
-      <guid>http://yujinqiu.github.io/posts/hugoblog/</guid>
+      <guid>http://yujinqiu.github.io:1313/posts/hugoblog/</guid>
       <description>
 
 &lt;h4 id=&#34;toc_0&#34;&gt;Prelude&lt;/h4&gt;

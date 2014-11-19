@@ -3,7 +3,7 @@
   <channel>
       <title>Docker on Engineer&#39;s Draft </title>
       <generator uri="https://hugo.spf13.com">Hugo</generator>
-    <link>http://yujinqiu.github.io/categories/docker/index.xml/</link>
+    <link>http://yujinqiu.github.io:1313/categories/docker/index.xml/</link>
     
     
     
@@ -11,10 +11,10 @@
     
     <item>
       <title>30 days of hacking Docker</title>
-      <link>http://yujinqiu.github.io/posts/streak/</link>
+      <link>http://yujinqiu.github.io:1313/posts/streak/</link>
       <pubDate>Wed, 11 Jun 2014 00:00:00 UTC</pubDate>
       
-      <guid>http://yujinqiu.github.io/posts/streak/</guid>
+      <guid>http://yujinqiu.github.io:1313/posts/streak/</guid>
       <description>
 
 &lt;h3 id=&#34;toc_0&#34;&gt;Prelude&lt;/h3&gt;
@@ -197,10 +197,10 @@ of course, Docker.&lt;/p&gt;
     
     <item>
       <title>Deploying blog with docker and hugo</title>
-      <link>http://yujinqiu.github.io/posts/hugoblog/</link>
+      <link>http://yujinqiu.github.io:1313/posts/hugoblog/</link>
       <pubDate>Sun, 04 May 2014 00:00:00 UTC</pubDate>
       
-      <guid>http://yujinqiu.github.io/posts/hugoblog/</guid>
+      <guid>http://yujinqiu.github.io:1313/posts/hugoblog/</guid>
       <description>
 
 &lt;h4 id=&#34;toc_0&#34;&gt;Prelude&lt;/h4&gt;
