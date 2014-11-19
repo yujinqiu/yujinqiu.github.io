@@ -313,9 +313,6 @@ you can read it :) I can update it just with &lt;code&gt;docker start blog_conte
 
 &lt;p&gt;It&amp;rsquo;s really fun to use docker. You don&amp;rsquo;t need to install and remove
 tons of crap on host machine, docker can handle it all for you.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;https://www.docker.io/static/img/homepage-docker-logo.png&#34; alt=&#34;docker&#34; /&gt;
-&lt;/p&gt;
 </description>
     </item>
     
