@@ -2,43 +2,48 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>http://localhost:1313/</loc>
-    <lastmod>2014-07-05T00:00:00+00:00</lastmod>
+    <loc>http://yujinqiu.github.io:61810/</loc>
+    <lastmod>2014-11-19T21:36:12+08:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>http://localhost:1313/posts/embedded_gists/</loc>
+    <loc>http://yujinqiu.github.io:61810/posts/CliDraft/</loc>
+    <lastmod>2014-11-19T21:36:12+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://yujinqiu.github.io:61810/posts/embedded_gists/</loc>
     <lastmod>2014-07-05T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://localhost:1313/posts/hugo_summary/</loc>
+    <loc>http://yujinqiu.github.io:61810/posts/hugo_summary/</loc>
     <lastmod>2014-06-28T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://localhost:1313/posts/streak/</loc>
+    <loc>http://yujinqiu.github.io:61810/posts/streak/</loc>
     <lastmod>2014-06-11T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://localhost:1313/posts/hugo_based_blog/</loc>
+    <loc>http://yujinqiu.github.io:61810/posts/hugo_based_blog/</loc>
     <lastmod>2014-05-29T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://localhost:1313/posts/defer/</loc>
+    <loc>http://yujinqiu.github.io:61810/posts/defer/</loc>
     <lastmod>2014-05-14T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://localhost:1313/posts/multicover/</loc>
+    <loc>http://yujinqiu.github.io:61810/posts/multicover/</loc>
     <lastmod>2014-05-06T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://localhost:1313/posts/hugoblog/</loc>
+    <loc>http://yujinqiu.github.io:61810/posts/hugoblog/</loc>
     <lastmod>2014-05-04T00:00:00+00:00</lastmod>
   </url>
   

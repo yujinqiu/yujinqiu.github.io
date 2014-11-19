@@ -3,7 +3,7 @@
   <channel>
       <title>Go on Engineer&#39;s Draft </title>
       <generator uri="https://hugo.spf13.com">Hugo</generator>
-    <link>http://localhost:1313/categories/go/index.xml/</link>
+    <link>http://yujinqiu.github.io:61810/categories/go/index.xml/</link>
     
     
     
@@ -11,10 +11,10 @@
     
     <item>
       <title>30 days of hacking Docker</title>
-      <link>http://localhost:1313/posts/streak/</link>
+      <link>http://yujinqiu.github.io:61810/posts/streak/</link>
       <pubDate>Wed, 11 Jun 2014 00:00:00 UTC</pubDate>
       
-      <guid>http://localhost:1313/posts/streak/</guid>
+      <guid>http://yujinqiu.github.io:61810/posts/streak/</guid>
       <description>
 
 &lt;h3 id=&#34;toc_0&#34;&gt;Prelude&lt;/h3&gt;
@@ -197,10 +197,10 @@ of course, Docker.&lt;/p&gt;
     
     <item>
       <title>Defer overhead in go</title>
-      <link>http://localhost:1313/posts/defer/</link>
+      <link>http://yujinqiu.github.io:61810/posts/defer/</link>
       <pubDate>Wed, 14 May 2014 00:00:00 UTC</pubDate>
       
-      <guid>http://localhost:1313/posts/defer/</guid>
+      <guid>http://yujinqiu.github.io:61810/posts/defer/</guid>
       <description>
 
 &lt;h4 id=&#34;toc_0&#34;&gt;Prelude&lt;/h4&gt;
@@ -353,10 +353,10 @@ BenchmarkGetDefer          10000            180839 ns/op
     
     <item>
       <title>Coverage for multiple packages in go</title>
-      <link>http://localhost:1313/posts/multicover/</link>
+      <link>http://yujinqiu.github.io:61810/posts/multicover/</link>
       <pubDate>Tue, 06 May 2014 00:00:00 UTC</pubDate>
       
-      <guid>http://localhost:1313/posts/multicover/</guid>
+      <guid>http://yujinqiu.github.io:61810/posts/multicover/</guid>
       <description>
 
 &lt;h4 id=&#34;toc_0&#34;&gt;Prelude&lt;/h4&gt;
