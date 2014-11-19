@@ -1,59 +1,66 @@
-  <!DOCTYPE html>
+
+
+
+
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8">
-    <base href="http://yujinqiu.github.io">
+    <base href="http://localhost:1313">
     <title> Coverage for multiple packages in go </title>
-    <link rel="canonical" href="http://yujinqiu.github.io/posts/multicover/">
-    <link href="" rel="alternate" type="application/rss+xml" title="Engineer&#39;s Draft" />
+    <link rel="canonical" href="http://localhost:1313/posts/multicover/">
     
-    <link id="elemento-theme" href="/css/bootstrap.min.css" rel="stylesheet">
-    <style type="text/css">
-        body {
-            font-family: "Helvetica Neue";
-            font-size: 16px;
-            text-rendering: optimizeLegibility;
-        }
-        body h4 {
-            margin-top: 30px;
-        }
-        .highlight pre {
-            background-color: transparent;
-        }
-        a {
-            text-decoration:none;
-            color:#666;
-        }
-        .nav-text {
-            padding-top:9px;
-        }
-        .container-narrow {
-            margin: 0 auto;
-            max-width: 700px;
-        }
-        .container-narrow > hr {
-            margin: 30px 0;
-        }
-    </style>
+
+<link rel="stylesheet" href="/css/poole.css">
+
+<link rel="stylesheet" href="/css/lanyon.css">
+<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700|PT+Sans:400">
 
 </head>
-<body>
-    <div class="container-narrow">
-        <div class="masthead">
-            <ul class="nav nav-pills pull-right">
-                <li><a href="https://github.com/yujinqiu">github</a></li>
-                <li><a href="" type="application/rss+xml">rss</a></li>
-            </ul>
-            <h3 class="muted">
-                <a href="http://yujinqiu.github.io">Engineer's Draft</a>
-            </h3>
-         </div>
-         <hr>
 
 
-      <h1>Coverage for multiple packages in go</h1>
+<body class="theme-base-0b">
+  
+
+
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+
+
+<div class="sidebar" id="sidebar">
+
+  <nav class="sidebar-nav">
+    <a class="sidebar-nav-item" href="/">Home</a>
+
+    <a class="sidebar-nav-item" href="/posts">Blog</a>
+
+    <a class="sidebar-nav-item" href="/cv">Me</a>
+  </nav>
+
+  <div class="sidebar-item">
+    <p>
+      Powered by <a href="http://hugo.spf13.com">Hugo</a>. Design reused from <a href="https://github.com/spencerlyon2">Spencer Lyon</a> which was modified from this Jekyl theme <a href="http://lanyon.getpoole.com">Lanyon</a> under this <a href="https://github.com/spencerlyon2/hugo_gh_blog/blob/master/LICENSE">licence</a>.
+    </p>
+  </div>
+</div>
+
+
+
+
+  
+  <div class="wrap">
+    <div class="masthead">
+      <div class="container">
+        <h3 class="masthead-title">
+          <a href="/posts" title="Blog">Blog Posts</a>
+        </h3>
+      </div>
+    </div>
+
+    
+    <div class="container content">
+      <h1 class="post-title">Coverage for multiple packages in go</h1>
         <section id="main">
-          <h5 id="date"> May 6, 2014 </h5>
+          <h5 id="date"> Tue May 6, 2014 </h5>
           
 
 <h4 id="toc_0">Prelude</h4>
@@ -145,11 +152,34 @@ will be able to run</p>
 <p>and leaning back in chair, enjoying perfect cover profiles.</p>
 
         </section>
+  
+    </div>
+  </div>
+
+  <label for="sidebar-checkbox" class="sidebar-toggle"></label>
 
   
+
 <div class="container">
-  <ul class="nav nav-pills">
-    <li class="nav-text">Categories: </li>
+  <hr />
+  
+    <span class="left">
+    &nbsp; <em>&laquo; Previous:</em> <a class="next" href="http://localhost:1313/posts/defer/">Defer overhead in go</a>
+    </span>
+  
+
+  
+    <span class="right">
+    <em>Next: </em><a class="next" href="http://localhost:1313/posts/hugoblog/"> &nbsp; Deploying blog with docker and hugo</a> &raquo;
+    </span>
+  
+</div>
+
+  <br />
+  
+<div class="container">
+  <ul class="catlist">
+    <li><em>Categories: </em></li>
     
       <li><a href="/categories/go">go</a> </li>
     
@@ -157,36 +187,27 @@ will be able to run</p>
 </div>
 
 
-      <hr />
-    <ul class="pager">
-        
-            <li class="previous"><a href="http://yujinqiu.github.io/posts/defer/">&laquo; Defer overhead in go</a>
-        
-        
-            <li class="next"><a href="http://yujinqiu.github.io/posts/hugoblog/">Deploying blog with docker and hugo &raquo;</a>
-        
-    </ul>
-
-
-    <div id="disqus_thread"></div>
-    <script type="text/javascript">
-        var disqus_shortname = 'lk4d4';
-
-        (function() {
-             var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-             dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-             (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-         })();
-    </script>
-    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
 
   
-    <hr>
-    <div class="footer">
-        <p>Powered by <a href="http://docker.io">Docker</a> and <a href="http://hugo.spf13.com/">Hugo</a></p>
-    </div>
+  
+
+<div class="container content">
+<footer>
+  <div>
+    <p class="right credit">
+    <a href="/">Home Page</a>
+    <a href="/blog">Blog Index</a>
+    </p>
+  </div>
+</footer>
 </div>
-</body>
+
+<script>document.write('<script src="http://'
+        + (location.host || 'localhost').split(':')[0]
+		+ ':1313/livereload.js?mindelay=10"></'
+        + 'script>')</script></body>
 </html>
+
+
+
 

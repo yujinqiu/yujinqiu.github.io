@@ -1,59 +1,66 @@
-  <!DOCTYPE html>
+
+
+
+
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8">
-    <base href="http://yujinqiu.github.io">
+    <base href="http://localhost:1313">
     <title> Defer overhead in go </title>
-    <link rel="canonical" href="http://yujinqiu.github.io/posts/defer/">
-    <link href="" rel="alternate" type="application/rss+xml" title="Engineer&#39;s Draft" />
+    <link rel="canonical" href="http://localhost:1313/posts/defer/">
     
-    <link id="elemento-theme" href="/css/bootstrap.min.css" rel="stylesheet">
-    <style type="text/css">
-        body {
-            font-family: "Helvetica Neue";
-            font-size: 16px;
-            text-rendering: optimizeLegibility;
-        }
-        body h4 {
-            margin-top: 30px;
-        }
-        .highlight pre {
-            background-color: transparent;
-        }
-        a {
-            text-decoration:none;
-            color:#666;
-        }
-        .nav-text {
-            padding-top:9px;
-        }
-        .container-narrow {
-            margin: 0 auto;
-            max-width: 700px;
-        }
-        .container-narrow > hr {
-            margin: 30px 0;
-        }
-    </style>
+
+<link rel="stylesheet" href="/css/poole.css">
+
+<link rel="stylesheet" href="/css/lanyon.css">
+<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700|PT+Sans:400">
 
 </head>
-<body>
-    <div class="container-narrow">
-        <div class="masthead">
-            <ul class="nav nav-pills pull-right">
-                <li><a href="https://github.com/yujinqiu">github</a></li>
-                <li><a href="" type="application/rss+xml">rss</a></li>
-            </ul>
-            <h3 class="muted">
-                <a href="http://yujinqiu.github.io">Engineer's Draft</a>
-            </h3>
-         </div>
-         <hr>
 
 
-      <h1>Defer overhead in go</h1>
+<body class="theme-base-0b">
+  
+
+
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+
+
+<div class="sidebar" id="sidebar">
+
+  <nav class="sidebar-nav">
+    <a class="sidebar-nav-item" href="/">Home</a>
+
+    <a class="sidebar-nav-item" href="/posts">Blog</a>
+
+    <a class="sidebar-nav-item" href="/cv">Me</a>
+  </nav>
+
+  <div class="sidebar-item">
+    <p>
+      Powered by <a href="http://hugo.spf13.com">Hugo</a>. Design reused from <a href="https://github.com/spencerlyon2">Spencer Lyon</a> which was modified from this Jekyl theme <a href="http://lanyon.getpoole.com">Lanyon</a> under this <a href="https://github.com/spencerlyon2/hugo_gh_blog/blob/master/LICENSE">licence</a>.
+    </p>
+  </div>
+</div>
+
+
+
+
+  
+  <div class="wrap">
+    <div class="masthead">
+      <div class="container">
+        <h3 class="masthead-title">
+          <a href="/posts" title="Blog">Blog Posts</a>
+        </h3>
+      </div>
+    </div>
+
+    
+    <div class="container content">
+      <h1 class="post-title">Defer overhead in go</h1>
         <section id="main">
-          <h5 id="date"> May 14, 2014 </h5>
+          <h5 id="date"> Wed May 14, 2014 </h5>
           
 
 <h4 id="toc_0">Prelude</h4>
@@ -74,110 +81,110 @@ without it.</p>
 
 <h4 id="toc_1">Code</h4>
 
-<div class="highlight" style="background: #272822"><pre style="line-height: 125%"><span style="color: #f8f8f2">&lt;</span><span style="color: #a6e22e">p</span><span style="color: #f8f8f2">&gt;</span><span style="color: #f92672">package</span> <span style="color: #a6e22e">defertest</span><span style="color: #f8f8f2">&lt;</span><span style="color: #f92672">/</span><span style="color: #a6e22e">p</span><span style="color: #f8f8f2">&gt;</span>
+<div class="highlight" style="background: #202020"><pre style="line-height: 125%"><span style="color: #d0d0d0">&lt;p&gt;</span><span style="color: #6ab825; font-weight: bold">package</span> <span style="color: #d0d0d0">defertest&lt;/p&gt;</span>
 
-<span style="color: #f8f8f2">&lt;</span><span style="color: #a6e22e">p</span><span style="color: #f8f8f2">&gt;</span><span style="color: #f92672">import</span> <span style="color: #f8f8f2">(</span>
-    <span style="color: #960050; background-color: #1e0010">“</span><span style="color: #a6e22e">sync</span><span style="color: #960050; background-color: #1e0010">”</span>
-<span style="color: #f8f8f2">)&lt;</span><span style="color: #f92672">/</span><span style="color: #a6e22e">p</span><span style="color: #f8f8f2">&gt;</span>
+<span style="color: #d0d0d0">&lt;p&gt;</span><span style="color: #6ab825; font-weight: bold">import</span> <span style="color: #d0d0d0">(</span>
+    <span style="color: #a61717; background-color: #e3d2d2">“</span><span style="color: #d0d0d0">sync</span><span style="color: #a61717; background-color: #e3d2d2">”</span>
+<span style="color: #d0d0d0">)&lt;/p&gt;</span>
 
-<span style="color: #f8f8f2">&lt;</span><span style="color: #a6e22e">p</span><span style="color: #f8f8f2">&gt;</span><span style="color: #66d9ef">type</span> <span style="color: #a6e22e">Queue</span> <span style="color: #66d9ef">struct</span> <span style="color: #f8f8f2">{</span>
-    <span style="color: #a6e22e">sync</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">Mutex</span>
-    <span style="color: #a6e22e">arr</span> <span style="color: #f8f8f2">[]</span><span style="color: #66d9ef">int</span>
-<span style="color: #f8f8f2">}&lt;</span><span style="color: #f92672">/</span><span style="color: #a6e22e">p</span><span style="color: #f8f8f2">&gt;</span>
+<span style="color: #d0d0d0">&lt;p&gt;</span><span style="color: #6ab825; font-weight: bold">type</span> <span style="color: #d0d0d0">Queue</span> <span style="color: #6ab825; font-weight: bold">struct</span> <span style="color: #d0d0d0">{</span>
+    <span style="color: #d0d0d0">sync.Mutex</span>
+    <span style="color: #d0d0d0">arr</span> <span style="color: #d0d0d0">[]</span><span style="color: #6ab825; font-weight: bold">int</span>
+<span style="color: #d0d0d0">}&lt;/p&gt;</span>
 
-<span style="color: #f8f8f2">&lt;</span><span style="color: #a6e22e">p</span><span style="color: #f8f8f2">&gt;</span><span style="color: #66d9ef">func</span> <span style="color: #a6e22e">New</span><span style="color: #f8f8f2">()</span> <span style="color: #f92672">*</span><span style="color: #a6e22e">Queue</span> <span style="color: #f8f8f2">{</span>
-    <span style="color: #66d9ef">return</span> <span style="color: #f92672">&amp;</span><span style="color: #a6e22e">Queue</span><span style="color: #f8f8f2">{}</span>
-<span style="color: #f8f8f2">}&lt;</span><span style="color: #f92672">/</span><span style="color: #a6e22e">p</span><span style="color: #f8f8f2">&gt;</span>
+<span style="color: #d0d0d0">&lt;p&gt;</span><span style="color: #6ab825; font-weight: bold">func</span> <span style="color: #d0d0d0">New()</span> <span style="color: #d0d0d0">*Queue</span> <span style="color: #d0d0d0">{</span>
+    <span style="color: #6ab825; font-weight: bold">return</span> <span style="color: #d0d0d0">&amp;Queue{}</span>
+<span style="color: #d0d0d0">}&lt;/p&gt;</span>
 
-<span style="color: #f8f8f2">&lt;</span><span style="color: #a6e22e">p</span><span style="color: #f8f8f2">&gt;</span><span style="color: #66d9ef">func</span> <span style="color: #f8f8f2">(</span><span style="color: #a6e22e">q</span> <span style="color: #f92672">*</span><span style="color: #a6e22e">Queue</span><span style="color: #f8f8f2">)</span> <span style="color: #a6e22e">Put</span><span style="color: #f8f8f2">(</span><span style="color: #a6e22e">elem</span> <span style="color: #66d9ef">int</span><span style="color: #f8f8f2">)</span> <span style="color: #f8f8f2">{</span>
-    <span style="color: #a6e22e">q</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">Lock</span><span style="color: #f8f8f2">()</span>
-    <span style="color: #a6e22e">q</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">arr</span> <span style="color: #f8f8f2">=</span> <span style="color: #f8f8f2">append(</span><span style="color: #a6e22e">q</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">arr</span><span style="color: #f8f8f2">,</span> <span style="color: #a6e22e">elem</span><span style="color: #f8f8f2">)</span>
-    <span style="color: #a6e22e">q</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">Unlock</span><span style="color: #f8f8f2">()</span>
-<span style="color: #f8f8f2">}&lt;</span><span style="color: #f92672">/</span><span style="color: #a6e22e">p</span><span style="color: #f8f8f2">&gt;</span>
+<span style="color: #d0d0d0">&lt;p&gt;</span><span style="color: #6ab825; font-weight: bold">func</span> <span style="color: #d0d0d0">(q</span> <span style="color: #d0d0d0">*Queue)</span> <span style="color: #d0d0d0">Put(elem</span> <span style="color: #6ab825; font-weight: bold">int</span><span style="color: #d0d0d0">)</span> <span style="color: #d0d0d0">{</span>
+    <span style="color: #d0d0d0">q.Lock()</span>
+    <span style="color: #d0d0d0">q.arr</span> <span style="color: #d0d0d0">=</span> <span style="color: #24909d">append</span><span style="color: #d0d0d0">(q.arr,</span> <span style="color: #d0d0d0">elem)</span>
+    <span style="color: #d0d0d0">q.Unlock()</span>
+<span style="color: #d0d0d0">}&lt;/p&gt;</span>
 
-<span style="color: #f8f8f2">&lt;</span><span style="color: #a6e22e">p</span><span style="color: #f8f8f2">&gt;</span><span style="color: #66d9ef">func</span> <span style="color: #f8f8f2">(</span><span style="color: #a6e22e">q</span> <span style="color: #f92672">*</span><span style="color: #a6e22e">Queue</span><span style="color: #f8f8f2">)</span> <span style="color: #a6e22e">PutDefer</span><span style="color: #f8f8f2">(</span><span style="color: #a6e22e">elem</span> <span style="color: #66d9ef">int</span><span style="color: #f8f8f2">)</span> <span style="color: #f8f8f2">{</span>
-    <span style="color: #a6e22e">q</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">Lock</span><span style="color: #f8f8f2">()</span>
-    <span style="color: #66d9ef">defer</span> <span style="color: #a6e22e">q</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">Unlock</span><span style="color: #f8f8f2">()</span>
-    <span style="color: #a6e22e">q</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">arr</span> <span style="color: #f8f8f2">=</span> <span style="color: #f8f8f2">append(</span><span style="color: #a6e22e">q</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">arr</span><span style="color: #f8f8f2">,</span> <span style="color: #a6e22e">elem</span><span style="color: #f8f8f2">)</span>
-<span style="color: #f8f8f2">}&lt;</span><span style="color: #f92672">/</span><span style="color: #a6e22e">p</span><span style="color: #f8f8f2">&gt;</span>
+<span style="color: #d0d0d0">&lt;p&gt;</span><span style="color: #6ab825; font-weight: bold">func</span> <span style="color: #d0d0d0">(q</span> <span style="color: #d0d0d0">*Queue)</span> <span style="color: #d0d0d0">PutDefer(elem</span> <span style="color: #6ab825; font-weight: bold">int</span><span style="color: #d0d0d0">)</span> <span style="color: #d0d0d0">{</span>
+    <span style="color: #d0d0d0">q.Lock()</span>
+    <span style="color: #6ab825; font-weight: bold">defer</span> <span style="color: #d0d0d0">q.Unlock()</span>
+    <span style="color: #d0d0d0">q.arr</span> <span style="color: #d0d0d0">=</span> <span style="color: #24909d">append</span><span style="color: #d0d0d0">(q.arr,</span> <span style="color: #d0d0d0">elem)</span>
+<span style="color: #d0d0d0">}&lt;/p&gt;</span>
 
-<span style="color: #f8f8f2">&lt;</span><span style="color: #a6e22e">p</span><span style="color: #f8f8f2">&gt;</span><span style="color: #66d9ef">func</span> <span style="color: #f8f8f2">(</span><span style="color: #a6e22e">q</span> <span style="color: #f92672">*</span><span style="color: #a6e22e">Queue</span><span style="color: #f8f8f2">)</span> <span style="color: #a6e22e">Get</span><span style="color: #f8f8f2">()</span> <span style="color: #66d9ef">int</span> <span style="color: #f8f8f2">{</span>
-    <span style="color: #a6e22e">q</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">Lock</span><span style="color: #f8f8f2">()</span>
-    <span style="color: #66d9ef">if</span> <span style="color: #f8f8f2">len(</span><span style="color: #a6e22e">q</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">arr</span><span style="color: #f8f8f2">)</span> <span style="color: #f92672">==</span> <span style="color: #ae81ff">0</span> <span style="color: #f8f8f2">{</span>
-        <span style="color: #a6e22e">q</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">Unlock</span><span style="color: #f8f8f2">()</span>
-        <span style="color: #66d9ef">return</span> <span style="color: #ae81ff">0</span>
-    <span style="color: #f8f8f2">}</span>
-    <span style="color: #a6e22e">res</span> <span style="color: #f92672">:=</span> <span style="color: #a6e22e">q</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">arr</span><span style="color: #f8f8f2">[</span><span style="color: #ae81ff">0</span><span style="color: #f8f8f2">]</span>
-    <span style="color: #a6e22e">q</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">arr</span> <span style="color: #f8f8f2">=</span> <span style="color: #a6e22e">q</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">arr</span><span style="color: #f8f8f2">[</span><span style="color: #ae81ff">1</span><span style="color: #f8f8f2">:]</span>
-    <span style="color: #a6e22e">q</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">Unlock</span><span style="color: #f8f8f2">()</span>
-    <span style="color: #66d9ef">return</span> <span style="color: #a6e22e">res</span>
-<span style="color: #f8f8f2">}&lt;</span><span style="color: #f92672">/</span><span style="color: #a6e22e">p</span><span style="color: #f8f8f2">&gt;</span>
+<span style="color: #d0d0d0">&lt;p&gt;</span><span style="color: #6ab825; font-weight: bold">func</span> <span style="color: #d0d0d0">(q</span> <span style="color: #d0d0d0">*Queue)</span> <span style="color: #d0d0d0">Get()</span> <span style="color: #6ab825; font-weight: bold">int</span> <span style="color: #d0d0d0">{</span>
+    <span style="color: #d0d0d0">q.Lock()</span>
+    <span style="color: #6ab825; font-weight: bold">if</span> <span style="color: #24909d">len</span><span style="color: #d0d0d0">(q.arr)</span> <span style="color: #d0d0d0">==</span> <span style="color: #3677a9">0</span> <span style="color: #d0d0d0">{</span>
+        <span style="color: #d0d0d0">q.Unlock()</span>
+        <span style="color: #6ab825; font-weight: bold">return</span> <span style="color: #3677a9">0</span>
+    <span style="color: #d0d0d0">}</span>
+    <span style="color: #d0d0d0">res</span> <span style="color: #d0d0d0">:=</span> <span style="color: #d0d0d0">q.arr[</span><span style="color: #3677a9">0</span><span style="color: #d0d0d0">]</span>
+    <span style="color: #d0d0d0">q.arr</span> <span style="color: #d0d0d0">=</span> <span style="color: #d0d0d0">q.arr[</span><span style="color: #3677a9">1</span><span style="color: #d0d0d0">:]</span>
+    <span style="color: #d0d0d0">q.Unlock()</span>
+    <span style="color: #6ab825; font-weight: bold">return</span> <span style="color: #d0d0d0">res</span>
+<span style="color: #d0d0d0">}&lt;/p&gt;</span>
 
-<span style="color: #f8f8f2">&lt;</span><span style="color: #a6e22e">p</span><span style="color: #f8f8f2">&gt;</span><span style="color: #66d9ef">func</span> <span style="color: #f8f8f2">(</span><span style="color: #a6e22e">q</span> <span style="color: #f92672">*</span><span style="color: #a6e22e">Queue</span><span style="color: #f8f8f2">)</span> <span style="color: #a6e22e">GetDefer</span><span style="color: #f8f8f2">()</span> <span style="color: #66d9ef">int</span> <span style="color: #f8f8f2">{</span>
-    <span style="color: #a6e22e">q</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">Lock</span><span style="color: #f8f8f2">()</span>
-    <span style="color: #66d9ef">defer</span> <span style="color: #a6e22e">q</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">Unlock</span><span style="color: #f8f8f2">()</span>
-    <span style="color: #66d9ef">if</span> <span style="color: #f8f8f2">len(</span><span style="color: #a6e22e">q</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">arr</span><span style="color: #f8f8f2">)</span> <span style="color: #f92672">==</span> <span style="color: #ae81ff">0</span> <span style="color: #f8f8f2">{</span>
-        <span style="color: #66d9ef">return</span> <span style="color: #ae81ff">0</span>
-    <span style="color: #f8f8f2">}</span>
-    <span style="color: #a6e22e">res</span> <span style="color: #f92672">:=</span> <span style="color: #a6e22e">q</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">arr</span><span style="color: #f8f8f2">[</span><span style="color: #ae81ff">0</span><span style="color: #f8f8f2">]</span>
-    <span style="color: #a6e22e">q</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">arr</span> <span style="color: #f8f8f2">=</span> <span style="color: #a6e22e">q</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">arr</span><span style="color: #f8f8f2">[</span><span style="color: #ae81ff">1</span><span style="color: #f8f8f2">:]</span>
-    <span style="color: #66d9ef">return</span> <span style="color: #a6e22e">res</span>
-<span style="color: #f8f8f2">}&lt;</span><span style="color: #f92672">/</span><span style="color: #a6e22e">p</span><span style="color: #f8f8f2">&gt;</span>
+<span style="color: #d0d0d0">&lt;p&gt;</span><span style="color: #6ab825; font-weight: bold">func</span> <span style="color: #d0d0d0">(q</span> <span style="color: #d0d0d0">*Queue)</span> <span style="color: #d0d0d0">GetDefer()</span> <span style="color: #6ab825; font-weight: bold">int</span> <span style="color: #d0d0d0">{</span>
+    <span style="color: #d0d0d0">q.Lock()</span>
+    <span style="color: #6ab825; font-weight: bold">defer</span> <span style="color: #d0d0d0">q.Unlock()</span>
+    <span style="color: #6ab825; font-weight: bold">if</span> <span style="color: #24909d">len</span><span style="color: #d0d0d0">(q.arr)</span> <span style="color: #d0d0d0">==</span> <span style="color: #3677a9">0</span> <span style="color: #d0d0d0">{</span>
+        <span style="color: #6ab825; font-weight: bold">return</span> <span style="color: #3677a9">0</span>
+    <span style="color: #d0d0d0">}</span>
+    <span style="color: #d0d0d0">res</span> <span style="color: #d0d0d0">:=</span> <span style="color: #d0d0d0">q.arr[</span><span style="color: #3677a9">0</span><span style="color: #d0d0d0">]</span>
+    <span style="color: #d0d0d0">q.arr</span> <span style="color: #d0d0d0">=</span> <span style="color: #d0d0d0">q.arr[</span><span style="color: #3677a9">1</span><span style="color: #d0d0d0">:]</span>
+    <span style="color: #6ab825; font-weight: bold">return</span> <span style="color: #d0d0d0">res</span>
+<span style="color: #d0d0d0">}&lt;/p&gt;</span>
 </pre></div>
 
 <h4 id="toc_2">Benchmarks</h4>
 
-<div class="highlight" style="background: #272822"><pre style="line-height: 125%"><span style="color: #f8f8f2">&lt;</span><span style="color: #a6e22e">p</span><span style="color: #f8f8f2">&gt;</span><span style="color: #f92672">package</span> <span style="color: #a6e22e">defertest</span><span style="color: #f8f8f2">&lt;</span><span style="color: #f92672">/</span><span style="color: #a6e22e">p</span><span style="color: #f8f8f2">&gt;</span>
+<div class="highlight" style="background: #202020"><pre style="line-height: 125%"><span style="color: #d0d0d0">&lt;p&gt;</span><span style="color: #6ab825; font-weight: bold">package</span> <span style="color: #d0d0d0">defertest&lt;/p&gt;</span>
 
-<span style="color: #f8f8f2">&lt;</span><span style="color: #a6e22e">p</span><span style="color: #f8f8f2">&gt;</span><span style="color: #f92672">import</span> <span style="color: #f8f8f2">(</span>
-    <span style="color: #960050; background-color: #1e0010">“</span><span style="color: #a6e22e">testing</span><span style="color: #960050; background-color: #1e0010">”</span>
-<span style="color: #f8f8f2">)&lt;</span><span style="color: #f92672">/</span><span style="color: #a6e22e">p</span><span style="color: #f8f8f2">&gt;</span>
+<span style="color: #d0d0d0">&lt;p&gt;</span><span style="color: #6ab825; font-weight: bold">import</span> <span style="color: #d0d0d0">(</span>
+    <span style="color: #a61717; background-color: #e3d2d2">“</span><span style="color: #d0d0d0">testing</span><span style="color: #a61717; background-color: #e3d2d2">”</span>
+<span style="color: #d0d0d0">)&lt;/p&gt;</span>
 
-<span style="color: #f8f8f2">&lt;</span><span style="color: #a6e22e">p</span><span style="color: #f8f8f2">&gt;</span><span style="color: #66d9ef">func</span> <span style="color: #a6e22e">BenchmarkPut</span><span style="color: #f8f8f2">(</span><span style="color: #a6e22e">b</span> <span style="color: #f92672">*</span><span style="color: #a6e22e">testing</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">B</span><span style="color: #f8f8f2">)</span> <span style="color: #f8f8f2">{</span>
-    <span style="color: #a6e22e">q</span> <span style="color: #f92672">:=</span> <span style="color: #a6e22e">New</span><span style="color: #f8f8f2">()</span>
-    <span style="color: #a6e22e">b</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">ResetTimer</span><span style="color: #f8f8f2">()</span>
-    <span style="color: #66d9ef">for</span> <span style="color: #a6e22e">i</span> <span style="color: #f92672">:=</span> <span style="color: #ae81ff">0</span><span style="color: #f8f8f2">;</span> <span style="color: #a6e22e">i</span> <span style="color: #f8f8f2">&lt;</span> <span style="color: #a6e22e">b</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">N</span><span style="color: #f8f8f2">;</span> <span style="color: #a6e22e">i</span><span style="color: #f92672">++</span> <span style="color: #f8f8f2">{</span>
-        <span style="color: #66d9ef">for</span> <span style="color: #a6e22e">j</span> <span style="color: #f92672">:=</span> <span style="color: #ae81ff">0</span><span style="color: #f8f8f2">;</span> <span style="color: #a6e22e">j</span> <span style="color: #f8f8f2">&lt;</span> <span style="color: #ae81ff">1000</span><span style="color: #f8f8f2">;</span> <span style="color: #a6e22e">j</span><span style="color: #f92672">++</span> <span style="color: #f8f8f2">{</span>
-            <span style="color: #a6e22e">q</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">Put</span><span style="color: #f8f8f2">(</span><span style="color: #a6e22e">j</span><span style="color: #f8f8f2">)</span>
-        <span style="color: #f8f8f2">}</span>
-    <span style="color: #f8f8f2">}</span>
-<span style="color: #f8f8f2">}&lt;</span><span style="color: #f92672">/</span><span style="color: #a6e22e">p</span><span style="color: #f8f8f2">&gt;</span>
+<span style="color: #d0d0d0">&lt;p&gt;</span><span style="color: #6ab825; font-weight: bold">func</span> <span style="color: #d0d0d0">BenchmarkPut(b</span> <span style="color: #d0d0d0">*testing.B)</span> <span style="color: #d0d0d0">{</span>
+    <span style="color: #d0d0d0">q</span> <span style="color: #d0d0d0">:=</span> <span style="color: #d0d0d0">New()</span>
+    <span style="color: #d0d0d0">b.ResetTimer()</span>
+    <span style="color: #6ab825; font-weight: bold">for</span> <span style="color: #d0d0d0">i</span> <span style="color: #d0d0d0">:=</span> <span style="color: #3677a9">0</span><span style="color: #d0d0d0">;</span> <span style="color: #d0d0d0">i</span> <span style="color: #d0d0d0">&lt;</span> <span style="color: #d0d0d0">b.N;</span> <span style="color: #d0d0d0">i++</span> <span style="color: #d0d0d0">{</span>
+        <span style="color: #6ab825; font-weight: bold">for</span> <span style="color: #d0d0d0">j</span> <span style="color: #d0d0d0">:=</span> <span style="color: #3677a9">0</span><span style="color: #d0d0d0">;</span> <span style="color: #d0d0d0">j</span> <span style="color: #d0d0d0">&lt;</span> <span style="color: #3677a9">1000</span><span style="color: #d0d0d0">;</span> <span style="color: #d0d0d0">j++</span> <span style="color: #d0d0d0">{</span>
+            <span style="color: #d0d0d0">q.Put(j)</span>
+        <span style="color: #d0d0d0">}</span>
+    <span style="color: #d0d0d0">}</span>
+<span style="color: #d0d0d0">}&lt;/p&gt;</span>
 
-<span style="color: #f8f8f2">&lt;</span><span style="color: #a6e22e">p</span><span style="color: #f8f8f2">&gt;</span><span style="color: #66d9ef">func</span> <span style="color: #a6e22e">BenchmarkPutDefer</span><span style="color: #f8f8f2">(</span><span style="color: #a6e22e">b</span> <span style="color: #f92672">*</span><span style="color: #a6e22e">testing</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">B</span><span style="color: #f8f8f2">)</span> <span style="color: #f8f8f2">{</span>
-    <span style="color: #a6e22e">q</span> <span style="color: #f92672">:=</span> <span style="color: #a6e22e">New</span><span style="color: #f8f8f2">()</span>
-    <span style="color: #a6e22e">b</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">ResetTimer</span><span style="color: #f8f8f2">()</span>
-    <span style="color: #66d9ef">for</span> <span style="color: #a6e22e">i</span> <span style="color: #f92672">:=</span> <span style="color: #ae81ff">0</span><span style="color: #f8f8f2">;</span> <span style="color: #a6e22e">i</span> <span style="color: #f8f8f2">&lt;</span> <span style="color: #a6e22e">b</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">N</span><span style="color: #f8f8f2">;</span> <span style="color: #a6e22e">i</span><span style="color: #f92672">++</span> <span style="color: #f8f8f2">{</span>
-        <span style="color: #66d9ef">for</span> <span style="color: #a6e22e">j</span> <span style="color: #f92672">:=</span> <span style="color: #ae81ff">0</span><span style="color: #f8f8f2">;</span> <span style="color: #a6e22e">j</span> <span style="color: #f8f8f2">&lt;</span> <span style="color: #ae81ff">1000</span><span style="color: #f8f8f2">;</span> <span style="color: #a6e22e">j</span><span style="color: #f92672">++</span> <span style="color: #f8f8f2">{</span>
-            <span style="color: #a6e22e">q</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">PutDefer</span><span style="color: #f8f8f2">(</span><span style="color: #a6e22e">j</span><span style="color: #f8f8f2">)</span>
-        <span style="color: #f8f8f2">}</span>
-    <span style="color: #f8f8f2">}</span>
-<span style="color: #f8f8f2">}&lt;</span><span style="color: #f92672">/</span><span style="color: #a6e22e">p</span><span style="color: #f8f8f2">&gt;</span>
+<span style="color: #d0d0d0">&lt;p&gt;</span><span style="color: #6ab825; font-weight: bold">func</span> <span style="color: #d0d0d0">BenchmarkPutDefer(b</span> <span style="color: #d0d0d0">*testing.B)</span> <span style="color: #d0d0d0">{</span>
+    <span style="color: #d0d0d0">q</span> <span style="color: #d0d0d0">:=</span> <span style="color: #d0d0d0">New()</span>
+    <span style="color: #d0d0d0">b.ResetTimer()</span>
+    <span style="color: #6ab825; font-weight: bold">for</span> <span style="color: #d0d0d0">i</span> <span style="color: #d0d0d0">:=</span> <span style="color: #3677a9">0</span><span style="color: #d0d0d0">;</span> <span style="color: #d0d0d0">i</span> <span style="color: #d0d0d0">&lt;</span> <span style="color: #d0d0d0">b.N;</span> <span style="color: #d0d0d0">i++</span> <span style="color: #d0d0d0">{</span>
+        <span style="color: #6ab825; font-weight: bold">for</span> <span style="color: #d0d0d0">j</span> <span style="color: #d0d0d0">:=</span> <span style="color: #3677a9">0</span><span style="color: #d0d0d0">;</span> <span style="color: #d0d0d0">j</span> <span style="color: #d0d0d0">&lt;</span> <span style="color: #3677a9">1000</span><span style="color: #d0d0d0">;</span> <span style="color: #d0d0d0">j++</span> <span style="color: #d0d0d0">{</span>
+            <span style="color: #d0d0d0">q.PutDefer(j)</span>
+        <span style="color: #d0d0d0">}</span>
+    <span style="color: #d0d0d0">}</span>
+<span style="color: #d0d0d0">}&lt;/p&gt;</span>
 
-<span style="color: #f8f8f2">&lt;</span><span style="color: #a6e22e">p</span><span style="color: #f8f8f2">&gt;</span><span style="color: #66d9ef">func</span> <span style="color: #a6e22e">BenchmarkGet</span><span style="color: #f8f8f2">(</span><span style="color: #a6e22e">b</span> <span style="color: #f92672">*</span><span style="color: #a6e22e">testing</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">B</span><span style="color: #f8f8f2">)</span> <span style="color: #f8f8f2">{</span>
-    <span style="color: #a6e22e">q</span> <span style="color: #f92672">:=</span> <span style="color: #a6e22e">New</span><span style="color: #f8f8f2">()</span>
-    <span style="color: #66d9ef">for</span> <span style="color: #a6e22e">i</span> <span style="color: #f92672">:=</span> <span style="color: #ae81ff">0</span><span style="color: #f8f8f2">;</span> <span style="color: #a6e22e">i</span> <span style="color: #f8f8f2">&lt;</span> <span style="color: #ae81ff">1000</span><span style="color: #f8f8f2">;</span> <span style="color: #a6e22e">i</span><span style="color: #f92672">++</span> <span style="color: #f8f8f2">{</span>
-        <span style="color: #a6e22e">q</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">Put</span><span style="color: #f8f8f2">(</span><span style="color: #a6e22e">i</span><span style="color: #f8f8f2">)</span>
-    <span style="color: #f8f8f2">}</span>
-    <span style="color: #a6e22e">b</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">ResetTimer</span><span style="color: #f8f8f2">()</span>
-    <span style="color: #66d9ef">for</span> <span style="color: #a6e22e">i</span> <span style="color: #f92672">:=</span> <span style="color: #ae81ff">0</span><span style="color: #f8f8f2">;</span> <span style="color: #a6e22e">i</span> <span style="color: #f8f8f2">&lt;</span> <span style="color: #a6e22e">b</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">N</span><span style="color: #f8f8f2">;</span> <span style="color: #a6e22e">i</span><span style="color: #f92672">++</span> <span style="color: #f8f8f2">{</span>
-        <span style="color: #66d9ef">for</span> <span style="color: #a6e22e">j</span> <span style="color: #f92672">:=</span> <span style="color: #ae81ff">0</span><span style="color: #f8f8f2">;</span> <span style="color: #a6e22e">j</span> <span style="color: #f8f8f2">&lt;</span> <span style="color: #ae81ff">2000</span><span style="color: #f8f8f2">;</span> <span style="color: #a6e22e">j</span><span style="color: #f92672">++</span> <span style="color: #f8f8f2">{</span>
-            <span style="color: #a6e22e">q</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">Get</span><span style="color: #f8f8f2">()</span>
-        <span style="color: #f8f8f2">}</span>
-    <span style="color: #f8f8f2">}</span>
-<span style="color: #f8f8f2">}&lt;</span><span style="color: #f92672">/</span><span style="color: #a6e22e">p</span><span style="color: #f8f8f2">&gt;</span>
+<span style="color: #d0d0d0">&lt;p&gt;</span><span style="color: #6ab825; font-weight: bold">func</span> <span style="color: #d0d0d0">BenchmarkGet(b</span> <span style="color: #d0d0d0">*testing.B)</span> <span style="color: #d0d0d0">{</span>
+    <span style="color: #d0d0d0">q</span> <span style="color: #d0d0d0">:=</span> <span style="color: #d0d0d0">New()</span>
+    <span style="color: #6ab825; font-weight: bold">for</span> <span style="color: #d0d0d0">i</span> <span style="color: #d0d0d0">:=</span> <span style="color: #3677a9">0</span><span style="color: #d0d0d0">;</span> <span style="color: #d0d0d0">i</span> <span style="color: #d0d0d0">&lt;</span> <span style="color: #3677a9">1000</span><span style="color: #d0d0d0">;</span> <span style="color: #d0d0d0">i++</span> <span style="color: #d0d0d0">{</span>
+        <span style="color: #d0d0d0">q.Put(i)</span>
+    <span style="color: #d0d0d0">}</span>
+    <span style="color: #d0d0d0">b.ResetTimer()</span>
+    <span style="color: #6ab825; font-weight: bold">for</span> <span style="color: #d0d0d0">i</span> <span style="color: #d0d0d0">:=</span> <span style="color: #3677a9">0</span><span style="color: #d0d0d0">;</span> <span style="color: #d0d0d0">i</span> <span style="color: #d0d0d0">&lt;</span> <span style="color: #d0d0d0">b.N;</span> <span style="color: #d0d0d0">i++</span> <span style="color: #d0d0d0">{</span>
+        <span style="color: #6ab825; font-weight: bold">for</span> <span style="color: #d0d0d0">j</span> <span style="color: #d0d0d0">:=</span> <span style="color: #3677a9">0</span><span style="color: #d0d0d0">;</span> <span style="color: #d0d0d0">j</span> <span style="color: #d0d0d0">&lt;</span> <span style="color: #3677a9">2000</span><span style="color: #d0d0d0">;</span> <span style="color: #d0d0d0">j++</span> <span style="color: #d0d0d0">{</span>
+            <span style="color: #d0d0d0">q.Get()</span>
+        <span style="color: #d0d0d0">}</span>
+    <span style="color: #d0d0d0">}</span>
+<span style="color: #d0d0d0">}&lt;/p&gt;</span>
 
-<span style="color: #f8f8f2">&lt;</span><span style="color: #a6e22e">p</span><span style="color: #f8f8f2">&gt;</span><span style="color: #66d9ef">func</span> <span style="color: #a6e22e">BenchmarkGetDefer</span><span style="color: #f8f8f2">(</span><span style="color: #a6e22e">b</span> <span style="color: #f92672">*</span><span style="color: #a6e22e">testing</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">B</span><span style="color: #f8f8f2">)</span> <span style="color: #f8f8f2">{</span>
-    <span style="color: #a6e22e">q</span> <span style="color: #f92672">:=</span> <span style="color: #a6e22e">New</span><span style="color: #f8f8f2">()</span>
-    <span style="color: #66d9ef">for</span> <span style="color: #a6e22e">i</span> <span style="color: #f92672">:=</span> <span style="color: #ae81ff">0</span><span style="color: #f8f8f2">;</span> <span style="color: #a6e22e">i</span> <span style="color: #f8f8f2">&lt;</span> <span style="color: #ae81ff">1000</span><span style="color: #f8f8f2">;</span> <span style="color: #a6e22e">i</span><span style="color: #f92672">++</span> <span style="color: #f8f8f2">{</span>
-        <span style="color: #a6e22e">q</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">Put</span><span style="color: #f8f8f2">(</span><span style="color: #a6e22e">i</span><span style="color: #f8f8f2">)</span>
-    <span style="color: #f8f8f2">}</span>
-    <span style="color: #a6e22e">b</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">ResetTimer</span><span style="color: #f8f8f2">()</span>
-    <span style="color: #66d9ef">for</span> <span style="color: #a6e22e">i</span> <span style="color: #f92672">:=</span> <span style="color: #ae81ff">0</span><span style="color: #f8f8f2">;</span> <span style="color: #a6e22e">i</span> <span style="color: #f8f8f2">&lt;</span> <span style="color: #a6e22e">b</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">N</span><span style="color: #f8f8f2">;</span> <span style="color: #a6e22e">i</span><span style="color: #f92672">++</span> <span style="color: #f8f8f2">{</span>
-        <span style="color: #66d9ef">for</span> <span style="color: #a6e22e">j</span> <span style="color: #f92672">:=</span> <span style="color: #ae81ff">0</span><span style="color: #f8f8f2">;</span> <span style="color: #a6e22e">j</span> <span style="color: #f8f8f2">&lt;</span> <span style="color: #ae81ff">2000</span><span style="color: #f8f8f2">;</span> <span style="color: #a6e22e">j</span><span style="color: #f92672">++</span> <span style="color: #f8f8f2">{</span>
-            <span style="color: #a6e22e">q</span><span style="color: #f8f8f2">.</span><span style="color: #a6e22e">GetDefer</span><span style="color: #f8f8f2">()</span>
-        <span style="color: #f8f8f2">}</span>
-    <span style="color: #f8f8f2">}</span>
-<span style="color: #f8f8f2">}&lt;</span><span style="color: #f92672">/</span><span style="color: #a6e22e">p</span><span style="color: #f8f8f2">&gt;</span>
+<span style="color: #d0d0d0">&lt;p&gt;</span><span style="color: #6ab825; font-weight: bold">func</span> <span style="color: #d0d0d0">BenchmarkGetDefer(b</span> <span style="color: #d0d0d0">*testing.B)</span> <span style="color: #d0d0d0">{</span>
+    <span style="color: #d0d0d0">q</span> <span style="color: #d0d0d0">:=</span> <span style="color: #d0d0d0">New()</span>
+    <span style="color: #6ab825; font-weight: bold">for</span> <span style="color: #d0d0d0">i</span> <span style="color: #d0d0d0">:=</span> <span style="color: #3677a9">0</span><span style="color: #d0d0d0">;</span> <span style="color: #d0d0d0">i</span> <span style="color: #d0d0d0">&lt;</span> <span style="color: #3677a9">1000</span><span style="color: #d0d0d0">;</span> <span style="color: #d0d0d0">i++</span> <span style="color: #d0d0d0">{</span>
+        <span style="color: #d0d0d0">q.Put(i)</span>
+    <span style="color: #d0d0d0">}</span>
+    <span style="color: #d0d0d0">b.ResetTimer()</span>
+    <span style="color: #6ab825; font-weight: bold">for</span> <span style="color: #d0d0d0">i</span> <span style="color: #d0d0d0">:=</span> <span style="color: #3677a9">0</span><span style="color: #d0d0d0">;</span> <span style="color: #d0d0d0">i</span> <span style="color: #d0d0d0">&lt;</span> <span style="color: #d0d0d0">b.N;</span> <span style="color: #d0d0d0">i++</span> <span style="color: #d0d0d0">{</span>
+        <span style="color: #6ab825; font-weight: bold">for</span> <span style="color: #d0d0d0">j</span> <span style="color: #d0d0d0">:=</span> <span style="color: #3677a9">0</span><span style="color: #d0d0d0">;</span> <span style="color: #d0d0d0">j</span> <span style="color: #d0d0d0">&lt;</span> <span style="color: #3677a9">2000</span><span style="color: #d0d0d0">;</span> <span style="color: #d0d0d0">j++</span> <span style="color: #d0d0d0">{</span>
+            <span style="color: #d0d0d0">q.GetDefer()</span>
+        <span style="color: #d0d0d0">}</span>
+    <span style="color: #d0d0d0">}</span>
+<span style="color: #d0d0d0">}&lt;/p&gt;</span>
 </pre></div>
 
 <h4 id="toc_3">Results</h4>
@@ -203,11 +210,34 @@ BenchmarkGetDefer          10000            180839 ns/op
 </code></pre>
 
         </section>
+  
+    </div>
+  </div>
+
+  <label for="sidebar-checkbox" class="sidebar-toggle"></label>
 
   
+
 <div class="container">
-  <ul class="nav nav-pills">
-    <li class="nav-text">Categories: </li>
+  <hr />
+  
+    <span class="left">
+    &nbsp; <em>&laquo; Previous:</em> <a class="next" href="http://localhost:1313/posts/hugo_based_blog/">Moving to Hugo</a>
+    </span>
+  
+
+  
+    <span class="right">
+    <em>Next: </em><a class="next" href="http://localhost:1313/posts/multicover/"> &nbsp; Coverage for multiple packages in go</a> &raquo;
+    </span>
+  
+</div>
+
+  <br />
+  
+<div class="container">
+  <ul class="catlist">
+    <li><em>Categories: </em></li>
     
       <li><a href="/categories/go">go</a> </li>
     
@@ -215,36 +245,27 @@ BenchmarkGetDefer          10000            180839 ns/op
 </div>
 
 
-      <hr />
-    <ul class="pager">
-        
-            <li class="previous"><a href="http://yujinqiu.github.io/posts/streak/">&laquo; 30 days of hacking Docker</a>
-        
-        
-            <li class="next"><a href="http://yujinqiu.github.io/posts/multicover/">Coverage for multiple packages in go &raquo;</a>
-        
-    </ul>
-
-
-    <div id="disqus_thread"></div>
-    <script type="text/javascript">
-        var disqus_shortname = 'lk4d4';
-
-        (function() {
-             var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-             dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-             (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-         })();
-    </script>
-    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
 
   
-    <hr>
-    <div class="footer">
-        <p>Powered by <a href="http://docker.io">Docker</a> and <a href="http://hugo.spf13.com/">Hugo</a></p>
-    </div>
+  
+
+<div class="container content">
+<footer>
+  <div>
+    <p class="right credit">
+    <a href="/">Home Page</a>
+    <a href="/blog">Blog Index</a>
+    </p>
+  </div>
+</footer>
 </div>
-</body>
+
+<script>document.write('<script src="http://'
+        + (location.host || 'localhost').split(':')[0]
+		+ ':1313/livereload.js?mindelay=10"></'
+        + 'script>')</script></body>
 </html>
+
+
+
 

@@ -7,8 +7,8 @@
 <head>
     <meta charset="utf-8">
     <base href="http://localhost:1313">
-    <title> Categories </title>
-    <link rel="canonical" href="http://localhost:1313/categories/">
+    <title> Making Your Own Summary </title>
+    <link rel="canonical" href="http://localhost:1313/posts/hugo_summary/">
     
 
 <link rel="stylesheet" href="/css/poole.css">
@@ -58,35 +58,62 @@
 
     
     <div class="container content">
+      <h1 class="post-title">Making Your Own Summary</h1>
         <section id="main">
-          <div>
-            <h1>Archive of Posts, by category</h1>
-            <ul class="category">
-              
-              
-              <li><a href="/categories/hugo"> hugo </a> (4 entries) </li>
-              
-              <li><a href="/categories/go"> go </a> (3 entries) </li>
-              
-              <li><a href="/categories/tech"> tech </a> (3 entries) </li>
-              
-              <li><a href="/categories/docker"> docker </a> (2 entries) </li>
-              
-              <li><a href="/categories/github"> github </a> (2 entries) </li>
-              
-              <li><a href="/categories/template"> template </a> (1 entries) </li>
-              
-              <li><a href="/categories/gists"> gists </a> (1 entries) </li>
-              
-              <li><a href="/categories/golang"> golang </a> (1 entries) </li>
-              
-            </ul>
-          </div>
+          <h5 id="date"> Sat Jun 28, 2014 </h5>
+          <p>Hugo allows you to specify where the summary stops - and allows the full markdown including shortcodes.</p>
+
+<p>You just need to construct the first bit of your article so that it makes a nice summary and then end it with&hellip;</p>
+
+<pre><code>&lt; !--more--&gt;
+</code></pre>
+
+<p>(of course dont include the space :) )</p>
+
+<!-- here is the real more... -->
+
+<p>Everything after the more comment will not make it into the summary - sweet.</p>
+
         </section>
+  
     </div>
   </div>
 
   <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+
+  
+
+<div class="container">
+  <hr />
+  
+    <span class="left">
+    &nbsp; <em>&laquo; Previous:</em> <a class="next" href="http://localhost:1313/posts/embedded_gists/">Embedded Gists</a>
+    </span>
+  
+
+  
+    <span class="right">
+    <em>Next: </em><a class="next" href="http://localhost:1313/posts/streak/"> &nbsp; 30 days of hacking Docker</a> &raquo;
+    </span>
+  
+</div>
+
+  <br />
+  
+<div class="container">
+  <ul class="catlist">
+    <li><em>Categories: </em></li>
+    
+      <li><a href="/categories/template">template</a> </li>
+    
+      <li><a href="/categories/hugo">hugo</a> </li>
+    
+      <li><a href="/categories/tech">tech</a> </li>
+    
+  </ul>
+</div>
+
+
 
   
   

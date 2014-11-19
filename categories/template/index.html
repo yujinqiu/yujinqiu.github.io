@@ -8,8 +8,8 @@
 <head>
     <meta charset="utf-8">
     <base href="http://localhost:1313">
-    <title> Docker </title>
-    <link rel="canonical" href="http://localhost:1313/categories/docker/">
+    <title> Template </title>
+    <link rel="canonical" href="http://localhost:1313/categories/template/">
     
 
 <link rel="stylesheet" href="/css/poole.css">
@@ -63,34 +63,29 @@
         <section id="main">
           <div>
             <h5><a href="/categories">Full Category Index</a></h5>
-            <h2>Posts in &ldquo;Docker&rdquo;</h2>
+            <h2>Posts in &ldquo;Template&rdquo;</h2>
             
             
 
 <article class="post">
     <header>
-      <h2><a href='http://localhost:1313/posts/streak/'> 30 days of hacking Docker</a> </h2>
-      <div class="meta">Wed, Jun 11, 2014</div>
+      <h2><a href='http://localhost:1313/posts/hugo_summary/'> Making Your Own Summary</a> </h2>
+      <div class="meta">Sat, Jun 28, 2014</div>
     </header>
 
-    Prelude Yesterday I finished my first 30-day streak on GitHub. Most of contributions were to Docker &ndash; the biggest opensource project on Go. I learned a lot in this month, and it was really cool. I think that this is mostly because of Go language. I&rsquo;ve been programming on Python for five years and I was never so excited about open source, because Python is not even half so fun as Go.
+    <p>Hugo allows you to specify where the summary stops - and allows the full markdown including shortcodes.</p>
+
+<p>You just need to construct the first bit of your article so that it makes a nice summary and then end it with&hellip;</p>
+
+<pre><code>&lt; !--more--&gt;
+</code></pre>
+
+<p>(of course dont include the space :) )</p>
+
+<!-- here is the real more... -->
+
     <footer>
-        <a href='http://localhost:1313/posts/streak/'><nobr>Read more →</nobr></a>
-    </footer>
-</article>
-
-            
-            
-
-<article class="post">
-    <header>
-      <h2><a href='http://localhost:1313/posts/hugoblog/'> Deploying blog with docker and hugo</a> </h2>
-      <div class="meta">Sun, May 4, 2014</div>
-    </header>
-
-    Prelude Recently I moved my jabber-server to DigitalOcean VPS. Run Prosody in docker was so easy, that I decided create this blog. And of course deploy it with docker! Content At first we need container with templates and content for blog generation. I used next dockerfile: FROM debian:jessie RUN apt-get update &amp;&amp; apt-get install --no-install-recommends -y ca-certificates git-core RUN git clone http://github.com/LK4D4/lk4d4.darth.io.git /src VOLUME [&quot;/src&quot;] WORKDIR /src ENTRYPOINT [&quot;git&quot;] CMD [&quot;pull&quot;] There is no magic here: just clone repo to /src (it will be used below), and update it on container start.
-    <footer>
-        <a href='http://localhost:1313/posts/hugoblog/'><nobr>Read more →</nobr></a>
+        <a href='http://localhost:1313/posts/hugo_summary/'><nobr>Read more →</nobr></a>
     </footer>
 </article>
 

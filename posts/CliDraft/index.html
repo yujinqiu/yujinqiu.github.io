@@ -1,0 +1,271 @@
+
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <base href="http://localhost:1313">
+    <title> CliDraft </title>
+    <link rel="canonical" href="http://localhost:1313/posts/CliDraft/">
+    
+
+<link rel="stylesheet" href="/css/poole.css">
+
+<link rel="stylesheet" href="/css/lanyon.css">
+<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700|PT+Sans:400">
+
+</head>
+
+
+<body class="theme-base-0b">
+  
+
+
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+
+
+<div class="sidebar" id="sidebar">
+
+  <nav class="sidebar-nav">
+    <a class="sidebar-nav-item" href="/">Home</a>
+
+    <a class="sidebar-nav-item" href="/posts">Blog</a>
+
+    <a class="sidebar-nav-item" href="/cv">Me</a>
+  </nav>
+
+  <div class="sidebar-item">
+    <p>
+      Powered by <a href="http://hugo.spf13.com">Hugo</a>. Design reused from <a href="https://github.com/spencerlyon2">Spencer Lyon</a> which was modified from this Jekyl theme <a href="http://lanyon.getpoole.com">Lanyon</a> under this <a href="https://github.com/spencerlyon2/hugo_gh_blog/blob/master/LICENSE">licence</a>.
+    </p>
+  </div>
+</div>
+
+
+
+
+  
+  <div class="wrap">
+    <div class="masthead">
+      <div class="container">
+        <h3 class="masthead-title">
+          <a href="/posts" title="Blog">Blog Posts</a>
+        </h3>
+      </div>
+    </div>
+
+    
+    <div class="container content">
+      <h1 class="post-title">CliDraft</h1>
+        <section id="main">
+          <h5 id="date"> Wed Nov 19, 2014 </h5>
+          
+
+<h1 id="toc_0">命令行控</h1>
+
+<hr />
+
+<h3 id="toc_1">ubuntu (命令行)</h3>
+
+<h4 id="toc_2">moc(music on console)</h4>
+
+<p>安装命令 <code>sudo apt-get -y install  moc</code></p>
+
+<h4 id="toc_3">特点</h4>
+
+<p>mod 很类似 tmux 能够attach(输入命令<code>mocp</code>) 和 detach(<code>q</code>)</p>
+
+<p>特点:<br />
+1. &gt;  音量increase  &lt; 音量 decrease<br />
+2. <code>h</code> for help<br />
+3. <code>Q</code> for quit</p>
+
+<h3 id="toc_4">MAC</h3>
+
+<h4 id="toc_5">afplay(Audio File Play)</h4>
+
+<p>很简单的命令, 帮助文档就一个选项<code>-h</code></p>
+
+<pre><code>{-t | --time} TIME
+    play for TIME seconds
+{-r | --rate} RATE
+    play at playback rate
+{-q | --rQuality} QUALITY
+    set the quality used for rate-scaled playback (default is 0 - low quality, 1 - high quality)
+</code></pre>
+
+<h3 id="toc_6">简单流式计算</h3>
+
+<h4 id="toc_7">背景</h4>
+
+<p>经常我们在追查线上问题的时候, 希望能够对线上的日志进行实时的统计输出?<br />
+假设线上的日志文件名为a.log 格式为</p>
+
+<pre><code>NOTICE: 09-27 09:51:00: abc  
+NOTICE: 09-27 09:51:00: cde  
+NOTICE: 09-27 09:51:01: fgh  
+NOTICE: 09-27 09:51:01: ijk  
+NOTICE: 09-27 09:51:03: lmn  
+</code></pre>
+
+<p>我们希望实时统计输出每秒的日志数目.</p>
+
+<h4 id="toc_8">解决命令</h4>
+
+<pre><code>tail -f a.log | cut -c 0-22 | uniq -c 
+</code></pre>
+
+<p>输出结果类似如下:</p>
+
+<pre><code>271 NOTICE: 09-27 09:59:54
+309 NOTICE: 09-27 09:59:55
+306 NOTICE: 09-27 09:59:56:
+</code></pre>
+
+<h3 id="toc_9">文件分割</h3>
+
+<h4 id="toc_10">背景</h4>
+
+<p>通常我们为了加快处理速度, 会对数据文件进行拆分, 然后同时运行多份相同的程序 load 不同的数据文件进行简单的并行处理. <strong>比较有用的拆分是根据文件的行数进行</strong></p>
+
+<h4 id="toc_11">解决命令</h4>
+
+<pre><code>split [OPTION]... [INPUT [PREFIX]]
+
+split -l 100 -d -a 2 DATA  PREFIX_
+</code></pre>
+
+<h4 id="toc_12">常用选项</h4>
+
+<pre><code>-l 按照行数拆分
+-d 拆分文件后缀以数字进行, 默认是字母
+-a NUM  拆分文件后缀名的长度, 默认2
+</code></pre>
+
+<h3 id="toc_13">screen 非交互运行</h3>
+
+<h4 id="toc_14">背景</h4>
+
+<p>有时候我们为了批量后台执行一些程序, 同时避免退出之后, 不会被杀伤, 会采用 screen, nohup等手段. 其中 screen 默认情况下是 ** attach ** 模式, 需要 <code>ctrl + a , d</code> 之后才可以 ** detach ** 出来, 其实是可以直接以 detach 模式后台运行的.</p>
+
+<h3 id="toc_15">解决命令</h3>
+
+<pre><code>    screen -d -m -S NAME  sleep 10 
+</code></pre>
+
+<h3 id="toc_16">缺点</h3>
+
+<p>程序执行退出之后, session 会自动消失, 建议输出写入到日志中.</p>
+
+<h3 id="toc_17">autojump</h3>
+
+<blockquote>
+<p>有了 autojump 妈妈再也不用当心我手指痛了.</p>
+</blockquote>
+
+<p>看了网上很多关于 autojump 的文章发现大部分都太过时了, 决定自己写一篇.</p>
+
+<h4 id="toc_18">背景</h4>
+
+<p>作为运维人员是不是经常各种 cd, 时间久了感觉手指心都觉得有点痛, 这时候你想要 autojump 来帮你解决这个问题.
+&gt; autojump - a faster way to navigate your filesystem</p>
+
+<h4 id="toc_19">应用场景</h4>
+
+<ol>
+<li><p>快速进入一个目录,autojump 会记录和计算各个目录权重, 通过 <code>j --stat</code> 来查看</p>
+
+<pre><code>j foo
+</code></pre></li>
+
+<li><p>快速进入当前目录下的一个子目录</p>
+
+<pre><code>jc images
+</code></pre></li>
+
+<li><p>直接用文件管理器( mac os x Finder)打开对应目录</p>
+
+<pre><code>jo images
+</code></pre></li>
+
+<li><p>支持用文件管理( mac os x Finder)进入当前目录的子目录</p>
+
+<pre><code>jco images
+</code></pre></li>
+</ol>
+
+<h4 id="toc_20">常用选项</h4>
+
+<ol>
+<li>-s, &ndash;stat 查看前100条目录的权重</li>
+<li>-i, &ndash;increase VALUE 增加当前目录的权重, 可以制定自己增加权重VALUE多少.</li>
+<li>-d, &ndash;decreate VALUE 减少当前目录的权重, 可以制定自己减少权重VALUE 多少.</li>
+<li>&ndash;purge 删除一些目录已经被删除但是仍然保留在数据库中.</li>
+</ol>
+
+<h4 id="toc_21">高级功能</h4>
+
+<ol>
+<li><p>ZSH 支持 Tab 补全<br />
+autojump ZSH 需要<strong>compinit</strong>模块来支持, 配置方法:把下面内容加入 ~/.zshrc</p>
+
+<pre><code>    autoload -U compinit &amp;&amp; compinit
+</code></pre></li>
+</ol>
+
+        </section>
+  
+    </div>
+  </div>
+
+  <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+
+  
+
+<div class="container">
+  <hr />
+  
+
+  
+    <span class="right">
+    <em>Next: </em><a class="next" href="http://localhost:1313/posts/embedded_gists/"> &nbsp; Embedded Gists</a> &raquo;
+    </span>
+  
+</div>
+
+  <br />
+  
+<div class="container">
+  <ul class="catlist">
+    <li><em>Categories: </em></li>
+    
+  </ul>
+</div>
+
+
+
+  
+  
+
+<div class="container content">
+<footer>
+  <div>
+    <p class="right credit">
+    <a href="/">Home Page</a>
+    <a href="/blog">Blog Index</a>
+    </p>
+  </div>
+</footer>
+</div>
+
+<script>document.write('<script src="http://'
+        + (location.host || 'localhost').split(':')[0]
+		+ ':1313/livereload.js?mindelay=10"></'
+        + 'script>')</script></body>
+</html>
+
+
+
+
