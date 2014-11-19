@@ -7,9 +7,9 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <base href="http://yujinqiu.github.io:1313">
+    <base href="http://yujinqiu.github.io">
     <title> Go </title>
-    <link rel="canonical" href="http://yujinqiu.github.io:1313/categories/go/">
+    <link rel="canonical" href="http://yujinqiu.github.io/categories/go/">
     
 
 <link rel="stylesheet" href="/css/poole.css">
@@ -69,13 +69,13 @@
 
 <article class="post">
     <header>
-      <h2><a href='http://yujinqiu.github.io:1313/posts/streak/'> 30 days of hacking Docker</a> </h2>
+      <h2><a href='http://yujinqiu.github.io/posts/streak/'> 30 days of hacking Docker</a> </h2>
       <div class="meta">Wed, Jun 11, 2014</div>
     </header>
 
     Prelude Yesterday I finished my first 30-day streak on GitHub. Most of contributions were to Docker &ndash; the biggest opensource project on Go. I learned a lot in this month, and it was really cool. I think that this is mostly because of Go language. I&rsquo;ve been programming on Python for five years and I was never so excited about open source, because Python is not even half so fun as Go.
     <footer>
-        <a href='http://yujinqiu.github.io:1313/posts/streak/'><nobr>Read more →</nobr></a>
+        <a href='http://yujinqiu.github.io/posts/streak/'><nobr>Read more →</nobr></a>
     </footer>
 </article>
 
@@ -84,13 +84,13 @@
 
 <article class="post">
     <header>
-      <h2><a href='http://yujinqiu.github.io:1313/posts/defer/'> Defer overhead in go</a> </h2>
+      <h2><a href='http://yujinqiu.github.io/posts/defer/'> Defer overhead in go</a> </h2>
       <div class="meta">Wed, May 14, 2014</div>
     </header>
 
     Prelude This post based on real events in docker repository. When I revealed that my 20-percent-cooler refactoring made Pop function x4-x5 times slower, I did some research and concluded, that problem was in using defer statement for unlocking everywhere. In this post I&rsquo;ll write simple program and benchmarks from which we will see, that sometimes defer statement can slowdown your program a lot. Let&rsquo;s create simple queue with methods Put and Get.
     <footer>
-        <a href='http://yujinqiu.github.io:1313/posts/defer/'><nobr>Read more →</nobr></a>
+        <a href='http://yujinqiu.github.io/posts/defer/'><nobr>Read more →</nobr></a>
     </footer>
 </article>
 
@@ -99,13 +99,13 @@
 
 <article class="post">
     <header>
-      <h2><a href='http://yujinqiu.github.io:1313/posts/multicover/'> Coverage for multiple packages in go</a> </h2>
+      <h2><a href='http://yujinqiu.github.io/posts/multicover/'> Coverage for multiple packages in go</a> </h2>
       <div class="meta">Tue, May 6, 2014</div>
     </header>
 
     Prelude There is awesome coverage in go. You can read about it here. But also it has some limitations. For example let&rsquo;s assume that we have next code structure: src ├── pkg1 │ ├── pkg11 │ └── pkg12 └── pkg2 ├── pkg21 └── pkg22 pkg2, pkg21, pkg22 uses pkg1, pkg11 and pkg12 in different cases. So question is &ndash; how we can compute overall coverage for our code base? Generating cover profiles Let&rsquo;s consider some possible go test commands with -coveprofile: go test -coverprofile=cover.out pkg2 tests run only for pkg1 and cover profile generated only for pkg2 go test -coverprofile=cover.out -coverpkg=./...
     <footer>
-        <a href='http://yujinqiu.github.io:1313/posts/multicover/'><nobr>Read more →</nobr></a>
+        <a href='http://yujinqiu.github.io/posts/multicover/'><nobr>Read more →</nobr></a>
     </footer>
 </article>
 
@@ -132,10 +132,7 @@
 </footer>
 </div>
 
-<script>document.write('<script src="http://'
-        + (location.host || 'localhost').split(':')[0]
-		+ ':1313/livereload.js?mindelay=10"></'
-        + 'script>')</script></body>
+</body>
 </html>
 
 

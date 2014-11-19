@@ -3,180 +3,18 @@
   <channel>
       <title>Recent Content on Engineer&#39;s Draft </title>
       <generator uri="https://hugo.spf13.com">Hugo</generator>
-    <link>http://yujinqiu.github.io:1313/index.xml/</link>
+    <link>http://yujinqiu.github.io/index.xml/</link>
     
     
     
-    <updated>Wed, 19 Nov 2014 21:36:12 CST</updated>
-    
-    <item>
-      <title>CliDraft</title>
-      <link>http://yujinqiu.github.io:1313/posts/CliDraft/</link>
-      <pubDate>Wed, 19 Nov 2014 21:36:12 CST</pubDate>
-      
-      <guid>http://yujinqiu.github.io:1313/posts/CliDraft/</guid>
-      <description>
-
-&lt;h1 id=&#34;toc_0&#34;&gt;命令行控&lt;/h1&gt;
-
-&lt;hr /&gt;
-
-&lt;h3 id=&#34;toc_1&#34;&gt;ubuntu (命令行)&lt;/h3&gt;
-
-&lt;h4 id=&#34;toc_2&#34;&gt;moc(music on console)&lt;/h4&gt;
-
-&lt;p&gt;安装命令 &lt;code&gt;sudo apt-get -y install  moc&lt;/code&gt;&lt;/p&gt;
-
-&lt;h4 id=&#34;toc_3&#34;&gt;特点&lt;/h4&gt;
-
-&lt;p&gt;mod 很类似 tmux 能够attach(输入命令&lt;code&gt;mocp&lt;/code&gt;) 和 detach(&lt;code&gt;q&lt;/code&gt;)&lt;/p&gt;
-
-&lt;p&gt;特点:&lt;br /&gt;
-1. &amp;gt;  音量increase  &amp;lt; 音量 decrease&lt;br /&gt;
-2. &lt;code&gt;h&lt;/code&gt; for help&lt;br /&gt;
-3. &lt;code&gt;Q&lt;/code&gt; for quit&lt;/p&gt;
-
-&lt;h3 id=&#34;toc_4&#34;&gt;MAC&lt;/h3&gt;
-
-&lt;h4 id=&#34;toc_5&#34;&gt;afplay(Audio File Play)&lt;/h4&gt;
-
-&lt;p&gt;很简单的命令, 帮助文档就一个选项&lt;code&gt;-h&lt;/code&gt;&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;{-t | --time} TIME
-    play for TIME seconds
-{-r | --rate} RATE
-    play at playback rate
-{-q | --rQuality} QUALITY
-    set the quality used for rate-scaled playback (default is 0 - low quality, 1 - high quality)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;toc_6&#34;&gt;简单流式计算&lt;/h3&gt;
-
-&lt;h4 id=&#34;toc_7&#34;&gt;背景&lt;/h4&gt;
-
-&lt;p&gt;经常我们在追查线上问题的时候, 希望能够对线上的日志进行实时的统计输出?&lt;br /&gt;
-假设线上的日志文件名为a.log 格式为&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;NOTICE: 09-27 09:51:00: abc  
-NOTICE: 09-27 09:51:00: cde  
-NOTICE: 09-27 09:51:01: fgh  
-NOTICE: 09-27 09:51:01: ijk  
-NOTICE: 09-27 09:51:03: lmn  
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;我们希望实时统计输出每秒的日志数目.&lt;/p&gt;
-
-&lt;h4 id=&#34;toc_8&#34;&gt;解决命令&lt;/h4&gt;
-
-&lt;pre&gt;&lt;code&gt;tail -f a.log | cut -c 0-22 | uniq -c 
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;输出结果类似如下:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;271 NOTICE: 09-27 09:59:54
-309 NOTICE: 09-27 09:59:55
-306 NOTICE: 09-27 09:59:56:
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;toc_9&#34;&gt;文件分割&lt;/h3&gt;
-
-&lt;h4 id=&#34;toc_10&#34;&gt;背景&lt;/h4&gt;
-
-&lt;p&gt;通常我们为了加快处理速度, 会对数据文件进行拆分, 然后同时运行多份相同的程序 load 不同的数据文件进行简单的并行处理. &lt;strong&gt;比较有用的拆分是根据文件的行数进行&lt;/strong&gt;&lt;/p&gt;
-
-&lt;h4 id=&#34;toc_11&#34;&gt;解决命令&lt;/h4&gt;
-
-&lt;pre&gt;&lt;code&gt;split [OPTION]... [INPUT [PREFIX]]
-
-split -l 100 -d -a 2 DATA  PREFIX_
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h4 id=&#34;toc_12&#34;&gt;常用选项&lt;/h4&gt;
-
-&lt;pre&gt;&lt;code&gt;-l 按照行数拆分
--d 拆分文件后缀以数字进行, 默认是字母
--a NUM  拆分文件后缀名的长度, 默认2
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;toc_13&#34;&gt;screen 非交互运行&lt;/h3&gt;
-
-&lt;h4 id=&#34;toc_14&#34;&gt;背景&lt;/h4&gt;
-
-&lt;p&gt;有时候我们为了批量后台执行一些程序, 同时避免退出之后, 不会被杀伤, 会采用 screen, nohup等手段. 其中 screen 默认情况下是 ** attach ** 模式, 需要 &lt;code&gt;ctrl + a , d&lt;/code&gt; 之后才可以 ** detach ** 出来, 其实是可以直接以 detach 模式后台运行的.&lt;/p&gt;
-
-&lt;h3 id=&#34;toc_15&#34;&gt;解决命令&lt;/h3&gt;
-
-&lt;pre&gt;&lt;code&gt;    screen -d -m -S NAME  sleep 10 
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;toc_16&#34;&gt;缺点&lt;/h3&gt;
-
-&lt;p&gt;程序执行退出之后, session 会自动消失, 建议输出写入到日志中.&lt;/p&gt;
-
-&lt;h3 id=&#34;toc_17&#34;&gt;autojump&lt;/h3&gt;
-
-&lt;blockquote&gt;
-&lt;p&gt;有了 autojump 妈妈再也不用当心我手指痛了.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;看了网上很多关于 autojump 的文章发现大部分都太过时了, 决定自己写一篇.&lt;/p&gt;
-
-&lt;h4 id=&#34;toc_18&#34;&gt;背景&lt;/h4&gt;
-
-&lt;p&gt;作为运维人员是不是经常各种 cd, 时间久了感觉手指心都觉得有点痛, 这时候你想要 autojump 来帮你解决这个问题.
-&amp;gt; autojump - a faster way to navigate your filesystem&lt;/p&gt;
-
-&lt;h4 id=&#34;toc_19&#34;&gt;应用场景&lt;/h4&gt;
-
-&lt;ol&gt;
-&lt;li&gt;&lt;p&gt;快速进入一个目录,autojump 会记录和计算各个目录权重, 通过 &lt;code&gt;j --stat&lt;/code&gt; 来查看&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;j foo
-&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;快速进入当前目录下的一个子目录&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;jc images
-&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;直接用文件管理器( mac os x Finder)打开对应目录&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;jo images
-&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;支持用文件管理( mac os x Finder)进入当前目录的子目录&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;jco images
-&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h4 id=&#34;toc_20&#34;&gt;常用选项&lt;/h4&gt;
-
-&lt;ol&gt;
-&lt;li&gt;-s, &amp;ndash;stat 查看前100条目录的权重&lt;/li&gt;
-&lt;li&gt;-i, &amp;ndash;increase VALUE 增加当前目录的权重, 可以制定自己增加权重VALUE多少.&lt;/li&gt;
-&lt;li&gt;-d, &amp;ndash;decreate VALUE 减少当前目录的权重, 可以制定自己减少权重VALUE 多少.&lt;/li&gt;
-&lt;li&gt;&amp;ndash;purge 删除一些目录已经被删除但是仍然保留在数据库中.&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h4 id=&#34;toc_21&#34;&gt;高级功能&lt;/h4&gt;
-
-&lt;ol&gt;
-&lt;li&gt;&lt;p&gt;ZSH 支持 Tab 补全&lt;br /&gt;
-autojump ZSH 需要&lt;strong&gt;compinit&lt;/strong&gt;模块来支持, 配置方法:把下面内容加入 ~/.zshrc&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    autoload -U compinit &amp;amp;&amp;amp; compinit
-&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
-&lt;/ol&gt;
-</description>
-    </item>
+    <updated>Sat, 05 Jul 2014 00:00:00 UTC</updated>
     
     <item>
       <title>Embedded Gists</title>
-      <link>http://yujinqiu.github.io:1313/posts/embedded_gists/</link>
+      <link>http://yujinqiu.github.io/posts/embedded_gists/</link>
       <pubDate>Sat, 05 Jul 2014 00:00:00 UTC</pubDate>
       
-      <guid>http://yujinqiu.github.io:1313/posts/embedded_gists/</guid>
+      <guid>http://yujinqiu.github.io/posts/embedded_gists/</guid>
       <description>
 
 &lt;h2 id=&#34;toc_0&#34;&gt;Syntax Highlighting - or Embedded Gists&lt;/h2&gt;
@@ -252,10 +90,10 @@ autojump ZSH 需要&lt;strong&gt;compinit&lt;/strong&gt;模块来支持, 配置�
     
     <item>
       <title>Making Your Own Summary</title>
-      <link>http://yujinqiu.github.io:1313/posts/hugo_summary/</link>
+      <link>http://yujinqiu.github.io/posts/hugo_summary/</link>
       <pubDate>Sat, 28 Jun 2014 00:00:00 UTC</pubDate>
       
-      <guid>http://yujinqiu.github.io:1313/posts/hugo_summary/</guid>
+      <guid>http://yujinqiu.github.io/posts/hugo_summary/</guid>
       <description>&lt;p&gt;Hugo allows you to specify where the summary stops - and allows the full markdown including shortcodes.&lt;/p&gt;
 
 &lt;p&gt;You just need to construct the first bit of your article so that it makes a nice summary and then end it with&amp;hellip;&lt;/p&gt;
@@ -273,10 +111,10 @@ autojump ZSH 需要&lt;strong&gt;compinit&lt;/strong&gt;模块来支持, 配置�
     
     <item>
       <title>30 days of hacking Docker</title>
-      <link>http://yujinqiu.github.io:1313/posts/streak/</link>
+      <link>http://yujinqiu.github.io/posts/streak/</link>
       <pubDate>Wed, 11 Jun 2014 00:00:00 UTC</pubDate>
       
-      <guid>http://yujinqiu.github.io:1313/posts/streak/</guid>
+      <guid>http://yujinqiu.github.io/posts/streak/</guid>
       <description>
 
 &lt;h3 id=&#34;toc_0&#34;&gt;Prelude&lt;/h3&gt;
@@ -459,10 +297,10 @@ of course, Docker.&lt;/p&gt;
     
     <item>
       <title>Moving to Hugo</title>
-      <link>http://yujinqiu.github.io:1313/posts/hugo_based_blog/</link>
+      <link>http://yujinqiu.github.io/posts/hugo_based_blog/</link>
       <pubDate>Thu, 29 May 2014 00:00:00 UTC</pubDate>
       
-      <guid>http://yujinqiu.github.io:1313/posts/hugo_based_blog/</guid>
+      <guid>http://yujinqiu.github.io/posts/hugo_based_blog/</guid>
       <description>
 
 &lt;p&gt;I decided that I should blog under my danmux.com domain - I often use danmux around the internet, sometimes danmull, but normally danmux for tech type things, so it makes sense.&lt;/p&gt;
@@ -481,10 +319,10 @@ of course, Docker.&lt;/p&gt;
     
     <item>
       <title>Defer overhead in go</title>
-      <link>http://yujinqiu.github.io:1313/posts/defer/</link>
+      <link>http://yujinqiu.github.io/posts/defer/</link>
       <pubDate>Wed, 14 May 2014 00:00:00 UTC</pubDate>
       
-      <guid>http://yujinqiu.github.io:1313/posts/defer/</guid>
+      <guid>http://yujinqiu.github.io/posts/defer/</guid>
       <description>
 
 &lt;h4 id=&#34;toc_0&#34;&gt;Prelude&lt;/h4&gt;
@@ -637,10 +475,10 @@ BenchmarkGetDefer          10000            180839 ns/op
     
     <item>
       <title>Coverage for multiple packages in go</title>
-      <link>http://yujinqiu.github.io:1313/posts/multicover/</link>
+      <link>http://yujinqiu.github.io/posts/multicover/</link>
       <pubDate>Tue, 06 May 2014 00:00:00 UTC</pubDate>
       
-      <guid>http://yujinqiu.github.io:1313/posts/multicover/</guid>
+      <guid>http://yujinqiu.github.io/posts/multicover/</guid>
       <description>
 
 &lt;h4 id=&#34;toc_0&#34;&gt;Prelude&lt;/h4&gt;
@@ -735,10 +573,10 @@ will be able to run&lt;/p&gt;
     
     <item>
       <title>Deploying blog with docker and hugo</title>
-      <link>http://yujinqiu.github.io:1313/posts/hugoblog/</link>
+      <link>http://yujinqiu.github.io/posts/hugoblog/</link>
       <pubDate>Sun, 04 May 2014 00:00:00 UTC</pubDate>
       
-      <guid>http://yujinqiu.github.io:1313/posts/hugoblog/</guid>
+      <guid>http://yujinqiu.github.io/posts/hugoblog/</guid>
       <description>
 
 &lt;h4 id=&#34;toc_0&#34;&gt;Prelude&lt;/h4&gt;
