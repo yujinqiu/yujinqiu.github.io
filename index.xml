@@ -17,7 +17,7 @@
       <guid>http://yujinqiu.github.io/posts/CliDraft/</guid>
       <description>
 
-&lt;h1 id=&#34;toc_0&#34;&gt;命令行控&lt;/h1&gt;
+&lt;h2 id=&#34;toc_0&#34;&gt;命令行控&lt;/h2&gt;
 
 &lt;hr /&gt;
 
@@ -260,8 +260,7 @@ autojump ZSH 需要&lt;strong&gt;compinit&lt;/strong&gt;模块来支持, 配置�
 
 &lt;p&gt;You just need to construct the first bit of your article so that it makes a nice summary and then end it with&amp;hellip;&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;&amp;lt; !--more--&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;(of course dont include the space :) )&lt;/p&gt;
 

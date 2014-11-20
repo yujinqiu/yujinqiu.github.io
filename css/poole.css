@@ -166,7 +166,9 @@ pre {
   line-height: 1.4;
   white-space: pre;
   overflow: auto;
-  /*background-color: #f9f9f9;*/
+  border:1px solid #cccccc;
+  background-color: #f9f9f9;
+  border-radius: 4px;
 }
 pre code {
   padding: 0;
