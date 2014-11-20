@@ -88,7 +88,22 @@
       <div class="meta">Wed, May 14, 2014</div>
     </header>
 
-    Prelude This post based on real events in docker repository. When I revealed that my 20-percent-cooler refactoring made Pop function x4-x5 times slower, I did some research and concluded, that problem was in using defer statement for unlocking everywhere. In this post I&rsquo;ll write simple program and benchmarks from which we will see, that sometimes defer statement can slowdown your program a lot. Let&rsquo;s create simple queue with methods Put and Get.
+    <h4>Prelude</h4>
+
+<p>This post based on
+<a href="https://github.com/dotcloud/docker/commit/5128feb690e8fd0244d1fecef5f3f5f77598bbfa">real events</a>
+in docker repository.
+When I revealed that my 20-percent-cooler refactoring made <code>Pop</code> function x4-x5
+times slower, I did some research and concluded, that problem was in using
+<code>defer</code> statement for unlocking everywhere.</p>
+
+<p>In this post I&rsquo;ll write simple program and benchmarks from which we will see,
+that sometimes <code>defer</code> statement can slowdown your program a lot.</p>
+
+<p>Let&rsquo;s create simple queue with methods <code>Put</code> and <code>Get</code>. Next snippets shows such
+queue and benchmarks for it. Also I wrote duplicate methods with <code>defer</code> and
+without it.</p>
+
     <footer>
         <a href='http://yujinqiu.github.io/posts/defer/'><nobr>Read more →</nobr></a>
     </footer>
