@@ -42,7 +42,7 @@
 
 &lt;p&gt;很简单的命令, 帮助文档就一个选项&lt;code&gt;-h&lt;/code&gt;&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;{-t | --time} TIME
+&lt;pre&gt;&lt;code&gt;{-t | --time} TIME  
     play for TIME seconds
 {-r | --rate} RATE
     play at playback rate
