@@ -50,7 +50,7 @@
     set the quality used for rate-scaled playback (default is 0 - low quality, 1 - high quality)
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;&lt;code&gt;&amp;lt;!-more-&amp;gt;&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&amp;lt;!-more-&amp;gt;&lt;/p&gt;
 
 &lt;h3 id=&#34;toc_6&#34;&gt;简单流式计算&lt;/h3&gt;
 
