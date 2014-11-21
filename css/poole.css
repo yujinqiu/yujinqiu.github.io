@@ -328,6 +328,7 @@ ul.catlist li:last-child:after { content: ""; }
   padding-right: 1rem;
   margin-left:  auto;
   margin-right: auto;
+  display : inline-block;
 }
 
 
