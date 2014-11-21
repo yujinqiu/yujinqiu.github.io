@@ -154,7 +154,7 @@ code {
   padding: .25em .5em;
   font-size: 85%;
   color: #bf616a;
-  background-color: #DBD3C4;
+  background-color: #f9f9f9;
   border-radius: 3px;
 }
 pre {
@@ -167,7 +167,7 @@ pre {
   white-space: pre;
   overflow: auto;
   border:1px solid #cccccc;
-  background-color: #DBD3C4;
+  background-color: #f9f9f9;
   border-radius: 4px;
 }
 pre code {
@@ -277,7 +277,7 @@ tbody tr:nth-child(odd) th {
 ul.category {text-transform: capitalize;}
 ul.category li {margin-bottom: 1rem;}
 
-ul.catlist { list-style: none; margin: 0; padding: 0; display:inline;}
+ul.catlist { list-style: none; margin: 0; padding: 0; }
 ul.catlist li { display: inline; }
 ul.catlist li:after { content: "・"; }
 ul.catlist li:last-child:after { content: ""; }
