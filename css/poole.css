@@ -130,7 +130,7 @@ dd {
 /* Misc */
 hr {
   position: relative;
-  margin: 1.5rem 0;
+  /*margin: 1.5rem 0;*/
   border: 0;
   border-top: 1px solid #eee;
   border-bottom: 1px solid #D3CACA;
@@ -154,7 +154,7 @@ code {
   padding: .25em .5em;
   font-size: 85%;
   color: #bf616a;
-  background-color: #f9f9f9;
+  background-color: #DBD3C4;
   border-radius: 3px;
 }
 pre {
@@ -167,7 +167,7 @@ pre {
   white-space: pre;
   overflow: auto;
   border:1px solid #cccccc;
-  background-color: #f9f9f9;
+  background-color: #DBD3C4;
   border-radius: 4px;
 }
 pre code {
@@ -324,7 +324,7 @@ ul.catlist li:last-child:after { content: ""; }
 
 .container {
   max-width: 38rem;
-  padding-left:  1rem;
+  padding-left:  0rem;
   padding-right: 1rem;
   margin-left:  auto;
   margin-right: auto;

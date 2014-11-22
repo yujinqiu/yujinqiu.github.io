@@ -627,9 +627,9 @@ BenchmarkGetDefer  10000            249029 ns/op
 &lt;p&gt;Retested with go from &lt;code&gt;tip&lt;/code&gt; as Cezar Sá Espinola suggested. So, here results:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;BenchmarkPut       50000             54633 ns/op
-BenchmarkPutDefer          10000            102971 ns/op
+BenchmarkPutDefer  10000            102971 ns/op
 BenchmarkGet       50000             65148 ns/op
-BenchmarkGetDefer          10000            180839 ns/op
+BenchmarkGetDefer  10000            180839 ns/op
 &lt;/code&gt;&lt;/pre&gt;
 </description>
     </item>

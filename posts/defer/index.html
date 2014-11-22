@@ -53,6 +53,7 @@
         <h3 class="masthead-title">
           <a href="/posts" title="Blog">Blog Posts</a>
         </h3>
+        <hr>
       </div>
     </div>
 
@@ -60,7 +61,7 @@
     <div class="container content">
       <h1 class="post-title">Defer overhead in go</h1>
         <section id="main">
-          <h5 id="date"> Wed May 14, 2014 
+          <p> Wed May 14, 2014 
 <div class="container">
   <ul class="catlist">
     <li><em>Categories: </em></li>
@@ -69,7 +70,7 @@
     
   </ul>
 </div>
- </h5>
+</p>
           
 
 <h4 id="toc_0">Prelude</h4>
@@ -213,9 +214,9 @@ BenchmarkGetDefer  10000            249029 ns/op
 <p>Retested with go from <code>tip</code> as Cezar Sá Espinola suggested. So, here results:</p>
 
 <pre><code>BenchmarkPut       50000             54633 ns/op
-BenchmarkPutDefer          10000            102971 ns/op
+BenchmarkPutDefer  10000            102971 ns/op
 BenchmarkGet       50000             65148 ns/op
-BenchmarkGetDefer          10000            180839 ns/op
+BenchmarkGetDefer  10000            180839 ns/op
 </code></pre>
 
         </section>
