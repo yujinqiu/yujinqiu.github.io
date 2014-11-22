@@ -74,7 +74,7 @@
     </header>
 
     Prelude Yesterday I finished my first 30-day streak on GitHub. Most of contributions were to Docker &ndash; the biggest opensource project on Go. I learned a lot in this month, and it was really cool. I think that this is mostly because of Go language. I&rsquo;ve been programming on Python for five years and I was never so excited about open source, because Python is not even half so fun as Go.
-    <footer>
+    <footer style="text-align:right; ">
         <a href='http://yujinqiu.github.io/posts/streak/'><nobr>Read more →</nobr></a>
     </footer>
     <hr/>
@@ -105,7 +105,7 @@ that sometimes <code>defer</code> statement can slowdown your program a lot.</p>
 queue and benchmarks for it. Also I wrote duplicate methods with <code>defer</code> and
 without it.</p>
 
-    <footer>
+    <footer style="text-align:right; ">
         <a href='http://yujinqiu.github.io/posts/defer/'><nobr>Read more →</nobr></a>
     </footer>
     <hr/>
@@ -121,7 +121,7 @@ without it.</p>
     </header>
 
     Prelude There is awesome coverage in go. You can read about it here. But also it has some limitations. For example let&rsquo;s assume that we have next code structure: src ├── pkg1 │ ├── pkg11 │ └── pkg12 └── pkg2 ├── pkg21 └── pkg22 pkg2, pkg21, pkg22 uses pkg1, pkg11 and pkg12 in different cases. So question is &ndash; how we can compute overall coverage for our code base? Generating cover profiles Let&rsquo;s consider some possible go test commands with -coveprofile: go test -coverprofile=cover.out pkg2 tests run only for pkg1 and cover profile generated only for pkg2 go test -coverprofile=cover.out -coverpkg=./...
-    <footer>
+    <footer style="text-align:right; ">
         <a href='http://yujinqiu.github.io/posts/multicover/'><nobr>Read more →</nobr></a>
     </footer>
     <hr/>

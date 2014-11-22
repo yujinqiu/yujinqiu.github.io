@@ -74,8 +74,6 @@
 
     <h2>命令行控</h2>
 
-<hr />
-
 <h3>ubuntu (命令行)</h3>
 
 <h4>moc(music on console)</h4>
@@ -105,7 +103,7 @@
     set the quality used for rate-scaled playback (default is 0 - low quality, 1 - high quality)
 </code></pre>
 
-    <footer>
+    <footer style="text-align:right; ">
         <a href='http://yujinqiu.github.io/posts/CliDraft/'><nobr>Read more →</nobr></a>
     </footer>
     <hr/>
@@ -151,7 +149,7 @@
 
 <p>So on embedding a gist as follows (but without syntax highlighting) failed&hellip;</p>
 
-    <footer>
+    <footer style="text-align:right; ">
         <a href='http://yujinqiu.github.io/posts/embedded_gists/'><nobr>Read more →</nobr></a>
     </footer>
     <hr/>
@@ -176,7 +174,7 @@
 
 <!-- here is the real more... -->
 
-    <footer>
+    <footer style="text-align:right; ">
         <a href='http://yujinqiu.github.io/posts/hugo_summary/'><nobr>Read more →</nobr></a>
     </footer>
     <hr/>
@@ -192,7 +190,7 @@
     </header>
 
     Prelude Yesterday I finished my first 30-day streak on GitHub. Most of contributions were to Docker &ndash; the biggest opensource project on Go. I learned a lot in this month, and it was really cool. I think that this is mostly because of Go language. I&rsquo;ve been programming on Python for five years and I was never so excited about open source, because Python is not even half so fun as Go.
-    <footer>
+    <footer style="text-align:right; ">
         <a href='http://yujinqiu.github.io/posts/streak/'><nobr>Read more →</nobr></a>
     </footer>
     <hr/>
@@ -211,7 +209,7 @@
 
 <p><strong>danmux</strong> because the <strong>x</strong> has always been a notable part of my name - and mux reminds me of my electrical engineering days, and I think humans multiplex all the time, there it is.</p>
 
-    <footer>
+    <footer style="text-align:right; ">
         <a href='http://yujinqiu.github.io/posts/hugo_based_blog/'><nobr>Read more →</nobr></a>
     </footer>
     <hr/>
@@ -242,7 +240,7 @@ that sometimes <code>defer</code> statement can slowdown your program a lot.</p>
 queue and benchmarks for it. Also I wrote duplicate methods with <code>defer</code> and
 without it.</p>
 
-    <footer>
+    <footer style="text-align:right; ">
         <a href='http://yujinqiu.github.io/posts/defer/'><nobr>Read more →</nobr></a>
     </footer>
     <hr/>
@@ -258,7 +256,7 @@ without it.</p>
     </header>
 
     Prelude There is awesome coverage in go. You can read about it here. But also it has some limitations. For example let&rsquo;s assume that we have next code structure: src ├── pkg1 │ ├── pkg11 │ └── pkg12 └── pkg2 ├── pkg21 └── pkg22 pkg2, pkg21, pkg22 uses pkg1, pkg11 and pkg12 in different cases. So question is &ndash; how we can compute overall coverage for our code base? Generating cover profiles Let&rsquo;s consider some possible go test commands with -coveprofile: go test -coverprofile=cover.out pkg2 tests run only for pkg1 and cover profile generated only for pkg2 go test -coverprofile=cover.out -coverpkg=./...
-    <footer>
+    <footer style="text-align:right; ">
         <a href='http://yujinqiu.github.io/posts/multicover/'><nobr>Read more →</nobr></a>
     </footer>
     <hr/>
@@ -274,7 +272,7 @@ without it.</p>
     </header>
 
     Prelude Recently I moved my jabber-server to DigitalOcean VPS. Run Prosody in docker was so easy, that I decided create this blog. And of course deploy it with docker! Content At first we need container with templates and content for blog generation. I used next dockerfile: FROM debian:jessie RUN apt-get update &amp;&amp; apt-get install --no-install-recommends -y ca-certificates git-core RUN git clone http://github.com/LK4D4/lk4d4.darth.io.git /src VOLUME [&quot;/src&quot;] WORKDIR /src ENTRYPOINT [&quot;git&quot;] CMD [&quot;pull&quot;] There is no magic here: just clone repo to /src (it will be used below), and update it on container start.
-    <footer>
+    <footer style="text-align:right; ">
         <a href='http://yujinqiu.github.io/posts/hugoblog/'><nobr>Read more →</nobr></a>
     </footer>
     <hr/>
