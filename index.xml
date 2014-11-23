@@ -7,7 +7,178 @@
     
     
     
-    <updated>Wed, 19 Nov 2014 21:36:12 CST</updated>
+    <updated>Sun, 23 Nov 2014 11:47:25 CST</updated>
+    
+    <item>
+      <title>SSHDraft</title>
+      <link>http://yujinqiu.github.io/posts/SSHDraft/</link>
+      <pubDate>Sun, 23 Nov 2014 11:47:25 CST</pubDate>
+      
+      <guid>http://yujinqiu.github.io/posts/SSHDraft/</guid>
+      <description>
+
+&lt;h2 id=&#34;toc_0&#34;&gt;Black Magic Of SSH&lt;/h2&gt;
+
+&lt;h3 id=&#34;toc_1&#34;&gt;绑定本地端口&lt;/h3&gt;
+
+&lt;p&gt;ssh 通过加密传输数据, 特别适合**国情, 加入我们要让8080 端口的数据, 全部通过 SSH  加密转发到远程主机上&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;ssh  -D 8080 user@host
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;toc_2&#34;&gt;应用场景&lt;/h4&gt;
+
+&lt;p&gt;在咖啡厅等公共场所, 为了上网安全, 可以使用 ssh动态转发来保证安全.&lt;/p&gt;
+
+&lt;h3 id=&#34;toc_3&#34;&gt;本地端口转发( Local Port Forwarding)&lt;/h3&gt;
+
+&lt;h4 id=&#34;toc_4&#34;&gt;背景&lt;/h4&gt;
+
+&lt;p&gt;公司从安全性上考虑, 通常会隔离网络, 不允许直接访问, 简单拓扑如下:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;          host2
+host1 --&amp;gt;  X  --&amp;gt; host3
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;host1 无法直接访问 host3, host1 可以访问 host2, host2 可以访问 host3.&lt;br /&gt;
+可以通过 ssh 的 &lt;strong&gt;本地端口转发&lt;/strong&gt; 来进行&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;ssh -L 2121:host3:21 user@host2
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;本地端口转发&lt;/strong&gt; 三个参数值表示:  本机绑定端口:目标主机:目标主机端口,  其中&lt;strong&gt;本机绑定端口&lt;/strong&gt;意思是会在本机启动一个&lt;strong&gt;本地监听的端口&lt;/strong&gt;.&lt;br /&gt;
+上面的命令实现的效果就是, 我们只要连接上 host1的2121 端口, 就等于连接上了 host2的21端口.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;ftp localhost:2121
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;本地端口转发&lt;/strong&gt; 让 host1 和 host2 直接形成 &lt;strong&gt;SSH 隧道&lt;/strong&gt;&lt;br /&gt;
+注意其中&lt;strong&gt;目标主机&lt;/strong&gt;的机器名或者 ip 是香港 host3 而言的.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;ssh -L 5900:localhost:5900  host2
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;表示将本机的5900端口绑定到 host3的5900 端口. localhost 是想对 host2 而言.&lt;/p&gt;
+
+&lt;p&gt;本地端口转发的意思是:  绑定本地机器端口, 进行数据转发.&lt;/p&gt;
+
+&lt;h3 id=&#34;toc_5&#34;&gt;远程端口转发(Remote Port Forwarding)&lt;/h3&gt;
+
+&lt;p&gt;远程端口转发: 对应就是 绑定远程机器端口, 进行数据转发.&lt;/p&gt;
+
+&lt;h4 id=&#34;toc_6&#34;&gt;背景&lt;/h4&gt;
+
+&lt;p&gt;公司又从安全性上考虑, host2 通过 NAT 出去可以访问 host1,  host1 机器无法访问 host2, 同时 host2 和 host3 机器间能够相互访问.   我们希望能够 host1 直接访问 host3&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;host1 &amp;lt;- host2
+       |     |
+       X     |
+       |     |
+       +---host3
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;解决的办法是:   既然 host2 可以连接 host1, 那么就从 host2上建立也 host1的连接, 然后在 host1上使用这个连接即可.&lt;br /&gt;
+在 host2上执行&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    ssh -R  2121:host3:21 host1
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;远程端口转发三个参数含义:  远程机器绑定端口: 目标主机:目标主机(Listen) 端口. 上面命令的意思是: 让 host1监听自己的2121 端口, 然后将所有的数据, 从 host2 转发到 host3 的21端口.&lt;br /&gt;
+绑定之后, 可以在 host1 上直连 host3.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;ftp localhost:2121
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h5 id=&#34;toc_7&#34;&gt;注意点&lt;/h5&gt;
+
+&lt;ol&gt;
+&lt;li&gt;2121 远程机器端口会在 ssh 运行之后, 自动在 host1 机器上启动.&lt;/li&gt;
+&lt;li&gt;localhost 是针对host2 而言. 对比 Local 和 Remote 本质上 &lt;strong&gt;localhost&lt;/strong&gt; 是针对 proxy 角色而言的,  在 local forwarding proxy 是:  host2,  remote 的 proxy 也是 host2&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h4 id=&#34;toc_8&#34;&gt;典型应用场景&lt;/h4&gt;
+
+&lt;p&gt;你在本机上开发了一个 web (9000端口) , 然后你想向你的朋友演示, 但是你没有外网 ip, 所有不可能直接访问.&lt;br /&gt;
+幸运的是你有一个外网可以访问的 VPS(3000端口), 这时候的解决方案是:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    ssh -R 3000:loclhost:9000 user@vps
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;默认情况下, ssh 是不会允许远程机器来进行端口转发.  需要在 &lt;strong&gt;host1&lt;/strong&gt;上增加一行配置,&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    vim /etc/ssh/sshd_config
+    GatewayPorts yes
+    sudo service ssh restart 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;toc_9&#34;&gt;SSH 有用参数&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;-N Do not execute a remote command.  This is useful for just forwarding
+         ports (protocol version 2 only).
+-T 不为这个连接分配 TTY
+-f      Requests ssh to go to background just before command execution.  This
+         is useful if ssh is going to ask for passwords or passphrases, but
+         the user wants it in the background.
+         表示SSH连接成功后，转入后台运行。这样一来，你就可以在不中断SSH连接的情况下，在本地shell中执行其他操作。
+
+-g      Allows remote hosts to connect to local forwarded ports. 
+
+-n      Redirects stdin from /dev/null (actually, prevents reading from stdin).  This must be used when ssh is run in the background.  A common trick
+         is to use this to run X11 programs on a remote machine.  For example, ssh -n shadows.cs.hut.fi emacs &amp;amp; will start an emacs on shad-
+         ows.cs.hut.fi, and the X11 connection will be automatically forwarded over an encrypted channel.  The ssh program will be put in the back-
+         ground.  (This does not work if ssh needs to ask for a password or passphrase; see also the -f option.)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;比较常见选项组合:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;-nNT
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;toc_10&#34;&gt;Reference&lt;/h4&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://blog.trackets.com/2014/05/17/ssh-tunnel-local-and-remote-port-forwarding-explained-with-examples.html&#34;&gt;SSH Tunnel - Local and Remote Port Forwarding Explained With Examples&lt;/a&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>fileserver</title>
+      <link>http://yujinqiu.github.io/posts/fileserver/</link>
+      <pubDate>Sun, 23 Nov 2014 10:43:43 CST</pubDate>
+      
+      <guid>http://yujinqiu.github.io/posts/fileserver/</guid>
+      <description>
+
+&lt;h1 id=&#34;toc_0&#34;&gt;文件服务器&lt;/h1&gt;
+
+&lt;h2 id=&#34;toc_1&#34;&gt;背景&lt;/h2&gt;
+
+&lt;p&gt;我们经常需要下载远程的一台服务器的一个文件, 比如临时线上的某台服务器的一个日志文件需要下载到本地 windows, 没有办法使用 scp, 搭建一个 ftp 又太费劲.&lt;/p&gt;
+
+&lt;h3 id=&#34;toc_2&#34;&gt;解决方案&lt;/h3&gt;
+
+&lt;h4 id=&#34;toc_3&#34;&gt;python&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code&gt;python -m SimpleHTTPServer 8080
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;优点是: 简单 缺点是: 可定制性差.  可能你中间经过代理转发, 需要通过特殊的前缀来区分.&lt;/p&gt;
+
+&lt;h4 id=&#34;toc_4&#34;&gt;golang&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code&gt;pakcage main
+
+import (
+    &amp;quot;net/http&amp;quot;
+    &amp;quot;log&amp;quot;
+)
+
+func main () {
+    fileHander := http.FileServer(http.Dir(&amp;quot;/tmp&amp;quot;))
+    log.Fatal(http.Handle(&amp;quot;/tmpfiles/&amp;quot;, http.StripPrefix(&amp;quot;/tmpfiles/&amp;quot;, fileHandler))))
+}
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
     
     <item>
       <title>CliDraft</title>

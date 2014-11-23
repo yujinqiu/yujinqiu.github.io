@@ -2,14 +2,13 @@
 
 
 
-
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8">
     <base href="http://yujinqiu.github.io">
-    <title> Golang </title>
-    <link rel="canonical" href="http://yujinqiu.github.io/categories/golang/">
+    <title> fileserver </title>
+    <link rel="canonical" href="http://yujinqiu.github.io/posts/fileserver/">
     
 
 <link rel="stylesheet" href="/css/poole.css">
@@ -54,71 +53,84 @@
         <h3 class="masthead-title">
           <a href="/posts" title="Blog">Blog Posts</a>
         </h3>
+        <hr>
       </div>
     </div>
 
-  
+    
     <div class="container content">
-      <h1 class="post-title">Recent Posts</h1>
+      <div class="post-tile-meta">
+        <h1 class="post-title">fileserver</h1>
+        <p> Sun Nov 23, 2014 
+<div class="container">
+  <ul class="catlist">
+    <li><em>Categories: </em></li>
+    
+      <li><a href="/categories/golang">golang</a> </li>
+    
+  </ul>
+</div>
+</p>
+      </div>
         <section id="main">
-          <div>
-            <h5><a href="/categories">Full Category Index</a></h5>
-            <h2>Posts in &ldquo;Golang&rdquo;</h2>
-            
-            
+          
 
-<article class="post">
-    <header>
-      <h2><a href='http://yujinqiu.github.io/posts/fileserver/'> fileserver</a> </h2>
-      <div class="meta">Sun, Nov 23, 2014</div>
-    </header>
+<h1 id="toc_0">文件服务器</h1>
 
-    <h1>文件服务器</h1>
-
-<h2>背景</h2>
+<h2 id="toc_1">背景</h2>
 
 <p>我们经常需要下载远程的一台服务器的一个文件, 比如临时线上的某台服务器的一个日志文件需要下载到本地 windows, 没有办法使用 scp, 搭建一个 ftp 又太费劲.</p>
 
-<h3>解决方案</h3>
+<h3 id="toc_2">解决方案</h3>
 
-<h4>python</h4>
+<h4 id="toc_3">python</h4>
 
 <pre><code>python -m SimpleHTTPServer 8080
 </code></pre>
 
-    <footer style="text-align:right; ">
-        <a href='http://yujinqiu.github.io/posts/fileserver/'><nobr>Read more →</nobr></a>
-    </footer>
-    <hr/>
-</article>
+<p>优点是: 简单 缺点是: 可定制性差.  可能你中间经过代理转发, 需要通过特殊的前缀来区分.</p>
 
-            
-            
+<h4 id="toc_4">golang</h4>
 
-<article class="post">
-    <header>
-      <h2><a href='http://yujinqiu.github.io/posts/hugo_based_blog/'> Moving to Hugo</a> </h2>
-      <div class="meta">Thu, May 29, 2014</div>
-    </header>
+<pre><code>pakcage main
 
-    <p>I decided that I should blog under my danmux.com domain - I often use danmux around the internet, sometimes danmull, but normally danmux for tech type things, so it makes sense.</p>
+import (
+    &quot;net/http&quot;
+    &quot;log&quot;
+)
 
-<p><strong>danmux</strong> because the <strong>x</strong> has always been a notable part of my name - and mux reminds me of my electrical engineering days, and I think humans multiplex all the time, there it is.</p>
+func main () {
+    fileHander := http.FileServer(http.Dir(&quot;/tmp&quot;))
+    log.Fatal(http.Handle(&quot;/tmpfiles/&quot;, http.StripPrefix(&quot;/tmpfiles/&quot;, fileHandler))))
+}
+</code></pre>
 
-    <footer style="text-align:right; ">
-        <a href='http://yujinqiu.github.io/posts/hugo_based_blog/'><nobr>Read more →</nobr></a>
-    </footer>
-    <hr/>
-</article>
-
-            
-          </div>
         </section>
-
+  
     </div>
   </div>
 
   <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+
+  
+
+<div class="container">
+  <hr />
+  
+    <span class="left">
+    &nbsp; <em>&laquo; Previous:</em> <a class="next" href="http://yujinqiu.github.io/posts/SSHDraft/">SSHDraft</a>
+    </span>
+  
+
+  
+    <span class="right">
+    <em>Next: </em><a class="next" href="http://yujinqiu.github.io/posts/CliDraft/"> &nbsp; CliDraft</a> &raquo;
+    </span>
+  
+</div>
+
+  <br />
+
 
   
   

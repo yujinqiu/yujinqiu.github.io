@@ -68,6 +68,78 @@
 
 <article class="post">
     <header>
+      <h2><a href='http://yujinqiu.github.io/posts/SSHDraft/'> SSHDraft</a> </h2>
+      <div class="meta">Sun, Nov 23, 2014</div>
+    </header>
+
+    <h2>Black Magic Of SSH</h2>
+
+<h3>绑定本地端口</h3>
+
+<p>ssh 通过加密传输数据, 特别适合**国情, 加入我们要让8080 端口的数据, 全部通过 SSH  加密转发到远程主机上</p>
+
+<pre><code>ssh  -D 8080 user@host
+</code></pre>
+
+<h4>应用场景</h4>
+
+<p>在咖啡厅等公共场所, 为了上网安全, 可以使用 ssh动态转发来保证安全.</p>
+
+<h3>本地端口转发( Local Port Forwarding)</h3>
+
+<h4>背景</h4>
+
+<p>公司从安全性上考虑, 通常会隔离网络, 不允许直接访问, 简单拓扑如下:</p>
+
+<pre><code>          host2
+host1 --&gt;  X  --&gt; host3
+</code></pre>
+
+<p>host1 无法直接访问 host3, host1 可以访问 host2, host2 可以访问 host3.<br />
+可以通过 ssh 的 <strong>本地端口转发</strong> 来进行</p>
+
+<pre><code>ssh -L 2121:host3:21 user@host2
+</code></pre>
+
+    <footer style="text-align:right; ">
+        <a href='http://yujinqiu.github.io/posts/SSHDraft/'><nobr>Read more →</nobr></a>
+    </footer>
+    <hr/>
+</article>
+
+            
+            
+
+<article class="post">
+    <header>
+      <h2><a href='http://yujinqiu.github.io/posts/fileserver/'> fileserver</a> </h2>
+      <div class="meta">Sun, Nov 23, 2014</div>
+    </header>
+
+    <h1>文件服务器</h1>
+
+<h2>背景</h2>
+
+<p>我们经常需要下载远程的一台服务器的一个文件, 比如临时线上的某台服务器的一个日志文件需要下载到本地 windows, 没有办法使用 scp, 搭建一个 ftp 又太费劲.</p>
+
+<h3>解决方案</h3>
+
+<h4>python</h4>
+
+<pre><code>python -m SimpleHTTPServer 8080
+</code></pre>
+
+    <footer style="text-align:right; ">
+        <a href='http://yujinqiu.github.io/posts/fileserver/'><nobr>Read more →</nobr></a>
+    </footer>
+    <hr/>
+</article>
+
+            
+            
+
+<article class="post">
+    <header>
       <h2><a href='http://yujinqiu.github.io/posts/CliDraft/'> CliDraft</a> </h2>
       <div class="meta">Wed, Nov 19, 2014</div>
     </header>

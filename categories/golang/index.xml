@@ -7,7 +7,47 @@
     
     
     
-    <updated>Thu, 29 May 2014 00:00:00 UTC</updated>
+    <updated>Sun, 23 Nov 2014 10:43:43 CST</updated>
+    
+    <item>
+      <title>fileserver</title>
+      <link>http://yujinqiu.github.io/posts/fileserver/</link>
+      <pubDate>Sun, 23 Nov 2014 10:43:43 CST</pubDate>
+      
+      <guid>http://yujinqiu.github.io/posts/fileserver/</guid>
+      <description>
+
+&lt;h1 id=&#34;toc_0&#34;&gt;文件服务器&lt;/h1&gt;
+
+&lt;h2 id=&#34;toc_1&#34;&gt;背景&lt;/h2&gt;
+
+&lt;p&gt;我们经常需要下载远程的一台服务器的一个文件, 比如临时线上的某台服务器的一个日志文件需要下载到本地 windows, 没有办法使用 scp, 搭建一个 ftp 又太费劲.&lt;/p&gt;
+
+&lt;h3 id=&#34;toc_2&#34;&gt;解决方案&lt;/h3&gt;
+
+&lt;h4 id=&#34;toc_3&#34;&gt;python&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code&gt;python -m SimpleHTTPServer 8080
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;优点是: 简单 缺点是: 可定制性差.  可能你中间经过代理转发, 需要通过特殊的前缀来区分.&lt;/p&gt;
+
+&lt;h4 id=&#34;toc_4&#34;&gt;golang&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code&gt;pakcage main
+
+import (
+    &amp;quot;net/http&amp;quot;
+    &amp;quot;log&amp;quot;
+)
+
+func main () {
+    fileHander := http.FileServer(http.Dir(&amp;quot;/tmp&amp;quot;))
+    log.Fatal(http.Handle(&amp;quot;/tmpfiles/&amp;quot;, http.StripPrefix(&amp;quot;/tmpfiles/&amp;quot;, fileHandler))))
+}
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
     
     <item>
       <title>Moving to Hugo</title>
