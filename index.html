@@ -68,15 +68,59 @@
 
 <article class="post">
     <header>
+      <h2><a href='http://yujinqiu.github.io/posts/ParallelDraft/'> CliDraft</a> </h2>
+      <div class="meta">Tue, Nov 25, 2014</div>
+    </header>
+
+    <h2>#Parallel(并行你的工作2)</h2>
+
+<p>今天看到看到一篇介绍Parallel 的文章<a href="http://www.rankfocus.com/use-cpu-cores-linux-commands/">Use multiple CPU Cores with your Linux commands — awk, sed, bzip2, grep, wc, etc.</a>, 感觉和实际工作的没有太大的帮助, 因为平时其实很少去压缩和解压缩超大的文件. 因此下面主要结合个人的工作经验,总结几条Parallel的工作.
+下面看一下Parallel的图片,感觉有点眼花,很有心理学的图片效果, 相信我Parallel 是一个值得你学习的命令, 所谓事半功倍说的就是它.</p>
+
+<p><img src="http://www.gnu.org/software/parallel/logo-gray+black300.png" alt="" />
+</p>
+
+<h2>典型场景1</h2>
+
+<p>在日常运维工作中,为了管理大量的机器(1k,1w台机器)我们通常搭建一台中心控制机器, 该机器和线上所有的机器有<a href="http://todo">信任关系</a>, 因此常见的工作就是在中心控制机器上顺序登录各台机器执行命令. 举一个简单的例子, 获取机器的启动时间 <code>uptime</code> . 考虑到机器的规模,假设是1万台, 我们基本上跑一下要消耗3-5min.</p>
+
+<p>为了解决上面的问题,我曾经学习了一下 <code>xargs</code> 命令, 已经能够基本上满足我的要求. 假设机器的列表在 machines 文件内, 那么通过以下命令</p>
+
+<p><code>cat machines | xargs -i ssh {} &quot; uptime &quot;</code></p>
+
+<p>上面的命令是逐台机器执行, 好处就是可以省略在bash 里边输入各种 for 循环. 上面的效果和下面的命令一致
+&gt;
+for host in $( &lt; machines ) ; do ssh ${host} &ldquo; uptime &rdquo; ;done</p>
+
+<p>如果需要并行执行应该怎么搞? 答案很简单翻一下 xargs 的man 手册你会发现有一个<code>-P</code> 选项, 表示并发度
+<code>-P 0</code> 表示全部并发.  -P 10 表示10台并发 (<strong>在运维工程中通常需要考虑控制并发度,特别是在日志下载的时候,因为进程会出现宽度被打满的case,要特别注意</strong>)
+因此</p>
+
+<p><code>cat machines | xargs -i -P 0 ssh {} &quot; uptime &quot;</code></p>
+
+<p>就能实现全部并发. 上面的命令你执行之后会发现由于是并行执行, 因此输出基本上是乱序的. 如果某一台机器执行错误,那么基本上很难定位到是哪台.  所以个人认为 xargs 在进行简单的并行,比如批量重启服务,分发大量小文件还是蛮不错的. 我最常用的命令组合是,来实现快速的文件分发</p>
+
+    <footer style="text-align:right; ">
+        <a href='http://yujinqiu.github.io/posts/ParallelDraft/'><nobr>Read more →</nobr></a>
+    </footer>
+    <hr/>
+</article>
+
+            
+            
+
+<article class="post">
+    <header>
       <h2><a href='http://yujinqiu.github.io/posts/SSHDraft/'> SSHDraft</a> </h2>
       <div class="meta">Sun, Nov 23, 2014</div>
     </header>
 
     <h2>Black Magic Of SSH</h2>
 
-<h3>绑定本地端口</h3>
+<h3>绑定本地端口( Dynamic Port Forwarding)</h3>
 
-<p>ssh 通过加密传输数据, 特别适合**国情, 加入我们要让8080 端口的数据, 全部通过 SSH  加密转发到远程主机上</p>
+<p>其实本质上就是一个 SOCKS5 proxy<br />
+ssh 通过加密传输数据, 特别适合**国情, 加入我们要让8080 端口的数据, 全部通过 SSH  加密转发到远程主机上</p>
 
 <pre><code>ssh  -D 8080 user@host
 </code></pre>
@@ -330,22 +374,6 @@ without it.</p>
     Prelude There is awesome coverage in go. You can read about it here. But also it has some limitations. For example let&rsquo;s assume that we have next code structure: src ├── pkg1 │ ├── pkg11 │ └── pkg12 └── pkg2 ├── pkg21 └── pkg22 pkg2, pkg21, pkg22 uses pkg1, pkg11 and pkg12 in different cases. So question is &ndash; how we can compute overall coverage for our code base? Generating cover profiles Let&rsquo;s consider some possible go test commands with -coveprofile: go test -coverprofile=cover.out pkg2 tests run only for pkg1 and cover profile generated only for pkg2 go test -coverprofile=cover.out -coverpkg=./...
     <footer style="text-align:right; ">
         <a href='http://yujinqiu.github.io/posts/multicover/'><nobr>Read more →</nobr></a>
-    </footer>
-    <hr/>
-</article>
-
-            
-            
-
-<article class="post">
-    <header>
-      <h2><a href='http://yujinqiu.github.io/posts/hugoblog/'> Deploying blog with docker and hugo</a> </h2>
-      <div class="meta">Sun, May 4, 2014</div>
-    </header>
-
-    Prelude Recently I moved my jabber-server to DigitalOcean VPS. Run Prosody in docker was so easy, that I decided create this blog. And of course deploy it with docker! Content At first we need container with templates and content for blog generation. I used next dockerfile: FROM debian:jessie RUN apt-get update &amp;&amp; apt-get install --no-install-recommends -y ca-certificates git-core RUN git clone http://github.com/LK4D4/lk4d4.darth.io.git /src VOLUME [&quot;/src&quot;] WORKDIR /src ENTRYPOINT [&quot;git&quot;] CMD [&quot;pull&quot;] There is no magic here: just clone repo to /src (it will be used below), and update it on container start.
-    <footer style="text-align:right; ">
-        <a href='http://yujinqiu.github.io/posts/hugoblog/'><nobr>Read more →</nobr></a>
     </footer>
     <hr/>
 </article>

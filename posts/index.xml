@@ -7,7 +7,271 @@
     
     
     
-    <updated>Sun, 23 Nov 2014 11:47:25 CST</updated>
+    <updated>Tue, 25 Nov 2014 21:36:12 CST</updated>
+    
+    <item>
+      <title>CliDraft</title>
+      <link>http://yujinqiu.github.io/posts/ParallelDraft/</link>
+      <pubDate>Tue, 25 Nov 2014 21:36:12 CST</pubDate>
+      
+      <guid>http://yujinqiu.github.io/posts/ParallelDraft/</guid>
+      <description>
+
+&lt;h2 id=&#34;toc_0&#34;&gt;#Parallel(并行你的工作2)&lt;/h2&gt;
+
+&lt;p&gt;今天看到看到一篇介绍Parallel 的文章&lt;a href=&#34;http://www.rankfocus.com/use-cpu-cores-linux-commands/&#34;&gt;Use multiple CPU Cores with your Linux commands — awk, sed, bzip2, grep, wc, etc.&lt;/a&gt;, 感觉和实际工作的没有太大的帮助, 因为平时其实很少去压缩和解压缩超大的文件. 因此下面主要结合个人的工作经验,总结几条Parallel的工作.
+下面看一下Parallel的图片,感觉有点眼花,很有心理学的图片效果, 相信我Parallel 是一个值得你学习的命令, 所谓事半功倍说的就是它.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://www.gnu.org/software/parallel/logo-gray+black300.png&#34; alt=&#34;&#34; /&gt;
+&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_1&#34;&gt;典型场景1&lt;/h2&gt;
+
+&lt;p&gt;在日常运维工作中,为了管理大量的机器(1k,1w台机器)我们通常搭建一台中心控制机器, 该机器和线上所有的机器有&lt;a href=&#34;http://todo&#34;&gt;信任关系&lt;/a&gt;, 因此常见的工作就是在中心控制机器上顺序登录各台机器执行命令. 举一个简单的例子, 获取机器的启动时间 &lt;code&gt;uptime&lt;/code&gt; . 考虑到机器的规模,假设是1万台, 我们基本上跑一下要消耗3-5min.&lt;/p&gt;
+
+&lt;p&gt;为了解决上面的问题,我曾经学习了一下 &lt;code&gt;xargs&lt;/code&gt; 命令, 已经能够基本上满足我的要求. 假设机器的列表在 machines 文件内, 那么通过以下命令&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;cat machines | xargs -i ssh {} &amp;quot; uptime &amp;quot;&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;上面的命令是逐台机器执行, 好处就是可以省略在bash 里边输入各种 for 循环. 上面的效果和下面的命令一致
+&amp;gt;
+for host in $( &amp;lt; machines ) ; do ssh ${host} &amp;ldquo; uptime &amp;rdquo; ;done&lt;/p&gt;
+
+&lt;p&gt;如果需要并行执行应该怎么搞? 答案很简单翻一下 xargs 的man 手册你会发现有一个&lt;code&gt;-P&lt;/code&gt; 选项, 表示并发度
+&lt;code&gt;-P 0&lt;/code&gt; 表示全部并发.  -P 10 表示10台并发 (&lt;strong&gt;在运维工程中通常需要考虑控制并发度,特别是在日志下载的时候,因为进程会出现宽度被打满的case,要特别注意&lt;/strong&gt;)
+因此&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;cat machines | xargs -i -P 0 ssh {} &amp;quot; uptime &amp;quot;&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;就能实现全部并发. 上面的命令你执行之后会发现由于是并行执行, 因此输出基本上是乱序的. 如果某一台机器执行错误,那么基本上很难定位到是哪台.  所以个人认为 xargs 在进行简单的并行,比如批量重启服务,分发大量小文件还是蛮不错的. 我最常用的命令组合是,来实现快速的文件分发&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;
+cat machine | xargs -i -P 0 rsync -HavP -e ssh  FILE {}:PATH
+&lt;/code&gt;
+** 对于错误问题定位xargs 还是不能解决, 因此需要Parallel 来解决.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_2&#34;&gt;典型场景2&lt;/h2&gt;
+
+&lt;p&gt;或许上面的case 还不具有说服力, 那就说说Parallel 解决我最头疼的事情.
+也是中控+N 台服务的模型, 只是这次比较恶心的是在N 台服务其中部署了 1 个模块假设名称为 nginx, 为了避免资源浪费你在这N台机器上部署了M个nginx实例. 需要做的事情是然后你需要完成这样的一件间的任务: 更新所有nginx的配置文件, 然后重新reload配置文件.&lt;br /&gt;
+通常比较高效的做法是:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;将nginx.conf 文件发送所有的机器上&lt;/li&gt;
+&lt;li&gt;编写一个nginx_reload.sh 脚本, 也发送到所有的机器上.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;写一个脚本 &lt;strong&gt;nginx_reload.sh&lt;/strong&gt; 类似如下:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;1. cat HOSTS | xargs -i -P 0 rsync -HavP -e ssh nginx.conf  ${HOME}/tmp/
+2.
+for nginx in `ls -d nginx-* `
+do
+    cp -v $HOME/tmp/nginx.conf $HOME/${nginx}/conf/ ; 
+    $HOME/${nginx}/sbin/nginx -s reload ; 
+    sleep 1;
+done
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;该方式能够以较小的代价来实现复杂的任务, 但是&lt;strong&gt;问题是: 需要多发送一次nginx_reload.sh, 而且有时候为了线上的部署清晰, 通常还需要删除 nginx_reload.sh, 还需要在运行一次&lt;/strong&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_3&#34;&gt;do it in Parallel way&lt;/h2&gt;
+
+&lt;p&gt;通过Parallel 能够十分方便完成上面的内容.&lt;/p&gt;
+
+&lt;p&gt;在编写好&lt;strong&gt;nginx_reload.sh&lt;/strong&gt; 之后利用&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;
+parallel --sshlogin server1,server2,... --tag --basefile $HOME/tmep/nginx_reload.sh --cleanup --onall sh {} ::: $HOME/tmep/nginx_reload.sh 
+&lt;/code&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_4&#34;&gt;Parallel 入门&lt;/h2&gt;
+
+&lt;h3 id=&#34;toc_5&#34;&gt;安装&lt;/h3&gt;
+
+&lt;p&gt;在&lt;a href=&#34;http://www.gnu.org/software/parallel/&#34;&gt;Parallel官网下载&lt;/a&gt;, 安装里边的说明进行安装即可.
+**在安装之后, 没有想到原来Parallel 居然是perl 写的 **&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;➜  bin git:(master) file parallel
+
+parallel: a perl script text executable
+
+➜  bin git:(master)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;toc_6&#34;&gt;常用的选项&lt;/h3&gt;
+
+&lt;p&gt;通常很多新同学在学习新命令的时候,会抱怨命令的选项太多, 其实根本就没有必要记住那么多, 记住最常用的就可以了. 剩下的通过笔记或者man 来查看就可以. 以下是我觉得笔记有用的选项:&lt;/p&gt;
+
+&lt;h4 id=&#34;toc_7&#34;&gt;运行的目标机器&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code&gt;-S [ncpu/]sshlogin[,[ncpu/]sshlogin[,...]]
+--sshlogin [ncpu/]sshlogin[,[ncpu/]sshlogin[,...]]
+            Distribute jobs to remote computers. The jobs will be run on a list of
+            remote computers.  GNU parallel will determine the number of CPU cores on
+            the remote computers and run the number of jobs as specified by -j.  If
+            the number ncpu is given GNU parallel will use this number for number of
+            CPU cores on the host. Normally ncpu will not be needed.
+
+            An sshlogin is of the form:
+
+              [sshcommand [options]][username@]hostname
+
+            The sshlogin must not require a password.
+
+            The sshlogin &#39;:&#39; is special, it means &#39;no ssh&#39; and will therefore run on
+            the local computer.
+
+            The sshlogin &#39;..&#39; is special, it read sshlogins from
+            ~/.parallel/sshloginfile
+
+            The sshlogin &#39;-&#39; is special, too, it read sshlogins from stdin (standard
+            input).
+
+            To specify more sshlogins separate the sshlogins by comma or repeat the
+            options multiple times.
+
+            For examples: see --sshloginfile.
+
+            The remote host must have GNU parallel installed.
+
+            --sshlogin is known to cause problems with -m and -X.
+
+            --sshlogin is often used with --transfer, --return, --cleanup, and --trc.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;toc_8&#34;&gt;清理文件&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code&gt;       --cleanup
+            Remove transferred files. --cleanup will remove the transferred files on
+            the remote computer after processing is done.
+
+              find log -name &#39;*gz&#39; | parallel \
+                --sshlogin server.example.com --transfer --return {.}.bz2 \
+                --cleanup &amp;quot;zcat {} | bzip -9 &amp;gt;{.}.bz2&amp;quot;
+
+            With --transfer the file transferred to the remote computer will be
+            removed on the remote computer.  Directories created will not be removed -
+            even if they are empty.
+
+            With --return the file transferred from the remote computer will be
+            removed on the remote computer.  Directories created will not be removed -
+            even if they are empty.
+
+            --cleanup is ignored when not used with --transfer or --return.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;toc_9&#34;&gt;命令输出打tag&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code&gt;         --tag    
+            Tag lines with arguments. Each output line will be prepended with the
+            arguments and TAB (\t). When combined with --onall or --nonall the lines
+            will be prepended with the sshlogin instead.
+
+            --tag is ignored when using -u.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;toc_10&#34;&gt;设置并发度&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code&gt;    --jobs N
+    -j N
+    --max-procs N
+    -P N     Number of jobslots. Run up to N jobs in parallel.  0 means as many as
+            possible. Default is 100% which will run one job per CPU core.
+
+            If --semaphore is set default is 1 thus making a mutex.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;toc_11&#34;&gt;分布式计算&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;    --transfer (alpha testing)
+Transfer files to remote computers. --transfer is used with --sshlogin when the arguments are files and should be transferred to the remote computers. The files will be transferred using rsync and will be put relative to the default login dir.
+ E.g.
+    echo foo/bar.txt | parallel \ 
+        --sshlogin server.example.com --transfer wc
+This will transfer the file foo/bar.txt to the computer server.example.com to the file $HOME/foo/bar.txt before running wc foo/bar.txt on server.example.com.
+echo /tmp/foo/bar.txt | parallel  --sshlogin server.example.com --transfer wc
+This will transfer the file foo/bar.txt to the computer server.example.com to the file /tmp/foo/bar.txt before running wc /tmp/foo/bar.txt on server.example.com.
+
+--transfer is often used with --return and --cleanup.
+--transfer is ignored when used with --sshlogin : or when not used with --sshlogin.
+--trc filename
+Transfer, Return, Cleanup. Short hand for:
+--transfer--return filename —cleanup
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;通过组合上面的&amp;ndash;cleanup 和 &amp;ndash;return 选项我们可以很容易实现自动压缩下载&lt;a href=&#34;http://www.rankfocus.com/automagically-compress-file-remotely-downloading-scprsync/&#34;&gt;来源&lt;/a&gt;.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;function scp_gzip {
+    parallel -S $1 --cleanup --return {/}.gz &amp;quot;gzip --best {} -c &amp;gt; {/}.gz&amp;quot; ::: $2
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;{/} 表示文件的dirname , 假设文件名为 foo.sh  那么 dirname 就是 foo
+&amp;ndash;return {/} 表示从server端 rsync 到本地.
+&amp;ndash;cleanup 表示rsync 完成之后,会删除 server端的 .gz 文件.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;::: 表示:::后面内容是前面的{}的参数. 
+parallel --tag  traceroute {} ::: iteye.com v2ex.com
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&amp;ndash;tag 能够针对每个输出进行标记, 能够帮助我们了解输出的来源.&lt;/p&gt;
+
+&lt;h3 id=&#34;toc_12&#34;&gt;常见用法&lt;/h3&gt;
+
+&lt;h4 id=&#34;toc_13&#34;&gt;批量并行下载文件&lt;/h4&gt;
+
+&lt;p&gt;假设有一批文件(file1..100)需要下载, 此时我们当然希望越快越好. 可以采用Parallel 轻松解决.
+将需要下载的文件写入 jobs&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;wget file1
+wget file2
+......
+wget file100
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;parallel -j 0 &amp;lt; jobs&lt;/code&gt;&lt;/p&gt;
+
+&lt;h4 id=&#34;toc_14&#34;&gt;替代两层循环&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code&gt;(
+for gender in M F ; 
+do    
+    for size in S M L XL XXL ; 
+    do      
+        echo $gender $size    
+    done  
+done
+) | sort
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;可以通过以下命令轻松搞定, 懒人总是希望write less , do more.&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;parallel echo {} {} ::: M F ::: S M L XL XXL | sort&lt;/code&gt;&lt;/p&gt;
+
+&lt;h4 id=&#34;toc_15&#34;&gt;解决ls 等命令参数过多问题.&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code&gt;When moving a lot of files like this: mv *.log destdir you will sometimes get the error:
+
+bash: /bin/mv: Argument list too long
+
+because there are too many files. You can instead do:
+
+ls | grep -E &#39;\.log$&#39; | parallel mv {} destdir
+
+This will run mv for each file. It can be done faster if mv gets as many arguments that will fit on the line:
+
+ls | grep -E &#39;\.log$&#39; | parallel -m mv {} destdir
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;toc_16&#34;&gt;远程执行命令&lt;/h4&gt;
+
+&lt;p&gt;如最开始的case 讲的那样.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    parallel -S server1,server2,...,server N --tag --cleanup --basefile $HOME/tmp/nginx_reload.sh &#39;sh {}&#39; ::: $HOME/tmp/nginx_reload.sh
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
     
     <item>
       <title>SSHDraft</title>
@@ -19,9 +283,10 @@
 
 &lt;h2 id=&#34;toc_0&#34;&gt;Black Magic Of SSH&lt;/h2&gt;
 
-&lt;h3 id=&#34;toc_1&#34;&gt;绑定本地端口&lt;/h3&gt;
+&lt;h3 id=&#34;toc_1&#34;&gt;绑定本地端口( Dynamic Port Forwarding)&lt;/h3&gt;
 
-&lt;p&gt;ssh 通过加密传输数据, 特别适合**国情, 加入我们要让8080 端口的数据, 全部通过 SSH  加密转发到远程主机上&lt;/p&gt;
+&lt;p&gt;其实本质上就是一个 SOCKS5 proxy&lt;br /&gt;
+ssh 通过加密传输数据, 特别适合**国情, 加入我们要让8080 端口的数据, 全部通过 SSH  加密转发到远程主机上&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;ssh  -D 8080 user@host
 &lt;/code&gt;&lt;/pre&gt;
@@ -111,7 +376,33 @@ host1 --&amp;gt;  X  --&amp;gt; host3
     sudo service ssh restart 
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h3 id=&#34;toc_9&#34;&gt;SSH 有用参数&lt;/h3&gt;
+&lt;h3 id=&#34;toc_9&#34;&gt;SSH Agent Forwarding&lt;/h3&gt;
+
+&lt;h4 id=&#34;toc_10&#34;&gt;典型应用场景&lt;/h4&gt;
+
+&lt;p&gt;本机 laptop 和 github.com 建立了信任关系, 可以直接 ssh 上去,  然后登陆自己的 vps, 希望能够在 vps 上登陆 github.com , 正常情况是把 vps 的 public key 放到 github.com 但是这样有点麻烦, 可以直接用下面:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;ssh -A  vpsserver  #会把本地的 ssh private key 带过去
+vpsservr$  ssh github.com
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;toc_11&#34;&gt;SSH 别名&lt;/h3&gt;
+
+&lt;h4 id=&#34;toc_12&#34;&gt;典型应用场景&lt;/h4&gt;
+
+&lt;p&gt;自己手上有几台机器, 名字都比较长, 可以采用 ssh 别名来进行.&lt;br /&gt;
+&lt;code&gt;~/.ssh/config&lt;/code&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Host AliasName
+Hostname bastin.east.doc.example.com
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;toc_13&#34;&gt;SSH 嵌套&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;ssh -t hostA  ssh -t hostB ssh -t hostC
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;toc_14&#34;&gt;SSH 有用参数&lt;/h3&gt;
 
 &lt;pre&gt;&lt;code&gt;-N Do not execute a remote command.  This is useful for just forwarding
          ports (protocol version 2 only).
@@ -134,7 +425,7 @@ host1 --&amp;gt;  X  --&amp;gt; host3
 &lt;pre&gt;&lt;code&gt;-nNT
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h4 id=&#34;toc_10&#34;&gt;Reference&lt;/h4&gt;
+&lt;h4 id=&#34;toc_15&#34;&gt;Reference&lt;/h4&gt;
 
 &lt;p&gt;&lt;a href=&#34;http://blog.trackets.com/2014/05/17/ssh-tunnel-local-and-remote-port-forwarding-explained-with-examples.html&#34;&gt;SSH Tunnel - Local and Remote Port Forwarding Explained With Examples&lt;/a&gt;&lt;/p&gt;
 </description>
@@ -337,6 +628,24 @@ autojump ZSH 需要&lt;strong&gt;compinit&lt;/strong&gt;模块来支持, 配置�
 &lt;pre&gt;&lt;code&gt;    autoload -U compinit &amp;amp;&amp;amp; compinit
 &lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
 &lt;/ol&gt;
+
+&lt;h3 id=&#34;toc_22&#34;&gt;PIPE 命令查看出错状态&lt;/h3&gt;
+
+&lt;p&gt;经常我们会执行一串命令, 管道连接, 可能有某个命令出错, 需要知道哪个环节出错.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;cat remote.py  | grep close | awk &#39;{print $1}&#39;
+
+echo ${PIPESTATS[*]}
+0 0 0
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;toc_23&#34;&gt;telnet 正常退出姿势&lt;/h3&gt;
+
+&lt;p&gt;说实话, 不太喜欢 &lt;code&gt;telnet&lt;/code&gt;, 个人还是比较希望强大的 &lt;code&gt;nc&lt;/code&gt; , 发现自己居然不会退出. 万能的 google&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;ctrl + ]
+quit
+&lt;/code&gt;&lt;/pre&gt;
 </description>
     </item>
     

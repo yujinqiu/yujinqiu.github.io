@@ -223,6 +223,24 @@ autojump ZSH 需要<strong>compinit</strong>模块来支持, 配置方法:把下
 </code></pre></li>
 </ol>
 
+<h3 id="toc_22">PIPE 命令查看出错状态</h3>
+
+<p>经常我们会执行一串命令, 管道连接, 可能有某个命令出错, 需要知道哪个环节出错.</p>
+
+<pre><code>cat remote.py  | grep close | awk '{print $1}'
+
+echo ${PIPESTATS[*]}
+0 0 0
+</code></pre>
+
+<h3 id="toc_23">telnet 正常退出姿势</h3>
+
+<p>说实话, 不太喜欢 <code>telnet</code>, 个人还是比较希望强大的 <code>nc</code> , 发现自己居然不会退出. 万能的 google</p>
+
+<pre><code>ctrl + ]
+quit
+</code></pre>
+
         </section>
   
     </div>
