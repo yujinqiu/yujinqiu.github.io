@@ -3,21 +3,114 @@
   <channel>
       <title>Posts on Engineer&#39;s Draft </title>
       <generator uri="https://hugo.spf13.com">Hugo</generator>
-    <link>http://yujinqiu.github.io/posts/index.xml/</link>
+    <link>http://127.0.0.1:1313/posts/index.xml/</link>
     
     
     
     <updated>Tue, 25 Nov 2014 21:36:12 CST</updated>
     
     <item>
-      <title>CliDraft</title>
-      <link>http://yujinqiu.github.io/posts/ParallelDraft/</link>
+      <title>AppleDraft</title>
+      <link>http://127.0.0.1:1313/posts/Apple/</link>
       <pubDate>Tue, 25 Nov 2014 21:36:12 CST</pubDate>
       
-      <guid>http://yujinqiu.github.io/posts/ParallelDraft/</guid>
+      <guid>http://127.0.0.1:1313/posts/Apple/</guid>
       <description>
 
-&lt;h2 id=&#34;toc_0&#34;&gt;#Parallel(并行你的工作2)&lt;/h2&gt;
+&lt;h1 id=&#34;toc_0&#34;&gt;Apple&lt;/h1&gt;
+
+&lt;h2 id=&#34;toc_1&#34;&gt;iphone 屏幕小白点怎么开启?&lt;/h2&gt;
+
+&lt;p&gt;看到别人的屏幕有一个小白点, 点击之后出现siri, device, favorites 和 home 怎么打开?&lt;br /&gt;
+那个东西叫Assistive Touch , 在 /setting/general/Accessibility/AssistiveTouch 里边可以打开.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_2&#34;&gt;iphone越狱&lt;/h2&gt;
+
+&lt;p&gt;其实不想一开始就写这篇文章,实在受不了美国v版的中文输入法, 就动起了越狱的心思.网上看了有什么pp助手,91助手之类的工具, 本着对国内流氓公司的不信任的关系,另外恰巧在安装&lt;a href=&#34;http://justgetflux.com/&#34;&gt;f.lux&lt;/a&gt; 遇到&lt;a href=&#34;http://evasi0n.com/&#34;&gt;破解的说明&lt;/a&gt;, 具体操作说明很清楚不到10min就越狱完成. 需要注意点:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;越狱前强烈建议利用itunes来进行完整备份&lt;/li&gt;
+&lt;li&gt;关闭passcode功能&lt;/li&gt;
+&lt;li&gt;退出所有的应用&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;I&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Mac os X Draft</title>
+      <link>http://127.0.0.1:1313/posts/Mac/</link>
+      <pubDate>Tue, 25 Nov 2014 21:36:12 CST</pubDate>
+      
+      <guid>http://127.0.0.1:1313/posts/Mac/</guid>
+      <description>
+
+&lt;p&gt;#Mac os X
+##Yosemite 升级之后应该进行什么操作?&lt;br /&gt;
+1. 从 mavericks 升级到 mac os x 之后, 会遇到一些比较诡异的问题(比如找不到 clang), 下面的命令会帮助你提前避免一些问题.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;sudo xcode-select --install  
+sudo xcode-select --switch /Applications/Xcode.app   
+sudo xcodebuild -license  
+sudo gem update --system  
+sudo gem install xcodeproj   
+sudo brew update   
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ol&gt;
+&lt;li&gt;同时 Yosemite 会收集用户的隐私数据, 建议通过&lt;a href=&#34;https://fix-macosx.com/&#34;&gt;fix-macosx&lt;/a&gt;进行修复&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&#34;toc_0&#34;&gt;Mac os X 窗体最小化之后恢复&lt;/h3&gt;
+
+&lt;p&gt;Mac os X 在最小化窗体之后, &lt;code&gt;command + tab&lt;/code&gt; 是不能够直接恢复, 具体操作如下&lt;br /&gt;
+command + tab 定位到对应的 Application 然后 &lt;code&gt;alt&lt;/code&gt; 然后同时放开 &lt;code&gt;alt command&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;toc_1&#34;&gt;清除 DNS cache&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;sudo dscacheutil -flushcache
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Git Draft</title>
+      <link>http://127.0.0.1:1313/posts/GitDraft/</link>
+      <pubDate>Tue, 25 Nov 2014 21:36:12 CST</pubDate>
+      
+      <guid>http://127.0.0.1:1313/posts/GitDraft/</guid>
+      <description>&lt;p&gt;#Git
+##原子提交&lt;/p&gt;
+
+&lt;p&gt;在我们修改文件的时候, 通常是希望一次提交只包含该次功能修改相关的操作.&lt;br /&gt;
+但是如果一个文件包含多个操作该怎么办 ?&lt;br /&gt;
+或者你的一个程序文件里边,为了调试写了很多的log日志输出, 你不希望这些语句ci 到server上, 该怎么办 ?&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;git add -p&lt;/code&gt; 能够解决上面的场景(虽然已经add 过,还是需要add 到 stage 进去).&lt;br /&gt;
+执行之后会提示:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Stage this hunk [y,n,q,a,d,/,e,?]?
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;hit &lt;code&gt;s&lt;/code&gt; to split whatever change into smaller chunks. This only works if there is at least one unchanged line in the &amp;ldquo;middle&amp;rdquo; of the hunk, which is where hunk will be split&lt;br /&gt;
+then hit &lt;code&gt;y&lt;/code&gt; to stage that chunk&lt;br /&gt;
+or &lt;code&gt;n&lt;/code&gt; to not stage that hunk&lt;br /&gt;
+or &lt;code&gt;e&lt;/code&gt; to manually edit the chunk (useful when git can&amp;rsquo;t split it automatically)&lt;br /&gt;
+and &lt;code&gt;d&lt;/code&gt; to exit or go to the next file.&lt;br /&gt;
+Use &lt;code&gt;?&lt;/code&gt; to get the whole list of available options.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>CliDraft</title>
+      <link>http://127.0.0.1:1313/posts/ParallelDraft/</link>
+      <pubDate>Tue, 25 Nov 2014 21:36:12 CST</pubDate>
+      
+      <guid>http://127.0.0.1:1313/posts/ParallelDraft/</guid>
+      <description>
+
+&lt;h1 id=&#34;toc_0&#34;&gt;Parallel(并行你的工作2)&lt;/h1&gt;
 
 &lt;p&gt;今天看到看到一篇介绍Parallel 的文章&lt;a href=&#34;http://www.rankfocus.com/use-cpu-cores-linux-commands/&#34;&gt;Use multiple CPU Cores with your Linux commands — awk, sed, bzip2, grep, wc, etc.&lt;/a&gt;, 感觉和实际工作的没有太大的帮助, 因为平时其实很少去压缩和解压缩超大的文件. 因此下面主要结合个人的工作经验,总结几条Parallel的工作.
 下面看一下Parallel的图片,感觉有点眼花,很有心理学的图片效果, 相信我Parallel 是一个值得你学习的命令, 所谓事半功倍说的就是它.&lt;/p&gt;
@@ -275,10 +368,10 @@ ls | grep -E &#39;\.log$&#39; | parallel -m mv {} destdir
     
     <item>
       <title>SSHDraft</title>
-      <link>http://yujinqiu.github.io/posts/SSHDraft/</link>
+      <link>http://127.0.0.1:1313/posts/SSHDraft/</link>
       <pubDate>Sun, 23 Nov 2014 11:47:25 CST</pubDate>
       
-      <guid>http://yujinqiu.github.io/posts/SSHDraft/</guid>
+      <guid>http://127.0.0.1:1313/posts/SSHDraft/</guid>
       <description>
 
 &lt;h2 id=&#34;toc_0&#34;&gt;Black Magic Of SSH&lt;/h2&gt;
@@ -433,10 +526,10 @@ Hostname bastin.east.doc.example.com
     
     <item>
       <title>fileserver</title>
-      <link>http://yujinqiu.github.io/posts/fileserver/</link>
+      <link>http://127.0.0.1:1313/posts/fileserver/</link>
       <pubDate>Sun, 23 Nov 2014 10:43:43 CST</pubDate>
       
-      <guid>http://yujinqiu.github.io/posts/fileserver/</guid>
+      <guid>http://127.0.0.1:1313/posts/fileserver/</guid>
       <description>
 
 &lt;h1 id=&#34;toc_0&#34;&gt;文件服务器&lt;/h1&gt;
@@ -473,10 +566,10 @@ func main () {
     
     <item>
       <title>CliDraft</title>
-      <link>http://yujinqiu.github.io/posts/CliDraft/</link>
+      <link>http://127.0.0.1:1313/posts/CliDraft/</link>
       <pubDate>Wed, 19 Nov 2014 21:36:12 CST</pubDate>
       
-      <guid>http://yujinqiu.github.io/posts/CliDraft/</guid>
+      <guid>http://127.0.0.1:1313/posts/CliDraft/</guid>
       <description>
 
 &lt;h2 id=&#34;toc_0&#34;&gt;命令行控&lt;/h2&gt;
@@ -651,10 +744,10 @@ quit
     
     <item>
       <title>Embedded Gists</title>
-      <link>http://yujinqiu.github.io/posts/embedded_gists/</link>
+      <link>http://127.0.0.1:1313/posts/embedded_gists/</link>
       <pubDate>Sat, 05 Jul 2014 00:00:00 UTC</pubDate>
       
-      <guid>http://yujinqiu.github.io/posts/embedded_gists/</guid>
+      <guid>http://127.0.0.1:1313/posts/embedded_gists/</guid>
       <description>
 
 &lt;h2 id=&#34;toc_0&#34;&gt;Syntax Highlighting - or Embedded Gists&lt;/h2&gt;
@@ -730,10 +823,10 @@ quit
     
     <item>
       <title>Making Your Own Summary</title>
-      <link>http://yujinqiu.github.io/posts/hugo_summary/</link>
+      <link>http://127.0.0.1:1313/posts/hugo_summary/</link>
       <pubDate>Sat, 28 Jun 2014 00:00:00 UTC</pubDate>
       
-      <guid>http://yujinqiu.github.io/posts/hugo_summary/</guid>
+      <guid>http://127.0.0.1:1313/posts/hugo_summary/</guid>
       <description>&lt;p&gt;Hugo allows you to specify where the summary stops - and allows the full markdown including shortcodes.&lt;/p&gt;
 
 &lt;p&gt;You just need to construct the first bit of your article so that it makes a nice summary and then end it with&amp;hellip;&lt;/p&gt;
@@ -750,10 +843,10 @@ quit
     
     <item>
       <title>30 days of hacking Docker</title>
-      <link>http://yujinqiu.github.io/posts/streak/</link>
+      <link>http://127.0.0.1:1313/posts/streak/</link>
       <pubDate>Wed, 11 Jun 2014 00:00:00 UTC</pubDate>
       
-      <guid>http://yujinqiu.github.io/posts/streak/</guid>
+      <guid>http://127.0.0.1:1313/posts/streak/</guid>
       <description>
 
 &lt;h3 id=&#34;toc_0&#34;&gt;Prelude&lt;/h3&gt;
@@ -936,10 +1029,10 @@ of course, Docker.&lt;/p&gt;
     
     <item>
       <title>Moving to Hugo</title>
-      <link>http://yujinqiu.github.io/posts/hugo_based_blog/</link>
+      <link>http://127.0.0.1:1313/posts/hugo_based_blog/</link>
       <pubDate>Thu, 29 May 2014 00:00:00 UTC</pubDate>
       
-      <guid>http://yujinqiu.github.io/posts/hugo_based_blog/</guid>
+      <guid>http://127.0.0.1:1313/posts/hugo_based_blog/</guid>
       <description>
 
 &lt;p&gt;I decided that I should blog under my danmux.com domain - I often use danmux around the internet, sometimes danmull, but normally danmux for tech type things, so it makes sense.&lt;/p&gt;
@@ -958,10 +1051,10 @@ of course, Docker.&lt;/p&gt;
     
     <item>
       <title>Defer overhead in go</title>
-      <link>http://yujinqiu.github.io/posts/defer/</link>
+      <link>http://127.0.0.1:1313/posts/defer/</link>
       <pubDate>Wed, 14 May 2014 00:00:00 UTC</pubDate>
       
-      <guid>http://yujinqiu.github.io/posts/defer/</guid>
+      <guid>http://127.0.0.1:1313/posts/defer/</guid>
       <description>
 
 &lt;h4 id=&#34;toc_0&#34;&gt;Prelude&lt;/h4&gt;
@@ -1114,10 +1207,10 @@ BenchmarkGetDefer  10000            180839 ns/op
     
     <item>
       <title>Coverage for multiple packages in go</title>
-      <link>http://yujinqiu.github.io/posts/multicover/</link>
+      <link>http://127.0.0.1:1313/posts/multicover/</link>
       <pubDate>Tue, 06 May 2014 00:00:00 UTC</pubDate>
       
-      <guid>http://yujinqiu.github.io/posts/multicover/</guid>
+      <guid>http://127.0.0.1:1313/posts/multicover/</guid>
       <description>
 
 &lt;h4 id=&#34;toc_0&#34;&gt;Prelude&lt;/h4&gt;
@@ -1212,10 +1305,10 @@ will be able to run&lt;/p&gt;
     
     <item>
       <title>Deploying blog with docker and hugo</title>
-      <link>http://yujinqiu.github.io/posts/hugoblog/</link>
+      <link>http://127.0.0.1:1313/posts/hugoblog/</link>
       <pubDate>Sun, 04 May 2014 00:00:00 UTC</pubDate>
       
-      <guid>http://yujinqiu.github.io/posts/hugoblog/</guid>
+      <guid>http://127.0.0.1:1313/posts/hugoblog/</guid>
       <description>
 
 &lt;h4 id=&#34;toc_0&#34;&gt;Prelude&lt;/h4&gt;

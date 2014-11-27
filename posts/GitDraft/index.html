@@ -7,8 +7,8 @@
 <head>
     <meta charset="utf-8">
     <base href="http://127.0.0.1:1313">
-    <title> Moving to Hugo </title>
-    <link rel="canonical" href="http://127.0.0.1:1313/posts/hugo_based_blog/">
+    <title> Git Draft </title>
+    <link rel="canonical" href="http://127.0.0.1:1313/posts/GitDraft/">
     
 
 <link rel="stylesheet" href="/css/poole.css">
@@ -60,38 +60,36 @@
     
     <div class="container content">
       <div class="post-tile-meta">
-        <h1 class="post-title">Moving to Hugo</h1>
-        <p> Thu May 29, 2014 
+        <h1 class="post-title">Git Draft</h1>
+        <p> Tue Nov 25, 2014 
 <div class="container">
   <ul class="catlist">
     <li><em>Categories: </em></li>
-    
-      <li><a href="/categories/hugo">hugo</a> </li>
-    
-      <li><a href="/categories/golang">golang</a> </li>
-    
-      <li><a href="/categories/github">github</a> </li>
-    
-      <li><a href="/categories/tech">tech</a> </li>
     
   </ul>
 </div>
 </p>
       </div>
         <section id="main">
-          
+          <p>#Git
+##原子提交</p>
 
-<p>I decided that I should blog under my danmux.com domain - I often use danmux around the internet, sometimes danmull, but normally danmux for tech type things, so it makes sense.</p>
+<p>在我们修改文件的时候, 通常是希望一次提交只包含该次功能修改相关的操作.<br />
+但是如果一个文件包含多个操作该怎么办 ?<br />
+或者你的一个程序文件里边,为了调试写了很多的log日志输出, 你不希望这些语句ci 到server上, 该怎么办 ?</p>
 
-<p><strong>danmux</strong> because the <strong>x</strong> has always been a notable part of my name - and mux reminds me of my electrical engineering days, and I think humans multiplex all the time, there it is.</p>
+<p><code>git add -p</code> 能够解决上面的场景(虽然已经add 过,还是需要add 到 stage 进去).<br />
+执行之后会提示:</p>
 
-<h2 id="toc_0">Github Pages</h2>
+<pre><code>Stage this hunk [y,n,q,a,d,/,e,?]?
+</code></pre>
 
-<p>As this will only get a couple of hits what could be better than hosting it on <a href="https://pages.github.com/">github pages</a> - I&rsquo;m a little bit in love with github anyway so perfect choice.</p>
-
-<h2 id="toc_1">Hugo</h2>
-
-<p>I&rsquo;m a little bit in love with go - so <a href="http://hugo.spf13.com/">Hugo</a> was the perfect choice as well, and its been great so far, other than is typical of newish open source projects slightly lacking in the documentation department.</p>
+<p>hit <code>s</code> to split whatever change into smaller chunks. This only works if there is at least one unchanged line in the &ldquo;middle&rdquo; of the hunk, which is where hunk will be split<br />
+then hit <code>y</code> to stage that chunk<br />
+or <code>n</code> to not stage that hunk<br />
+or <code>e</code> to manually edit the chunk (useful when git can&rsquo;t split it automatically)<br />
+and <code>d</code> to exit or go to the next file.<br />
+Use <code>?</code> to get the whole list of available options.</p>
 
         </section>
   
@@ -106,13 +104,13 @@
   <hr />
   
     <span class="left">
-    &nbsp; <em>&laquo; Previous:</em> <a class="next" href="http://127.0.0.1:1313/posts/streak/">30 days of hacking Docker</a>
+    &nbsp; <em>&laquo; Previous:</em> <a class="next" href="http://127.0.0.1:1313/posts/Mac/">Mac os X Draft</a>
     </span>
   
 
   
     <span class="right">
-    <em>Next: </em><a class="next" href="http://127.0.0.1:1313/posts/defer/"> &nbsp; Defer overhead in go</a> &raquo;
+    <em>Next: </em><a class="next" href="http://127.0.0.1:1313/posts/ParallelDraft/"> &nbsp; CliDraft</a> &raquo;
     </span>
   
 </div>

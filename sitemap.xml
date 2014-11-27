@@ -2,63 +2,78 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>http://yujinqiu.github.io/</loc>
+    <loc>http://127.0.0.1:1313/</loc>
     <lastmod>2014-11-25T21:36:12+08:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>http://yujinqiu.github.io/posts/ParallelDraft/</loc>
+    <loc>http://127.0.0.1:1313/posts/Apple/</loc>
     <lastmod>2014-11-25T21:36:12+08:00</lastmod>
   </url>
   
   <url>
-    <loc>http://yujinqiu.github.io/posts/SSHDraft/</loc>
+    <loc>http://127.0.0.1:1313/posts/Mac/</loc>
+    <lastmod>2014-11-25T21:36:12+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://127.0.0.1:1313/posts/GitDraft/</loc>
+    <lastmod>2014-11-25T21:36:12+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://127.0.0.1:1313/posts/ParallelDraft/</loc>
+    <lastmod>2014-11-25T21:36:12+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://127.0.0.1:1313/posts/SSHDraft/</loc>
     <lastmod>2014-11-23T11:47:25+08:00</lastmod>
   </url>
   
   <url>
-    <loc>http://yujinqiu.github.io/posts/fileserver/</loc>
+    <loc>http://127.0.0.1:1313/posts/fileserver/</loc>
     <lastmod>2014-11-23T10:43:43+08:00</lastmod>
   </url>
   
   <url>
-    <loc>http://yujinqiu.github.io/posts/CliDraft/</loc>
+    <loc>http://127.0.0.1:1313/posts/CliDraft/</loc>
     <lastmod>2014-11-19T21:36:12+08:00</lastmod>
   </url>
   
   <url>
-    <loc>http://yujinqiu.github.io/posts/embedded_gists/</loc>
+    <loc>http://127.0.0.1:1313/posts/embedded_gists/</loc>
     <lastmod>2014-07-05T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://yujinqiu.github.io/posts/hugo_summary/</loc>
+    <loc>http://127.0.0.1:1313/posts/hugo_summary/</loc>
     <lastmod>2014-06-28T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://yujinqiu.github.io/posts/streak/</loc>
+    <loc>http://127.0.0.1:1313/posts/streak/</loc>
     <lastmod>2014-06-11T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://yujinqiu.github.io/posts/hugo_based_blog/</loc>
+    <loc>http://127.0.0.1:1313/posts/hugo_based_blog/</loc>
     <lastmod>2014-05-29T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://yujinqiu.github.io/posts/defer/</loc>
+    <loc>http://127.0.0.1:1313/posts/defer/</loc>
     <lastmod>2014-05-14T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://yujinqiu.github.io/posts/multicover/</loc>
+    <loc>http://127.0.0.1:1313/posts/multicover/</loc>
     <lastmod>2014-05-06T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>http://yujinqiu.github.io/posts/hugoblog/</loc>
+    <loc>http://127.0.0.1:1313/posts/hugoblog/</loc>
     <lastmod>2014-05-04T00:00:00+00:00</lastmod>
   </url>
   

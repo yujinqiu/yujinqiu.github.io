@@ -6,9 +6,9 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <base href="http://yujinqiu.github.io">
+    <base href="http://127.0.0.1:1313">
     <title> CliDraft </title>
-    <link rel="canonical" href="http://yujinqiu.github.io/posts/ParallelDraft/">
+    <link rel="canonical" href="http://127.0.0.1:1313/posts/ParallelDraft/">
     
 
 <link rel="stylesheet" href="/css/poole.css">
@@ -73,7 +73,7 @@
         <section id="main">
           
 
-<h2 id="toc_0">#Parallel(并行你的工作2)</h2>
+<h1 id="toc_0">Parallel(并行你的工作2)</h1>
 
 <p>今天看到看到一篇介绍Parallel 的文章<a href="http://www.rankfocus.com/use-cpu-cores-linux-commands/">Use multiple CPU Cores with your Linux commands — awk, sed, bzip2, grep, wc, etc.</a>, 感觉和实际工作的没有太大的帮助, 因为平时其实很少去压缩和解压缩超大的文件. 因此下面主要结合个人的工作经验,总结几条Parallel的工作.
 下面看一下Parallel的图片,感觉有点眼花,很有心理学的图片效果, 相信我Parallel 是一个值得你学习的命令, 所谓事半功倍说的就是它.</p>
@@ -339,10 +339,14 @@ ls | grep -E '\.log$' | parallel -m mv {} destdir
 <div class="container">
   <hr />
   
+    <span class="left">
+    &nbsp; <em>&laquo; Previous:</em> <a class="next" href="http://127.0.0.1:1313/posts/GitDraft/">Git Draft</a>
+    </span>
+  
 
   
     <span class="right">
-    <em>Next: </em><a class="next" href="http://yujinqiu.github.io/posts/SSHDraft/"> &nbsp; SSHDraft</a> &raquo;
+    <em>Next: </em><a class="next" href="http://127.0.0.1:1313/posts/SSHDraft/"> &nbsp; SSHDraft</a> &raquo;
     </span>
   
 </div>
@@ -358,7 +362,10 @@ ls | grep -E '\.log$' | parallel -m mv {} destdir
 </footer>
 </div>
 
-</body>
+<script>document.write('<script src="http://'
+        + (location.host || 'localhost').split(':')[0]
+		+ ':1313/livereload.js?mindelay=10"></'
+        + 'script>')</script></body>
 </html>
 
 

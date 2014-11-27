@@ -5,10 +5,10 @@
 <head>
     
     <meta charset="utf-8">
-    <base href="http://yujinqiu.github.io">
+    <base href="http://127.0.0.1:1313">
     <title>Engineer&#39;s Draft</title>
-    <link rel="canonical" href="http://yujinqiu.github.io/">
-    <link href="http://yujinqiu.github.io/index.xml/" rel="alternate" type="application/rss+xml" title="Engineer&#39;s Draft" />
+    <link rel="canonical" href="http://127.0.0.1:1313/">
+    <link href="http://127.0.0.1:1313/index.xml/" rel="alternate" type="application/rss+xml" title="Engineer&#39;s Draft" />
 
     
 
@@ -68,11 +68,95 @@
 
 <article class="post">
     <header>
-      <h2><a href='http://yujinqiu.github.io/posts/ParallelDraft/'> CliDraft</a> </h2>
+      <h2><a href='http://127.0.0.1:1313/posts/Apple/'> AppleDraft</a> </h2>
       <div class="meta">Tue, Nov 25, 2014</div>
     </header>
 
-    <h2>#Parallel(并行你的工作2)</h2>
+    <h1>Apple</h1>
+
+<h2>iphone 屏幕小白点怎么开启?</h2>
+
+<p>看到别人的屏幕有一个小白点, 点击之后出现siri, device, favorites 和 home 怎么打开?<br />
+那个东西叫Assistive Touch , 在 /setting/general/Accessibility/AssistiveTouch 里边可以打开.</p>
+
+    <footer style="text-align:right; ">
+        <a href='http://127.0.0.1:1313/posts/Apple/'><nobr>Read more →</nobr></a>
+    </footer>
+    <hr/>
+</article>
+
+            
+            
+
+<article class="post">
+    <header>
+      <h2><a href='http://127.0.0.1:1313/posts/Mac/'> Mac os X Draft</a> </h2>
+      <div class="meta">Tue, Nov 25, 2014</div>
+    </header>
+
+    <p>#Mac os X
+##Yosemite 升级之后应该进行什么操作?<br />
+1. 从 mavericks 升级到 mac os x 之后, 会遇到一些比较诡异的问题(比如找不到 clang), 下面的命令会帮助你提前避免一些问题.</p>
+
+<pre><code class="language-bash">sudo xcode-select --install  
+sudo xcode-select --switch /Applications/Xcode.app   
+sudo xcodebuild -license  
+sudo gem update --system  
+sudo gem install xcodeproj   
+sudo brew update   
+</code></pre>
+
+    <footer style="text-align:right; ">
+        <a href='http://127.0.0.1:1313/posts/Mac/'><nobr>Read more →</nobr></a>
+    </footer>
+    <hr/>
+</article>
+
+            
+            
+
+<article class="post">
+    <header>
+      <h2><a href='http://127.0.0.1:1313/posts/GitDraft/'> Git Draft</a> </h2>
+      <div class="meta">Tue, Nov 25, 2014</div>
+    </header>
+
+    <p>#Git
+##原子提交</p>
+
+<p>在我们修改文件的时候, 通常是希望一次提交只包含该次功能修改相关的操作.<br />
+但是如果一个文件包含多个操作该怎么办 ?<br />
+或者你的一个程序文件里边,为了调试写了很多的log日志输出, 你不希望这些语句ci 到server上, 该怎么办 ?</p>
+
+<p><code>git add -p</code> 能够解决上面的场景(虽然已经add 过,还是需要add 到 stage 进去).<br />
+执行之后会提示:</p>
+
+<pre><code>Stage this hunk [y,n,q,a,d,/,e,?]?
+</code></pre>
+
+<p>hit <code>s</code> to split whatever change into smaller chunks. This only works if there is at least one unchanged line in the &ldquo;middle&rdquo; of the hunk, which is where hunk will be split<br />
+then hit <code>y</code> to stage that chunk<br />
+or <code>n</code> to not stage that hunk<br />
+or <code>e</code> to manually edit the chunk (useful when git can&rsquo;t split it automatically)<br />
+and <code>d</code> to exit or go to the next file.<br />
+Use <code>?</code> to get the whole list of available options.</p>
+
+    <footer style="text-align:right; ">
+        <a href='http://127.0.0.1:1313/posts/GitDraft/'><nobr>Read more →</nobr></a>
+    </footer>
+    <hr/>
+</article>
+
+            
+            
+
+<article class="post">
+    <header>
+      <h2><a href='http://127.0.0.1:1313/posts/ParallelDraft/'> CliDraft</a> </h2>
+      <div class="meta">Tue, Nov 25, 2014</div>
+    </header>
+
+    <h1>Parallel(并行你的工作2)</h1>
 
 <p>今天看到看到一篇介绍Parallel 的文章<a href="http://www.rankfocus.com/use-cpu-cores-linux-commands/">Use multiple CPU Cores with your Linux commands — awk, sed, bzip2, grep, wc, etc.</a>, 感觉和实际工作的没有太大的帮助, 因为平时其实很少去压缩和解压缩超大的文件. 因此下面主要结合个人的工作经验,总结几条Parallel的工作.
 下面看一下Parallel的图片,感觉有点眼花,很有心理学的图片效果, 相信我Parallel 是一个值得你学习的命令, 所谓事半功倍说的就是它.</p>
@@ -101,7 +185,7 @@ for host in $( &lt; machines ) ; do ssh ${host} &ldquo; uptime &rdquo; ;done</p>
 <p>就能实现全部并发. 上面的命令你执行之后会发现由于是并行执行, 因此输出基本上是乱序的. 如果某一台机器执行错误,那么基本上很难定位到是哪台.  所以个人认为 xargs 在进行简单的并行,比如批量重启服务,分发大量小文件还是蛮不错的. 我最常用的命令组合是,来实现快速的文件分发</p>
 
     <footer style="text-align:right; ">
-        <a href='http://yujinqiu.github.io/posts/ParallelDraft/'><nobr>Read more →</nobr></a>
+        <a href='http://127.0.0.1:1313/posts/ParallelDraft/'><nobr>Read more →</nobr></a>
     </footer>
     <hr/>
 </article>
@@ -111,7 +195,7 @@ for host in $( &lt; machines ) ; do ssh ${host} &ldquo; uptime &rdquo; ;done</p>
 
 <article class="post">
     <header>
-      <h2><a href='http://yujinqiu.github.io/posts/SSHDraft/'> SSHDraft</a> </h2>
+      <h2><a href='http://127.0.0.1:1313/posts/SSHDraft/'> SSHDraft</a> </h2>
       <div class="meta">Sun, Nov 23, 2014</div>
     </header>
 
@@ -146,7 +230,7 @@ host1 --&gt;  X  --&gt; host3
 </code></pre>
 
     <footer style="text-align:right; ">
-        <a href='http://yujinqiu.github.io/posts/SSHDraft/'><nobr>Read more →</nobr></a>
+        <a href='http://127.0.0.1:1313/posts/SSHDraft/'><nobr>Read more →</nobr></a>
     </footer>
     <hr/>
 </article>
@@ -156,7 +240,7 @@ host1 --&gt;  X  --&gt; host3
 
 <article class="post">
     <header>
-      <h2><a href='http://yujinqiu.github.io/posts/fileserver/'> fileserver</a> </h2>
+      <h2><a href='http://127.0.0.1:1313/posts/fileserver/'> fileserver</a> </h2>
       <div class="meta">Sun, Nov 23, 2014</div>
     </header>
 
@@ -174,7 +258,7 @@ host1 --&gt;  X  --&gt; host3
 </code></pre>
 
     <footer style="text-align:right; ">
-        <a href='http://yujinqiu.github.io/posts/fileserver/'><nobr>Read more →</nobr></a>
+        <a href='http://127.0.0.1:1313/posts/fileserver/'><nobr>Read more →</nobr></a>
     </footer>
     <hr/>
 </article>
@@ -184,7 +268,7 @@ host1 --&gt;  X  --&gt; host3
 
 <article class="post">
     <header>
-      <h2><a href='http://yujinqiu.github.io/posts/CliDraft/'> CliDraft</a> </h2>
+      <h2><a href='http://127.0.0.1:1313/posts/CliDraft/'> CliDraft</a> </h2>
       <div class="meta">Wed, Nov 19, 2014</div>
     </header>
 
@@ -220,7 +304,7 @@ host1 --&gt;  X  --&gt; host3
 </code></pre>
 
     <footer style="text-align:right; ">
-        <a href='http://yujinqiu.github.io/posts/CliDraft/'><nobr>Read more →</nobr></a>
+        <a href='http://127.0.0.1:1313/posts/CliDraft/'><nobr>Read more →</nobr></a>
     </footer>
     <hr/>
 </article>
@@ -230,7 +314,7 @@ host1 --&gt;  X  --&gt; host3
 
 <article class="post">
     <header>
-      <h2><a href='http://yujinqiu.github.io/posts/embedded_gists/'> Embedded Gists</a> </h2>
+      <h2><a href='http://127.0.0.1:1313/posts/embedded_gists/'> Embedded Gists</a> </h2>
       <div class="meta">Sat, Jul 5, 2014</div>
     </header>
 
@@ -266,7 +350,7 @@ host1 --&gt;  X  --&gt; host3
 <p>So on embedding a gist as follows (but without syntax highlighting) failed&hellip;</p>
 
     <footer style="text-align:right; ">
-        <a href='http://yujinqiu.github.io/posts/embedded_gists/'><nobr>Read more →</nobr></a>
+        <a href='http://127.0.0.1:1313/posts/embedded_gists/'><nobr>Read more →</nobr></a>
     </footer>
     <hr/>
 </article>
@@ -276,7 +360,7 @@ host1 --&gt;  X  --&gt; host3
 
 <article class="post">
     <header>
-      <h2><a href='http://yujinqiu.github.io/posts/hugo_summary/'> Making Your Own Summary</a> </h2>
+      <h2><a href='http://127.0.0.1:1313/posts/hugo_summary/'> Making Your Own Summary</a> </h2>
       <div class="meta">Sat, Jun 28, 2014</div>
     </header>
 
@@ -291,7 +375,7 @@ host1 --&gt;  X  --&gt; host3
 <!-- here is the real more... -->
 
     <footer style="text-align:right; ">
-        <a href='http://yujinqiu.github.io/posts/hugo_summary/'><nobr>Read more →</nobr></a>
+        <a href='http://127.0.0.1:1313/posts/hugo_summary/'><nobr>Read more →</nobr></a>
     </footer>
     <hr/>
 </article>
@@ -301,79 +385,13 @@ host1 --&gt;  X  --&gt; host3
 
 <article class="post">
     <header>
-      <h2><a href='http://yujinqiu.github.io/posts/streak/'> 30 days of hacking Docker</a> </h2>
+      <h2><a href='http://127.0.0.1:1313/posts/streak/'> 30 days of hacking Docker</a> </h2>
       <div class="meta">Wed, Jun 11, 2014</div>
     </header>
 
     Prelude Yesterday I finished my first 30-day streak on GitHub. Most of contributions were to Docker &ndash; the biggest opensource project on Go. I learned a lot in this month, and it was really cool. I think that this is mostly because of Go language. I&rsquo;ve been programming on Python for five years and I was never so excited about open source, because Python is not even half so fun as Go.
     <footer style="text-align:right; ">
-        <a href='http://yujinqiu.github.io/posts/streak/'><nobr>Read more →</nobr></a>
-    </footer>
-    <hr/>
-</article>
-
-            
-            
-
-<article class="post">
-    <header>
-      <h2><a href='http://yujinqiu.github.io/posts/hugo_based_blog/'> Moving to Hugo</a> </h2>
-      <div class="meta">Thu, May 29, 2014</div>
-    </header>
-
-    <p>I decided that I should blog under my danmux.com domain - I often use danmux around the internet, sometimes danmull, but normally danmux for tech type things, so it makes sense.</p>
-
-<p><strong>danmux</strong> because the <strong>x</strong> has always been a notable part of my name - and mux reminds me of my electrical engineering days, and I think humans multiplex all the time, there it is.</p>
-
-    <footer style="text-align:right; ">
-        <a href='http://yujinqiu.github.io/posts/hugo_based_blog/'><nobr>Read more →</nobr></a>
-    </footer>
-    <hr/>
-</article>
-
-            
-            
-
-<article class="post">
-    <header>
-      <h2><a href='http://yujinqiu.github.io/posts/defer/'> Defer overhead in go</a> </h2>
-      <div class="meta">Wed, May 14, 2014</div>
-    </header>
-
-    <h4>Prelude</h4>
-
-<p>This post based on
-<a href="https://github.com/dotcloud/docker/commit/5128feb690e8fd0244d1fecef5f3f5f77598bbfa">real events</a>
-in docker repository.
-When I revealed that my 20-percent-cooler refactoring made <code>Pop</code> function x4-x5
-times slower, I did some research and concluded, that problem was in using
-<code>defer</code> statement for unlocking everywhere.</p>
-
-<p>In this post I&rsquo;ll write simple program and benchmarks from which we will see,
-that sometimes <code>defer</code> statement can slowdown your program a lot.</p>
-
-<p>Let&rsquo;s create simple queue with methods <code>Put</code> and <code>Get</code>. Next snippets shows such
-queue and benchmarks for it. Also I wrote duplicate methods with <code>defer</code> and
-without it.</p>
-
-    <footer style="text-align:right; ">
-        <a href='http://yujinqiu.github.io/posts/defer/'><nobr>Read more →</nobr></a>
-    </footer>
-    <hr/>
-</article>
-
-            
-            
-
-<article class="post">
-    <header>
-      <h2><a href='http://yujinqiu.github.io/posts/multicover/'> Coverage for multiple packages in go</a> </h2>
-      <div class="meta">Tue, May 6, 2014</div>
-    </header>
-
-    Prelude There is awesome coverage in go. You can read about it here. But also it has some limitations. For example let&rsquo;s assume that we have next code structure: src ├── pkg1 │ ├── pkg11 │ └── pkg12 └── pkg2 ├── pkg21 └── pkg22 pkg2, pkg21, pkg22 uses pkg1, pkg11 and pkg12 in different cases. So question is &ndash; how we can compute overall coverage for our code base? Generating cover profiles Let&rsquo;s consider some possible go test commands with -coveprofile: go test -coverprofile=cover.out pkg2 tests run only for pkg1 and cover profile generated only for pkg2 go test -coverprofile=cover.out -coverpkg=./...
-    <footer style="text-align:right; ">
-        <a href='http://yujinqiu.github.io/posts/multicover/'><nobr>Read more →</nobr></a>
+        <a href='http://127.0.0.1:1313/posts/streak/'><nobr>Read more →</nobr></a>
     </footer>
     <hr/>
 </article>
@@ -394,6 +412,9 @@ without it.</p>
 </footer>
 </div>
 
-</body>
+<script>document.write('<script src="http://'
+        + (location.host || 'localhost').split(':')[0]
+		+ ':1313/livereload.js?mindelay=10"></'
+        + 'script>')</script></body>
 </html>
 

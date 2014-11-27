@@ -7,9 +7,9 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <base href="http://yujinqiu.github.io">
+    <base href="http://127.0.0.1:1313">
     <title> Hugo </title>
-    <link rel="canonical" href="http://yujinqiu.github.io/categories/hugo/">
+    <link rel="canonical" href="http://127.0.0.1:1313/categories/hugo/">
     
 
 <link rel="stylesheet" href="/css/poole.css">
@@ -69,7 +69,7 @@
 
 <article class="post">
     <header>
-      <h2><a href='http://yujinqiu.github.io/posts/embedded_gists/'> Embedded Gists</a> </h2>
+      <h2><a href='http://127.0.0.1:1313/posts/embedded_gists/'> Embedded Gists</a> </h2>
       <div class="meta">Sat, Jul 5, 2014</div>
     </header>
 
@@ -105,7 +105,7 @@
 <p>So on embedding a gist as follows (but without syntax highlighting) failed&hellip;</p>
 
     <footer style="text-align:right; ">
-        <a href='http://yujinqiu.github.io/posts/embedded_gists/'><nobr>Read more →</nobr></a>
+        <a href='http://127.0.0.1:1313/posts/embedded_gists/'><nobr>Read more →</nobr></a>
     </footer>
     <hr/>
 </article>
@@ -115,7 +115,7 @@
 
 <article class="post">
     <header>
-      <h2><a href='http://yujinqiu.github.io/posts/hugo_summary/'> Making Your Own Summary</a> </h2>
+      <h2><a href='http://127.0.0.1:1313/posts/hugo_summary/'> Making Your Own Summary</a> </h2>
       <div class="meta">Sat, Jun 28, 2014</div>
     </header>
 
@@ -130,7 +130,7 @@
 <!-- here is the real more... -->
 
     <footer style="text-align:right; ">
-        <a href='http://yujinqiu.github.io/posts/hugo_summary/'><nobr>Read more →</nobr></a>
+        <a href='http://127.0.0.1:1313/posts/hugo_summary/'><nobr>Read more →</nobr></a>
     </footer>
     <hr/>
 </article>
@@ -140,7 +140,7 @@
 
 <article class="post">
     <header>
-      <h2><a href='http://yujinqiu.github.io/posts/hugo_based_blog/'> Moving to Hugo</a> </h2>
+      <h2><a href='http://127.0.0.1:1313/posts/hugo_based_blog/'> Moving to Hugo</a> </h2>
       <div class="meta">Thu, May 29, 2014</div>
     </header>
 
@@ -149,7 +149,7 @@
 <p><strong>danmux</strong> because the <strong>x</strong> has always been a notable part of my name - and mux reminds me of my electrical engineering days, and I think humans multiplex all the time, there it is.</p>
 
     <footer style="text-align:right; ">
-        <a href='http://yujinqiu.github.io/posts/hugo_based_blog/'><nobr>Read more →</nobr></a>
+        <a href='http://127.0.0.1:1313/posts/hugo_based_blog/'><nobr>Read more →</nobr></a>
     </footer>
     <hr/>
 </article>
@@ -159,13 +159,13 @@
 
 <article class="post">
     <header>
-      <h2><a href='http://yujinqiu.github.io/posts/hugoblog/'> Deploying blog with docker and hugo</a> </h2>
+      <h2><a href='http://127.0.0.1:1313/posts/hugoblog/'> Deploying blog with docker and hugo</a> </h2>
       <div class="meta">Sun, May 4, 2014</div>
     </header>
 
     Prelude Recently I moved my jabber-server to DigitalOcean VPS. Run Prosody in docker was so easy, that I decided create this blog. And of course deploy it with docker! Content At first we need container with templates and content for blog generation. I used next dockerfile: FROM debian:jessie RUN apt-get update &amp;&amp; apt-get install --no-install-recommends -y ca-certificates git-core RUN git clone http://github.com/LK4D4/lk4d4.darth.io.git /src VOLUME [&quot;/src&quot;] WORKDIR /src ENTRYPOINT [&quot;git&quot;] CMD [&quot;pull&quot;] There is no magic here: just clone repo to /src (it will be used below), and update it on container start.
     <footer style="text-align:right; ">
-        <a href='http://yujinqiu.github.io/posts/hugoblog/'><nobr>Read more →</nobr></a>
+        <a href='http://127.0.0.1:1313/posts/hugoblog/'><nobr>Read more →</nobr></a>
     </footer>
     <hr/>
 </article>
@@ -187,7 +187,10 @@
 </footer>
 </div>
 
-</body>
+<script>document.write('<script src="http://'
+        + (location.host || 'localhost').split(':')[0]
+		+ ':1313/livereload.js?mindelay=10"></'
+        + 'script>')</script></body>
 </html>
 
 

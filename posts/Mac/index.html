@@ -7,8 +7,8 @@
 <head>
     <meta charset="utf-8">
     <base href="http://127.0.0.1:1313">
-    <title> Moving to Hugo </title>
-    <link rel="canonical" href="http://127.0.0.1:1313/posts/hugo_based_blog/">
+    <title> Mac os X Draft </title>
+    <link rel="canonical" href="http://127.0.0.1:1313/posts/Mac/">
     
 
 <link rel="stylesheet" href="/css/poole.css">
@@ -60,19 +60,11 @@
     
     <div class="container content">
       <div class="post-tile-meta">
-        <h1 class="post-title">Moving to Hugo</h1>
-        <p> Thu May 29, 2014 
+        <h1 class="post-title">Mac os X Draft</h1>
+        <p> Tue Nov 25, 2014 
 <div class="container">
   <ul class="catlist">
     <li><em>Categories: </em></li>
-    
-      <li><a href="/categories/hugo">hugo</a> </li>
-    
-      <li><a href="/categories/golang">golang</a> </li>
-    
-      <li><a href="/categories/github">github</a> </li>
-    
-      <li><a href="/categories/tech">tech</a> </li>
     
   </ul>
 </div>
@@ -81,17 +73,31 @@
         <section id="main">
           
 
-<p>I decided that I should blog under my danmux.com domain - I often use danmux around the internet, sometimes danmull, but normally danmux for tech type things, so it makes sense.</p>
+<p>#Mac os X
+##Yosemite 升级之后应该进行什么操作?<br />
+1. 从 mavericks 升级到 mac os x 之后, 会遇到一些比较诡异的问题(比如找不到 clang), 下面的命令会帮助你提前避免一些问题.</p>
 
-<p><strong>danmux</strong> because the <strong>x</strong> has always been a notable part of my name - and mux reminds me of my electrical engineering days, and I think humans multiplex all the time, there it is.</p>
+<pre><code class="language-bash">sudo xcode-select --install  
+sudo xcode-select --switch /Applications/Xcode.app   
+sudo xcodebuild -license  
+sudo gem update --system  
+sudo gem install xcodeproj   
+sudo brew update   
+</code></pre>
 
-<h2 id="toc_0">Github Pages</h2>
+<ol>
+<li>同时 Yosemite 会收集用户的隐私数据, 建议通过<a href="https://fix-macosx.com/">fix-macosx</a>进行修复</li>
+</ol>
 
-<p>As this will only get a couple of hits what could be better than hosting it on <a href="https://pages.github.com/">github pages</a> - I&rsquo;m a little bit in love with github anyway so perfect choice.</p>
+<h3 id="toc_0">Mac os X 窗体最小化之后恢复</h3>
 
-<h2 id="toc_1">Hugo</h2>
+<p>Mac os X 在最小化窗体之后, <code>command + tab</code> 是不能够直接恢复, 具体操作如下<br />
+command + tab 定位到对应的 Application 然后 <code>alt</code> 然后同时放开 <code>alt command</code></p>
 
-<p>I&rsquo;m a little bit in love with go - so <a href="http://hugo.spf13.com/">Hugo</a> was the perfect choice as well, and its been great so far, other than is typical of newish open source projects slightly lacking in the documentation department.</p>
+<h3 id="toc_1">清除 DNS cache</h3>
+
+<pre><code>sudo dscacheutil -flushcache
+</code></pre>
 
         </section>
   
@@ -106,13 +112,13 @@
   <hr />
   
     <span class="left">
-    &nbsp; <em>&laquo; Previous:</em> <a class="next" href="http://127.0.0.1:1313/posts/streak/">30 days of hacking Docker</a>
+    &nbsp; <em>&laquo; Previous:</em> <a class="next" href="http://127.0.0.1:1313/posts/Apple/">AppleDraft</a>
     </span>
   
 
   
     <span class="right">
-    <em>Next: </em><a class="next" href="http://127.0.0.1:1313/posts/defer/"> &nbsp; Defer overhead in go</a> &raquo;
+    <em>Next: </em><a class="next" href="http://127.0.0.1:1313/posts/GitDraft/"> &nbsp; Git Draft</a> &raquo;
     </span>
   
 </div>
