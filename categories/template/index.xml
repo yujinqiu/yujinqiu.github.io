@@ -3,7 +3,7 @@
   <channel>
       <title>Template on Engineer&#39;s Draft </title>
       <generator uri="https://hugo.spf13.com">Hugo</generator>
-    <link>http://127.0.0.1:1313/categories/template/index.xml/</link>
+    <link>http://yujinqiu.github.io/categories/template/index.xml/</link>
     
     
     
@@ -11,10 +11,10 @@
     
     <item>
       <title>Making Your Own Summary</title>
-      <link>http://127.0.0.1:1313/posts/hugo_summary/</link>
+      <link>http://yujinqiu.github.io/posts/hugo_summary/</link>
       <pubDate>Sat, 28 Jun 2014 00:00:00 UTC</pubDate>
       
-      <guid>http://127.0.0.1:1313/posts/hugo_summary/</guid>
+      <guid>http://yujinqiu.github.io/posts/hugo_summary/</guid>
       <description>&lt;p&gt;Hugo allows you to specify where the summary stops - and allows the full markdown including shortcodes.&lt;/p&gt;
 
 &lt;p&gt;You just need to construct the first bit of your article so that it makes a nice summary and then end it with&amp;hellip;&lt;/p&gt;

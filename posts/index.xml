@@ -3,7 +3,7 @@
   <channel>
       <title>Posts on Engineer&#39;s Draft </title>
       <generator uri="https://hugo.spf13.com">Hugo</generator>
-    <link>http://127.0.0.1:1313/posts/index.xml/</link>
+    <link>http://yujinqiu.github.io/posts/index.xml/</link>
     
     
     
@@ -11,10 +11,10 @@
     
     <item>
       <title>AppleDraft</title>
-      <link>http://127.0.0.1:1313/posts/Apple/</link>
+      <link>http://yujinqiu.github.io/posts/Apple/</link>
       <pubDate>Tue, 25 Nov 2014 21:36:12 CST</pubDate>
       
-      <guid>http://127.0.0.1:1313/posts/Apple/</guid>
+      <guid>http://yujinqiu.github.io/posts/Apple/</guid>
       <description>
 
 &lt;h1 id=&#34;toc_0&#34;&gt;Apple&lt;/h1&gt;
@@ -40,10 +40,10 @@
     
     <item>
       <title>Mac os X Draft</title>
-      <link>http://127.0.0.1:1313/posts/Mac/</link>
+      <link>http://yujinqiu.github.io/posts/Mac/</link>
       <pubDate>Tue, 25 Nov 2014 21:36:12 CST</pubDate>
       
-      <guid>http://127.0.0.1:1313/posts/Mac/</guid>
+      <guid>http://yujinqiu.github.io/posts/Mac/</guid>
       <description>
 
 &lt;p&gt;#Mac os X
@@ -76,11 +76,13 @@ command + tab 定位到对应的 Application 然后 &lt;code&gt;alt&lt;/code&gt;
     
     <item>
       <title>Git Draft</title>
-      <link>http://127.0.0.1:1313/posts/GitDraft/</link>
+      <link>http://yujinqiu.github.io/posts/GitDraft/</link>
       <pubDate>Tue, 25 Nov 2014 21:36:12 CST</pubDate>
       
-      <guid>http://127.0.0.1:1313/posts/GitDraft/</guid>
-      <description>&lt;p&gt;#Git
+      <guid>http://yujinqiu.github.io/posts/GitDraft/</guid>
+      <description>
+
+&lt;p&gt;#Git
 ##原子提交&lt;/p&gt;
 
 &lt;p&gt;在我们修改文件的时候, 通常是希望一次提交只包含该次功能修改相关的操作.&lt;br /&gt;
@@ -99,15 +101,25 @@ or &lt;code&gt;n&lt;/code&gt; to not stage that hunk&lt;br /&gt;
 or &lt;code&gt;e&lt;/code&gt; to manually edit the chunk (useful when git can&amp;rsquo;t split it automatically)&lt;br /&gt;
 and &lt;code&gt;d&lt;/code&gt; to exit or go to the next file.&lt;br /&gt;
 Use &lt;code&gt;?&lt;/code&gt; to get the whole list of available options.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_0&#34;&gt;Git checkout 某个分支&lt;/h2&gt;
+
+&lt;h3 id=&#34;toc_1&#34;&gt;背景&lt;/h3&gt;
+
+&lt;p&gt;在使用 git 的时候, 经常会使用第三方开发的程序/lib 的特定版本(兼容性问题) ,&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;git tag -l
+git checkout tags/&amp;lt;tag_name&amp;gt; 
+&lt;/code&gt;&lt;/pre&gt;
 </description>
     </item>
     
     <item>
       <title>CliDraft</title>
-      <link>http://127.0.0.1:1313/posts/ParallelDraft/</link>
+      <link>http://yujinqiu.github.io/posts/ParallelDraft/</link>
       <pubDate>Tue, 25 Nov 2014 21:36:12 CST</pubDate>
       
-      <guid>http://127.0.0.1:1313/posts/ParallelDraft/</guid>
+      <guid>http://yujinqiu.github.io/posts/ParallelDraft/</guid>
       <description>
 
 &lt;h1 id=&#34;toc_0&#34;&gt;Parallel(并行你的工作2)&lt;/h1&gt;
@@ -368,10 +380,10 @@ ls | grep -E &#39;\.log$&#39; | parallel -m mv {} destdir
     
     <item>
       <title>SSHDraft</title>
-      <link>http://127.0.0.1:1313/posts/SSHDraft/</link>
+      <link>http://yujinqiu.github.io/posts/SSHDraft/</link>
       <pubDate>Sun, 23 Nov 2014 11:47:25 CST</pubDate>
       
-      <guid>http://127.0.0.1:1313/posts/SSHDraft/</guid>
+      <guid>http://yujinqiu.github.io/posts/SSHDraft/</guid>
       <description>
 
 &lt;h2 id=&#34;toc_0&#34;&gt;Black Magic Of SSH&lt;/h2&gt;
@@ -526,10 +538,10 @@ Hostname bastin.east.doc.example.com
     
     <item>
       <title>fileserver</title>
-      <link>http://127.0.0.1:1313/posts/fileserver/</link>
+      <link>http://yujinqiu.github.io/posts/fileserver/</link>
       <pubDate>Sun, 23 Nov 2014 10:43:43 CST</pubDate>
       
-      <guid>http://127.0.0.1:1313/posts/fileserver/</guid>
+      <guid>http://yujinqiu.github.io/posts/fileserver/</guid>
       <description>
 
 &lt;h1 id=&#34;toc_0&#34;&gt;文件服务器&lt;/h1&gt;
@@ -566,10 +578,10 @@ func main () {
     
     <item>
       <title>CliDraft</title>
-      <link>http://127.0.0.1:1313/posts/CliDraft/</link>
+      <link>http://yujinqiu.github.io/posts/CliDraft/</link>
       <pubDate>Wed, 19 Nov 2014 21:36:12 CST</pubDate>
       
-      <guid>http://127.0.0.1:1313/posts/CliDraft/</guid>
+      <guid>http://yujinqiu.github.io/posts/CliDraft/</guid>
       <description>
 
 &lt;h2 id=&#34;toc_0&#34;&gt;命令行控&lt;/h2&gt;
@@ -744,10 +756,10 @@ quit
     
     <item>
       <title>Embedded Gists</title>
-      <link>http://127.0.0.1:1313/posts/embedded_gists/</link>
+      <link>http://yujinqiu.github.io/posts/embedded_gists/</link>
       <pubDate>Sat, 05 Jul 2014 00:00:00 UTC</pubDate>
       
-      <guid>http://127.0.0.1:1313/posts/embedded_gists/</guid>
+      <guid>http://yujinqiu.github.io/posts/embedded_gists/</guid>
       <description>
 
 &lt;h2 id=&#34;toc_0&#34;&gt;Syntax Highlighting - or Embedded Gists&lt;/h2&gt;
@@ -823,10 +835,10 @@ quit
     
     <item>
       <title>Making Your Own Summary</title>
-      <link>http://127.0.0.1:1313/posts/hugo_summary/</link>
+      <link>http://yujinqiu.github.io/posts/hugo_summary/</link>
       <pubDate>Sat, 28 Jun 2014 00:00:00 UTC</pubDate>
       
-      <guid>http://127.0.0.1:1313/posts/hugo_summary/</guid>
+      <guid>http://yujinqiu.github.io/posts/hugo_summary/</guid>
       <description>&lt;p&gt;Hugo allows you to specify where the summary stops - and allows the full markdown including shortcodes.&lt;/p&gt;
 
 &lt;p&gt;You just need to construct the first bit of your article so that it makes a nice summary and then end it with&amp;hellip;&lt;/p&gt;
@@ -843,10 +855,10 @@ quit
     
     <item>
       <title>30 days of hacking Docker</title>
-      <link>http://127.0.0.1:1313/posts/streak/</link>
+      <link>http://yujinqiu.github.io/posts/streak/</link>
       <pubDate>Wed, 11 Jun 2014 00:00:00 UTC</pubDate>
       
-      <guid>http://127.0.0.1:1313/posts/streak/</guid>
+      <guid>http://yujinqiu.github.io/posts/streak/</guid>
       <description>
 
 &lt;h3 id=&#34;toc_0&#34;&gt;Prelude&lt;/h3&gt;
@@ -1029,10 +1041,10 @@ of course, Docker.&lt;/p&gt;
     
     <item>
       <title>Moving to Hugo</title>
-      <link>http://127.0.0.1:1313/posts/hugo_based_blog/</link>
+      <link>http://yujinqiu.github.io/posts/hugo_based_blog/</link>
       <pubDate>Thu, 29 May 2014 00:00:00 UTC</pubDate>
       
-      <guid>http://127.0.0.1:1313/posts/hugo_based_blog/</guid>
+      <guid>http://yujinqiu.github.io/posts/hugo_based_blog/</guid>
       <description>
 
 &lt;p&gt;I decided that I should blog under my danmux.com domain - I often use danmux around the internet, sometimes danmull, but normally danmux for tech type things, so it makes sense.&lt;/p&gt;
@@ -1051,10 +1063,10 @@ of course, Docker.&lt;/p&gt;
     
     <item>
       <title>Defer overhead in go</title>
-      <link>http://127.0.0.1:1313/posts/defer/</link>
+      <link>http://yujinqiu.github.io/posts/defer/</link>
       <pubDate>Wed, 14 May 2014 00:00:00 UTC</pubDate>
       
-      <guid>http://127.0.0.1:1313/posts/defer/</guid>
+      <guid>http://yujinqiu.github.io/posts/defer/</guid>
       <description>
 
 &lt;h4 id=&#34;toc_0&#34;&gt;Prelude&lt;/h4&gt;
@@ -1207,10 +1219,10 @@ BenchmarkGetDefer  10000            180839 ns/op
     
     <item>
       <title>Coverage for multiple packages in go</title>
-      <link>http://127.0.0.1:1313/posts/multicover/</link>
+      <link>http://yujinqiu.github.io/posts/multicover/</link>
       <pubDate>Tue, 06 May 2014 00:00:00 UTC</pubDate>
       
-      <guid>http://127.0.0.1:1313/posts/multicover/</guid>
+      <guid>http://yujinqiu.github.io/posts/multicover/</guid>
       <description>
 
 &lt;h4 id=&#34;toc_0&#34;&gt;Prelude&lt;/h4&gt;
@@ -1305,10 +1317,10 @@ will be able to run&lt;/p&gt;
     
     <item>
       <title>Deploying blog with docker and hugo</title>
-      <link>http://127.0.0.1:1313/posts/hugoblog/</link>
+      <link>http://yujinqiu.github.io/posts/hugoblog/</link>
       <pubDate>Sun, 04 May 2014 00:00:00 UTC</pubDate>
       
-      <guid>http://127.0.0.1:1313/posts/hugoblog/</guid>
+      <guid>http://yujinqiu.github.io/posts/hugoblog/</guid>
       <description>
 
 &lt;h4 id=&#34;toc_0&#34;&gt;Prelude&lt;/h4&gt;
