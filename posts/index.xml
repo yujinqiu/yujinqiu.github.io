@@ -10,35 +10,6 @@
     <updated>Tue, 25 Nov 2014 21:36:12 CST</updated>
     
     <item>
-      <title>AppleDraft</title>
-      <link>http://yujinqiu.github.io/posts/Apple/</link>
-      <pubDate>Tue, 25 Nov 2014 21:36:12 CST</pubDate>
-      
-      <guid>http://yujinqiu.github.io/posts/Apple/</guid>
-      <description>
-
-&lt;h1 id=&#34;toc_0&#34;&gt;Apple&lt;/h1&gt;
-
-&lt;h2 id=&#34;toc_1&#34;&gt;iphone 屏幕小白点怎么开启?&lt;/h2&gt;
-
-&lt;p&gt;看到别人的屏幕有一个小白点, 点击之后出现siri, device, favorites 和 home 怎么打开?&lt;br /&gt;
-那个东西叫Assistive Touch , 在 /setting/general/Accessibility/AssistiveTouch 里边可以打开.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_2&#34;&gt;iphone越狱&lt;/h2&gt;
-
-&lt;p&gt;其实不想一开始就写这篇文章,实在受不了美国v版的中文输入法, 就动起了越狱的心思.网上看了有什么pp助手,91助手之类的工具, 本着对国内流氓公司的不信任的关系,另外恰巧在安装&lt;a href=&#34;http://justgetflux.com/&#34;&gt;f.lux&lt;/a&gt; 遇到&lt;a href=&#34;http://evasi0n.com/&#34;&gt;破解的说明&lt;/a&gt;, 具体操作说明很清楚不到10min就越狱完成. 需要注意点:&lt;/p&gt;
-
-&lt;ol&gt;
-&lt;li&gt;越狱前强烈建议利用itunes来进行完整备份&lt;/li&gt;
-&lt;li&gt;关闭passcode功能&lt;/li&gt;
-&lt;li&gt;退出所有的应用&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;I&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
       <title>Mac os X Draft</title>
       <link>http://yujinqiu.github.io/posts/Mac/</link>
       <pubDate>Tue, 25 Nov 2014 21:36:12 CST</pubDate>
@@ -82,8 +53,9 @@ command + tab 定位到对应的 Application 然后 &lt;code&gt;alt&lt;/code&gt;
       <guid>http://yujinqiu.github.io/posts/GitDraft/</guid>
       <description>
 
-&lt;p&gt;#Git
-##原子提交&lt;/p&gt;
+&lt;h1 id=&#34;toc_0&#34;&gt;Git&lt;/h1&gt;
+
+&lt;h2 id=&#34;toc_1&#34;&gt;原子提交&lt;/h2&gt;
 
 &lt;p&gt;在我们修改文件的时候, 通常是希望一次提交只包含该次功能修改相关的操作.&lt;br /&gt;
 但是如果一个文件包含多个操作该怎么办 ?&lt;br /&gt;
@@ -102,15 +74,44 @@ or &lt;code&gt;e&lt;/code&gt; to manually edit the chunk (useful when git can&am
 and &lt;code&gt;d&lt;/code&gt; to exit or go to the next file.&lt;br /&gt;
 Use &lt;code&gt;?&lt;/code&gt; to get the whole list of available options.&lt;/p&gt;
 
-&lt;h2 id=&#34;toc_0&#34;&gt;Git checkout 某个分支&lt;/h2&gt;
+&lt;h2 id=&#34;toc_2&#34;&gt;Git checkout 某个分支&lt;/h2&gt;
 
-&lt;h3 id=&#34;toc_1&#34;&gt;背景&lt;/h3&gt;
+&lt;h3 id=&#34;toc_3&#34;&gt;背景&lt;/h3&gt;
 
 &lt;p&gt;在使用 git 的时候, 经常会使用第三方开发的程序/lib 的特定版本(兼容性问题) ,&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;git tag -l
 git checkout tags/&amp;lt;tag_name&amp;gt; 
 &lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>AppleDraft</title>
+      <link>http://yujinqiu.github.io/posts/Apple/</link>
+      <pubDate>Tue, 25 Nov 2014 21:36:12 CST</pubDate>
+      
+      <guid>http://yujinqiu.github.io/posts/Apple/</guid>
+      <description>
+
+&lt;h1 id=&#34;toc_0&#34;&gt;Apple&lt;/h1&gt;
+
+&lt;h2 id=&#34;toc_1&#34;&gt;iphone 屏幕小白点怎么开启?&lt;/h2&gt;
+
+&lt;p&gt;看到别人的屏幕有一个小白点, 点击之后出现siri, device, favorites 和 home 怎么打开?&lt;br /&gt;
+那个东西叫Assistive Touch , 在 /setting/general/Accessibility/AssistiveTouch 里边可以打开.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_2&#34;&gt;iphone越狱&lt;/h2&gt;
+
+&lt;p&gt;其实不想一开始就写这篇文章,实在受不了美国v版的中文输入法, 就动起了越狱的心思.网上看了有什么pp助手,91助手之类的工具, 本着对国内流氓公司的不信任的关系,另外恰巧在安装&lt;a href=&#34;http://justgetflux.com/&#34;&gt;f.lux&lt;/a&gt; 遇到&lt;a href=&#34;http://evasi0n.com/&#34;&gt;破解的说明&lt;/a&gt;, 具体操作说明很清楚不到10min就越狱完成. 需要注意点:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;越狱前强烈建议利用itunes来进行完整备份&lt;/li&gt;
+&lt;li&gt;关闭passcode功能&lt;/li&gt;
+&lt;li&gt;退出所有的应用&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;I&lt;/p&gt;
 </description>
     </item>
     
