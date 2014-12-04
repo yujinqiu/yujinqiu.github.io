@@ -7,111 +7,271 @@
     
     
     
-    <updated>Tue, 25 Nov 2014 21:36:12 CST</updated>
+    <updated>Thu, 04 Dec 2014 21:36:12 CST</updated>
     
     <item>
-      <title>Mac os X Draft</title>
-      <link>http://yujinqiu.github.io/posts/Mac/</link>
-      <pubDate>Tue, 25 Nov 2014 21:36:12 CST</pubDate>
+      <title>Nmap Draft</title>
+      <link>http://yujinqiu.github.io/posts/NmapHack/</link>
+      <pubDate>Thu, 04 Dec 2014 21:36:12 CST</pubDate>
       
-      <guid>http://yujinqiu.github.io/posts/Mac/</guid>
+      <guid>http://yujinqiu.github.io/posts/NmapHack/</guid>
       <description>
 
-&lt;p&gt;#Mac os X
-##Yosemite 升级之后应该进行什么操作?&lt;br /&gt;
-1. 从 mavericks 升级到 mac os x 之后, 会遇到一些比较诡异的问题(比如找不到 clang), 下面的命令会帮助你提前避免一些问题.&lt;/p&gt;
+&lt;p&gt;#nmap 简单介绍&lt;/p&gt;
 
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;sudo xcode-select --install  
-sudo xcode-select --switch /Applications/Xcode.app   
-sudo xcodebuild -license  
-sudo gem update --system  
-sudo gem install xcodeproj   
-sudo brew update   
+&lt;p&gt;本文的切入点:hacker使用Nmap的流程角度来介绍如何掌握Nmap这个强大的工具,帮助安全管理员发现自己网站的漏洞, 并逐步加固自己的安全.&lt;/p&gt;
+
+&lt;p&gt;nmap(network mapper) 主要用途&lt;br /&gt;
+- 网络发现&lt;br /&gt;
+- 安全扫描
+- 端口扫描
+- 网络审查&lt;/p&gt;
+
+&lt;h3 id=&#34;toc_0&#34;&gt;nmap 命令选项&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;nmap [-s (Scan Type)] [Options] {target specification}
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;ol&gt;
-&lt;li&gt;同时 Yosemite 会收集用户的隐私数据, 建议通过&lt;a href=&#34;https://fix-macosx.com/&#34;&gt;fix-macosx&lt;/a&gt;进行修复&lt;/li&gt;
-&lt;/ol&gt;
+&lt;h2 id=&#34;toc_1&#34;&gt;Let&amp;rsquo;s start hack&lt;/h2&gt;
 
-&lt;h3 id=&#34;toc_0&#34;&gt;Mac os X 窗体最小化之后恢复&lt;/h3&gt;
+&lt;h3 id=&#34;toc_2&#34;&gt;确定网络的主机&lt;/h3&gt;
 
-&lt;p&gt;Mac os X 在最小化窗体之后, &lt;code&gt;command + tab&lt;/code&gt; 是不能够直接恢复, 具体操作如下&lt;br /&gt;
-command + tab 定位到对应的 Application 然后 &lt;code&gt;alt&lt;/code&gt; 然后同时放开 &lt;code&gt;alt command&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;hacker使用Nmap来扫描整个网络。&lt;/p&gt;
 
-&lt;h3 id=&#34;toc_1&#34;&gt;清除 DNS cache&lt;/h3&gt;
-
-&lt;pre&gt;&lt;code&gt;sudo dscacheutil -flushcache
+&lt;pre&gt;&lt;code&gt;nmap -sP 192.168.1.0/24  
 &lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;nmap 做了什么事情?&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;-sP 表示ping scanning, nmap 发送ICMP echo request 到每个机器, 返回echo response的机器是存活状态. 但是有些站点会屏蔽echo request , 因此nmap 会发送一个TCP ack packet 到端口80 (by default), 如果获取到RST, 那么也可以确定是
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;toc_3&#34;&gt;强制使用TCP ACK(PA) 或者 TCP SYN(PS) 来进行存活探测&lt;/h4&gt;
+
+&lt;p&gt;有些机器或者firewall 会关闭&lt;strong&gt;ICMP response&lt;/strong&gt;, 我们可以强制使用&lt;strong&gt;TCP ACK&lt;/strong&gt; 或者&lt;strong&gt;TCP SYN&lt;/strong&gt;来进行扫描.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;use -PA&amp;lt;port1&amp;gt;[,port2][...].  The default port is 80, since this port is often not filtered out.  Note that this option now accepts multiple, comma-separated port numbers.
+
+nmap -PS 80,81 192.168.1.101
+nmap -PA 8888,8889192.158.1.101
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;批量扫描&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;nmap ip1 ip2 ip3
+nmap 192.168.1.*
+nmap 192.168.1.101,102,103
+nmap 191.168.1.101-201
+nmap 129.168.1.101-201 --exclude=192.168.1.150  
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;toc_4&#34;&gt;端口扫描&lt;/h3&gt;
+
+&lt;p&gt;确定在子网内的机器ip之后就可以针对某些特定的机器进行端口扫描.
+1: 使用TCP连接进行扫描&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;nmap -sT 192.168.1.2  
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;nmap 做了什么事情?&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;本机会利用connect() 和远程进行进行创建连接, 如果远程的机器端口是Listened, connect() 会成功  
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;优点: 不需要root权限就能够进行
+缺点: 该扫描很容易被远程机器探测到, 远程的机器会记录创建连接和错误日志.&lt;/p&gt;
+
+&lt;p&gt;2: 隐蔽扫描(stealth scanning)
+使用TCP SYN扫描来解决上面的问题, 这种方式通常叫&amp;rdquo;half-open scanning&amp;rdquo;.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;nmap -sS 192.168.1.2
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;nmap 做了什么事情?&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;本机发送SYN, 如果端口listen那么就返回 ACK|SYN,本机收到之后返回RST来断开连接.  如果返回RST那么表示该端口没有listen. 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;优点: half-open scanning 相对来说比较难被发现在扫描
+缺点:执行该操作需要root 权限, 因为需要构建SYN包.&lt;/p&gt;
+
+&lt;h3 id=&#34;toc_5&#34;&gt;防火墙检查&lt;/h3&gt;
+
+&lt;p&gt;检查目标机器是否在防火墙或者packet filter之后?　　&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;nmap -sA 192.168.0.101
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;toc_6&#34;&gt;检测刚刚启动的host&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;nmap -sP  192.168.1.*
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;toc_7&#34;&gt;操作系统识别(OS Fingerprinting)&lt;/h3&gt;
+
+&lt;p&gt;hacker可能对某个os的漏洞很熟悉, 能够轻易进入该操作系统的机器.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;nmap -O ip
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;toc_8&#34;&gt;indent 扫描&lt;/h3&gt;
+
+&lt;p&gt;hacker 会选择一台对某些进程存在漏洞的电脑, 比如一个root运行的webserver, 如果目标机器运行了identd(前提哦,identd是一个协议的实现) 通过 &lt;code&gt;-l&lt;/code&gt;选项能够进行查看哪个用户拥有http守护进程.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;nmap -sT -p 80 -l -O www.yourserver.com
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Apache运行在root下，是不安全的实践，你可以通过把/etc/indeed.conf中的&lt;strong&gt;auth服务注销&lt;/strong&gt;来阻止ident请求，并重新启动ident。另外也可用使用ipchains或你的最常用的防火墙，在网络边界上执行防火墙规则来终止ident请求，这可以阻止来路不明的人探测你的网站用户拥有哪些进程。&lt;/p&gt;
+
+&lt;p&gt;###快速扫描
+ 只进行nmap-services 文件中列出的服务进行检测.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;nmap -F 192.168.1.101  
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;### TCP端口扫描&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;nmap -p -T:8888,80 192.168.1.101
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;toc_9&#34;&gt;常用选项&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;-p 指定端口 -p 21,22,23
+-v verbose mode 详细模式
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;toc_10&#34;&gt;检测host 服务的版本&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;nmap -sV www.baidu.com
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;toc_11&#34;&gt;小结：　　&lt;/h3&gt;
+
+&lt;p&gt;使用什么样的方法来抵制一个黑客使用Nmap，这样的工具是有的，比如 Scanlogd, Courtney, and Shadow;，然而使用这样的工具并不能代替网络安全管理员。因为扫描只是攻击的前期准备，站点使用它只可以进行严密的监视。 使用Nmap监视自己的站点，系统和网络管理员能发现潜在入侵者对你的系统的探测。&lt;/p&gt;
 </description>
     </item>
     
     <item>
-      <title>Git Draft</title>
-      <link>http://yujinqiu.github.io/posts/GitDraft/</link>
-      <pubDate>Tue, 25 Nov 2014 21:36:12 CST</pubDate>
+      <title>MysqlDraft</title>
+      <link>http://yujinqiu.github.io/posts/MysqlDraft/</link>
+      <pubDate>Thu, 04 Dec 2014 13:53:18 CST</pubDate>
       
-      <guid>http://yujinqiu.github.io/posts/GitDraft/</guid>
+      <guid>http://yujinqiu.github.io/posts/MysqlDraft/</guid>
       <description>
 
-&lt;h1 id=&#34;toc_0&#34;&gt;Git&lt;/h1&gt;
+&lt;h2 id=&#34;toc_0&#34;&gt;Mysql多列去重&lt;/h2&gt;
 
-&lt;h2 id=&#34;toc_1&#34;&gt;原子提交&lt;/h2&gt;
+&lt;h3 id=&#34;toc_1&#34;&gt;背景&lt;/h3&gt;
 
-&lt;p&gt;在我们修改文件的时候, 通常是希望一次提交只包含该次功能修改相关的操作.&lt;br /&gt;
-但是如果一个文件包含多个操作该怎么办 ?&lt;br /&gt;
-或者你的一个程序文件里边,为了调试写了很多的log日志输出, 你不希望这些语句ci 到server上, 该怎么办 ?&lt;/p&gt;
+&lt;p&gt;在项目中通常需要我们对数据进行去重, 第一反应应该是使用&lt;code&gt;distinct&lt;/code&gt; 来进行去重, 假设数据如下&lt;/p&gt;
 
-&lt;p&gt;&lt;code&gt;git add -p&lt;/code&gt; 能够解决上面的场景(虽然已经add 过,还是需要add 到 stage 进去).&lt;br /&gt;
-执行之后会提示:&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;id&lt;/th&gt;
+&lt;th&gt;name&lt;/th&gt;
+&lt;th&gt;age&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
 
-&lt;pre&gt;&lt;code&gt;Stage this hunk [y,n,q,a,d,/,e,?]?
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;1&lt;/td&gt;
+&lt;td&gt;monalisa&lt;/td&gt;
+&lt;td&gt;100&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;2&lt;/td&gt;
+&lt;td&gt;foo&lt;/td&gt;
+&lt;td&gt;100&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;3&lt;/td&gt;
+&lt;td&gt;monalisa&lt;/td&gt;
+&lt;td&gt;26&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;4&lt;/td&gt;
+&lt;td&gt;foo&lt;/td&gt;
+&lt;td&gt;100&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;5&lt;/td&gt;
+&lt;td&gt;bar&lt;/td&gt;
+&lt;td&gt;100&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;6&lt;/td&gt;
+&lt;td&gt;test&lt;/td&gt;
+&lt;td&gt;100&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;7&lt;/td&gt;
+&lt;td&gt;demo&lt;/td&gt;
+&lt;td&gt;100&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;pre&gt;&lt;code&gt;select distinct name , age from driver; 但是很多时候我们需要保留 id
+
+mysql&amp;gt; select distinct name , age from driver;
++----------+------+
+| name     | age  |
++----------+------+
+| monalisa |  100 |
+| foo      |  100 |
+| monalisa |   26 |
+| bar      |  100 |
+| test     |  100 |
+| demo     |  100 |
++----------+------+
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;hit &lt;code&gt;s&lt;/code&gt; to split whatever change into smaller chunks. This only works if there is at least one unchanged line in the &amp;ldquo;middle&amp;rdquo; of the hunk, which is where hunk will be split&lt;br /&gt;
-then hit &lt;code&gt;y&lt;/code&gt; to stage that chunk&lt;br /&gt;
-or &lt;code&gt;n&lt;/code&gt; to not stage that hunk&lt;br /&gt;
-or &lt;code&gt;e&lt;/code&gt; to manually edit the chunk (useful when git can&amp;rsquo;t split it automatically)&lt;br /&gt;
-and &lt;code&gt;d&lt;/code&gt; to exit or go to the next file.&lt;br /&gt;
-Use &lt;code&gt;?&lt;/code&gt; to get the whole list of available options.&lt;/p&gt;
+&lt;p&gt;采用 &lt;code&gt;select distinct id, name, age from driver&lt;/code&gt; 无法实现想要的效果, 因为 distinct 看来是三元组 [id, name, age], 均不一样.&lt;/p&gt;
 
-&lt;h2 id=&#34;toc_2&#34;&gt;Git checkout 某个分支&lt;/h2&gt;
+&lt;p&gt;可以采用 &lt;code&gt;select id, name, age from driver group by name, age&lt;/code&gt; 来实现.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_2&#34;&gt;Mysql 复制行&lt;/h2&gt;
 
 &lt;h3 id=&#34;toc_3&#34;&gt;背景&lt;/h3&gt;
 
-&lt;p&gt;在使用 git 的时候, 经常会使用第三方开发的程序/lib 的特定版本(兼容性问题) ,&lt;/p&gt;
+&lt;p&gt;在开发中, 经常需要初始数据, INSERT INTO &lt;TABLE&gt; values (&amp;hellip;.), (&amp;hellip;) , 效率比较慢,  我们经常需要充以后的内容中复制几行.&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;git tag -l
-git checkout tags/&amp;lt;tag_name&amp;gt; 
+&lt;pre&gt;&lt;code&gt;mysql&amp;gt; select * from driver;
++----+----------+------+
+| id | name     | age  |
++----+----------+------+
+|  1 | monalisa |  100 |
+|  2 | foo      |  100 |
+|  3 | monalisa |   26 |
+|  4 | foo      |  100 |
+|  5 | bar      |  100 |
+|  6 | test     |  100 |
+|  7 | demo     |  100 |
++----+----------+------+
 &lt;/code&gt;&lt;/pre&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>AppleDraft</title>
-      <link>http://yujinqiu.github.io/posts/Apple/</link>
-      <pubDate>Tue, 25 Nov 2014 21:36:12 CST</pubDate>
-      
-      <guid>http://yujinqiu.github.io/posts/Apple/</guid>
-      <description>
 
-&lt;h1 id=&#34;toc_0&#34;&gt;Apple&lt;/h1&gt;
+&lt;p&gt;假设我们需要复制 monalisa 行到新行里边, 然后就可以修改新行内容.&lt;/p&gt;
 
-&lt;h2 id=&#34;toc_1&#34;&gt;iphone 屏幕小白点怎么开启?&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;insert into driver (name, age) select name,  age from driver where name = &#39;monalisa&#39; ; 
+&lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;看到别人的屏幕有一个小白点, 点击之后出现siri, device, favorites 和 home 怎么打开?&lt;br /&gt;
-那个东西叫Assistive Touch , 在 /setting/general/Accessibility/AssistiveTouch 里边可以打开.&lt;/p&gt;
+&lt;h2 id=&#34;toc_4&#34;&gt;Mysql 输出取消 table 内容&lt;/h2&gt;
 
-&lt;h2 id=&#34;toc_2&#34;&gt;iphone越狱&lt;/h2&gt;
+&lt;h3 id=&#34;toc_5&#34;&gt;背景&lt;/h3&gt;
 
-&lt;p&gt;其实不想一开始就写这篇文章,实在受不了美国v版的中文输入法, 就动起了越狱的心思.网上看了有什么pp助手,91助手之类的工具, 本着对国内流氓公司的不信任的关系,另外恰巧在安装&lt;a href=&#34;http://justgetflux.com/&#34;&gt;f.lux&lt;/a&gt; 遇到&lt;a href=&#34;http://evasi0n.com/&#34;&gt;破解的说明&lt;/a&gt;, 具体操作说明很清楚不到10min就越狱完成. 需要注意点:&lt;/p&gt;
+&lt;p&gt;我们在 Mysql 查询内容的时候, 为方便数据处理, 有时候我们不需要输出结果中带有 table 边框.&lt;/p&gt;
 
-&lt;ol&gt;
-&lt;li&gt;越狱前强烈建议利用itunes来进行完整备份&lt;/li&gt;
-&lt;li&gt;关闭passcode功能&lt;/li&gt;
-&lt;li&gt;退出所有的应用&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;I&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;-s, --silent        Be more silent. Print results with a tab as separator,
+                  each row on new line.
+&lt;/code&gt;&lt;/pre&gt;
 </description>
     </item>
     
@@ -376,6 +536,229 @@ ls | grep -E &#39;\.log$&#39; | parallel -m mv {} destdir
 
 &lt;pre&gt;&lt;code&gt;    parallel -S server1,server2,...,server N --tag --cleanup --basefile $HOME/tmp/nginx_reload.sh &#39;sh {}&#39; ::: $HOME/tmp/nginx_reload.sh
 &lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Mac os X Draft</title>
+      <link>http://yujinqiu.github.io/posts/Mac/</link>
+      <pubDate>Tue, 25 Nov 2014 21:36:12 CST</pubDate>
+      
+      <guid>http://yujinqiu.github.io/posts/Mac/</guid>
+      <description>
+
+&lt;p&gt;#Mac os X
+##Yosemite 升级之后应该进行什么操作?&lt;br /&gt;
+1. 从 mavericks 升级到 mac os x 之后, 会遇到一些比较诡异的问题(比如找不到 clang), 下面的命令会帮助你提前避免一些问题.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;sudo xcode-select --install  
+sudo xcode-select --switch /Applications/Xcode.app   
+sudo xcodebuild -license  
+sudo gem update --system  
+sudo gem install xcodeproj   
+sudo brew update   
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ol&gt;
+&lt;li&gt;同时 Yosemite 会收集用户的隐私数据, 建议通过&lt;a href=&#34;https://fix-macosx.com/&#34;&gt;fix-macosx&lt;/a&gt;进行修复&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&#34;toc_0&#34;&gt;Mac os X 窗体最小化之后恢复&lt;/h3&gt;
+
+&lt;p&gt;Mac os X 在最小化窗体之后, &lt;code&gt;command + tab&lt;/code&gt; 是不能够直接恢复, 具体操作如下&lt;br /&gt;
+command + tab 定位到对应的 Application 然后 &lt;code&gt;alt&lt;/code&gt; 然后同时放开 &lt;code&gt;alt command&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;toc_1&#34;&gt;清除 DNS cache&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;sudo dscacheutil -flushcache
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;toc_2&#34;&gt;mac os x 权限位问题&lt;/h3&gt;
+
+&lt;p&gt;在 mac os terminal 中我们经常可以看到 带有 &lt;code&gt;+&lt;/code&gt;  和  &lt;code&gt;@&lt;/code&gt;  的权限问题&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;-rw-r--r--@  1 knight  staff      775 Feb 26  2014 Apple.md
+-rw-r--r--   1 knight  staff     3608 Oct 25 14:23 CliDraft.md
+-rw-r--r--@  1 knight  staff     1208 Nov 16  2013 EspeakDraft.md
+-rw-r--r--@  1 knight  staff     3470 Dec 31  2013 FPDraft.md
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;toc_3&#34;&gt;@ 字符&lt;/h4&gt;
+
+&lt;p&gt;&lt;code&gt;@&lt;/code&gt; 表示这个文件拥有扩展的属性( additional attribute) , 可以通过&lt;code&gt;xattr&lt;/code&gt; 来查看详细信息:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;xattr -l  &amp;lt;filename&amp;gt; 
+
+➜  engineerdraft git:(master) ✗ xattr -l Apple.md
+com.apple.TextEncoding: utf-8;134217984
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;扩展的属性用途是: 定义一些打开文件的程序比如 Mou 打开 markdown 文件.&lt;/p&gt;
+
+&lt;h4 id=&#34;toc_4&#34;&gt;+ 字符&lt;/h4&gt;
+
+&lt;p&gt;+ 表示这个文件用户 ACL(Access Control List) 相对于文件的权限能够耕细粒度的控制.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;ls -le 可以查看文件的 acl 权限
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;##如何快速访问Menu或者mac访问Menu的快捷键
+在window的用户会有这样的习惯, 通过alt来快速访问菜单栏. 在mac 下怎么通过键盘来快速访问?
+终于在&lt;a href=&#34;http://lifehacker.com/321595/access-the-dock-and-menu-bar-from-your-keyboard&#34;&gt;access-the-dock-and-menu-bar-from-your-keyboard&lt;/a&gt; 找到方法.    
+其实很简单就是通过 &lt;code&gt;ctrl+F2&lt;/code&gt;(menubar) &lt;code&gt;ctrl+F3&lt;/code&gt;(dock), 然后直接输入对应的菜单名称. 比如:&lt;code&gt;View&lt;/code&gt;, 输入回车即可选择, 然后继续输入对应的名称,或者通过方向键即可选择.
+打开Menu的Help的快捷键是&lt;code&gt;command + shift + /&lt;/code&gt;, 可以这样记住: shift+/ = ?  快捷键就是command + ? == help&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_5&#34;&gt;mac 计算md5 值&lt;/h2&gt;
+
+&lt;p&gt;在linux 下有md5sum 这个命令, 在mac 下发现居然没有. 仔细查找之后发现原来叫md5. 运行之后发现和md5sum输出的结果不一样, 其实可以利用&lt;code&gt;md5 -r&lt;/code&gt;就可以得到一样的结果.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_6&#34;&gt;mac 版本管理&lt;/h2&gt;
+
+&lt;p&gt;mac 的 keynote, pages, numbers 和原始文本编辑器是具有版本管理的. 入口在&lt;code&gt;File-&amp;gt; revert to -&amp;gt; brow all version&lt;/code&gt;, 可以进入查看和 time machine 一样的界面.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_7&#34;&gt;快速打开stikcy note 快捷键&lt;/h2&gt;
+
+&lt;p&gt;shift+ command + y ,  退出:  command + q&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_8&#34;&gt;屏幕放大&lt;/h2&gt;
+
+&lt;p&gt;ctrl + 鼠标放大,缩小&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_9&#34;&gt;快速预览文件( quick look)&lt;/h2&gt;
+
+&lt;h3 id=&#34;toc_10&#34;&gt;背景&lt;/h3&gt;
+
+&lt;p&gt;经常我们在命令行里边,看到某个文件之后, 希望能够 quick look, 一般的做法是, open File 打开, 然后关闭, 其实我们只是希望能够简单看一下, 可以利用以下命令来实现 :&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;qlmanage -p  File
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Git Draft</title>
+      <link>http://yujinqiu.github.io/posts/GitDraft/</link>
+      <pubDate>Tue, 25 Nov 2014 21:36:12 CST</pubDate>
+      
+      <guid>http://yujinqiu.github.io/posts/GitDraft/</guid>
+      <description>
+
+&lt;h1 id=&#34;toc_0&#34;&gt;Git&lt;/h1&gt;
+
+&lt;h2 id=&#34;toc_1&#34;&gt;原子提交&lt;/h2&gt;
+
+&lt;p&gt;在我们修改文件的时候, 通常是希望一次提交只包含该次功能修改相关的操作.&lt;br /&gt;
+但是如果一个文件包含多个操作该怎么办 ?&lt;br /&gt;
+或者你的一个程序文件里边,为了调试写了很多的log日志输出, 你不希望这些语句ci 到server上, 该怎么办 ?&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;git add -p&lt;/code&gt; 能够解决上面的场景(虽然已经add 过,还是需要add 到 stage 进去).&lt;br /&gt;
+执行之后会提示:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Stage this hunk [y,n,q,a,d,/,e,?]?
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;hit &lt;code&gt;s&lt;/code&gt; to split whatever change into smaller chunks. This only works if there is at least one unchanged line in the &amp;ldquo;middle&amp;rdquo; of the hunk, which is where hunk will be split&lt;br /&gt;
+then hit &lt;code&gt;y&lt;/code&gt; to stage that chunk&lt;br /&gt;
+or &lt;code&gt;n&lt;/code&gt; to not stage that hunk&lt;br /&gt;
+or &lt;code&gt;e&lt;/code&gt; to manually edit the chunk (useful when git can&amp;rsquo;t split it automatically)&lt;br /&gt;
+and &lt;code&gt;d&lt;/code&gt; to exit or go to the next file.&lt;br /&gt;
+Use &lt;code&gt;?&lt;/code&gt; to get the whole list of available options.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_2&#34;&gt;Git checkout 某个分支&lt;/h2&gt;
+
+&lt;h3 id=&#34;toc_3&#34;&gt;背景&lt;/h3&gt;
+
+&lt;p&gt;在使用 git 的时候, 经常会使用第三方开发的程序/lib 的特定版本(兼容性问题) ,&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;git tag -l
+git checkout tags/&amp;lt;tag_name&amp;gt; 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;toc_4&#34;&gt;Git checkout 远程的一个分支&lt;/h2&gt;
+
+&lt;h3 id=&#34;toc_5&#34;&gt;背景&lt;/h3&gt;
+
+&lt;p&gt;在多人协作的开发场景下, Dev B 提交了一个分支, 需要拉到本地.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;git fetch origin 
+git branch -v -a 
+git checkout -b test origin/test
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;toc_6&#34;&gt;Git 多人开发流程&lt;/h2&gt;
+
+&lt;h3 id=&#34;toc_7&#34;&gt;如何发 PR&lt;/h3&gt;
+
+&lt;p&gt;以下以 wiki-pages 为例&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;把项目 fork 到自己名下，然后 clone 到本地&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;git clone git@git.xiaojukeji.com:yexiliang/wiki-pages.git
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;将原始项目加为上游&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;git remote add upstream git@git.xiaojukeji.com:op/wiki-pages.git
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;在本地项目建立分支并切换到该分支&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;git checkout -b dev
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;在 dev 分支上开发，提交&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;touch foo.txt
+git add foo.txt
+git commit
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;切换到 master 分支并合并上游&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;git checkout master
+git fetch upstream
+git merge upstream/master
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;切换到 dev 分支，合并 master，推送代码&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;git checkout dev
+git rebase master
+git push
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;到 github / gitlab 选 dev 分支发 pull request&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>AppleDraft</title>
+      <link>http://yujinqiu.github.io/posts/Apple/</link>
+      <pubDate>Tue, 25 Nov 2014 21:36:12 CST</pubDate>
+      
+      <guid>http://yujinqiu.github.io/posts/Apple/</guid>
+      <description>
+
+&lt;h1 id=&#34;toc_0&#34;&gt;Apple&lt;/h1&gt;
+
+&lt;h2 id=&#34;toc_1&#34;&gt;iphone 屏幕小白点怎么开启?&lt;/h2&gt;
+
+&lt;p&gt;看到别人的屏幕有一个小白点, 点击之后出现siri, device, favorites 和 home 怎么打开?&lt;br /&gt;
+那个东西叫Assistive Touch , 在 /setting/general/Accessibility/AssistiveTouch 里边可以打开.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_2&#34;&gt;iphone越狱&lt;/h2&gt;
+
+&lt;p&gt;其实不想一开始就写这篇文章,实在受不了美国v版的中文输入法, 就动起了越狱的心思.网上看了有什么pp助手,91助手之类的工具, 本着对国内流氓公司的不信任的关系,另外恰巧在安装&lt;a href=&#34;http://justgetflux.com/&#34;&gt;f.lux&lt;/a&gt; 遇到&lt;a href=&#34;http://evasi0n.com/&#34;&gt;破解的说明&lt;/a&gt;, 具体操作说明很清楚不到10min就越狱完成. 需要注意点:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;越狱前强烈建议利用itunes来进行完整备份&lt;/li&gt;
+&lt;li&gt;关闭passcode功能&lt;/li&gt;
+&lt;li&gt;退出所有的应用&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;I&lt;/p&gt;
 </description>
     </item>
     
@@ -1313,127 +1696,6 @@ will be able to run&lt;/p&gt;
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;and leaning back in chair, enjoying perfect cover profiles.&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Deploying blog with docker and hugo</title>
-      <link>http://yujinqiu.github.io/posts/hugoblog/</link>
-      <pubDate>Sun, 04 May 2014 00:00:00 UTC</pubDate>
-      
-      <guid>http://yujinqiu.github.io/posts/hugoblog/</guid>
-      <description>
-
-&lt;h4 id=&#34;toc_0&#34;&gt;Prelude&lt;/h4&gt;
-
-&lt;p&gt;Recently I moved my jabber-server to DigitalOcean VPS. Run Prosody in docker was
-so easy, that I decided create this blog. And of course deploy it with docker!&lt;/p&gt;
-
-&lt;h4 id=&#34;toc_1&#34;&gt;Content&lt;/h4&gt;
-
-&lt;p&gt;At first we need container with templates and content for blog generation.
-I used next dockerfile:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;FROM debian:jessie
-
-RUN apt-get update &amp;amp;&amp;amp; apt-get install --no-install-recommends -y ca-certificates git-core
-RUN git clone http://github.com/LK4D4/lk4d4.darth.io.git /src
-VOLUME [&amp;quot;/src&amp;quot;]
-WORKDIR /src
-ENTRYPOINT [&amp;quot;git&amp;quot;]
-CMD [&amp;quot;pull&amp;quot;]
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;There is no magic here: just clone repo to &lt;code&gt;/src&lt;/code&gt; (it will be used below),
-and update it on container start.&lt;/p&gt;
-
-&lt;p&gt;Build image:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;docker build -t blog/content .
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Create data container:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;docker run --name blog_content blog/content
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;For updating content and templates from github we need just:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;docker start blog_content
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h4 id=&#34;toc_2&#34;&gt;Hugo&lt;/h4&gt;
-
-&lt;p&gt;&lt;a href=&#34;http://hugo.spf13.com&#34;&gt;Hugo&lt;/a&gt; &amp;ndash; very fast static site generator, written in Go (so
-many cool things written in Go btw).&lt;/p&gt;
-
-&lt;p&gt;Idea is to run hugo in docker container so it reads contents from one directory
-and writes generated blog to another.&lt;/p&gt;
-
-&lt;p&gt;Hugo dockerfile:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;FROM crosbymichael/golang
-
-RUN apt-get update &amp;amp;&amp;amp; apt-get install --no-install-recommends -y bzr
-
-RUN go get github.com/spf13/hugo
-
-VOLUME [&amp;quot;/var/www/blog&amp;quot;]
-
-ENTRYPOINT [&amp;quot;hugo&amp;quot;]
-CMD [&amp;quot;-w&amp;quot;, &amp;quot;-s&amp;quot;, &amp;quot;/src&amp;quot;, &amp;quot;-d&amp;quot;, &amp;quot;/var/www/blog&amp;quot;]
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;So, here we &lt;code&gt;go get&lt;/code&gt; hugo and use /src(remember this from content container?)
-as source directory for it and &lt;code&gt;/var/www/blog&lt;/code&gt; as destination.&lt;/p&gt;
-
-&lt;p&gt;Now build image and run container with hugo:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;docker build -t blog/rendered .
-docker run --name blog --volumes-from blog_content blog/rendered
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Here the trick with
-&lt;a href=&#34;http://docs.docker.io/use/working_with_volumes/&#34;&gt;&lt;code&gt;--volumes-from&lt;/code&gt;&lt;/a&gt; &amp;ndash; we used
-&lt;code&gt;/src&lt;/code&gt; from &lt;code&gt;blog_content&lt;/code&gt; container, and yeah, we&amp;rsquo;re going to use
-&lt;code&gt;/var/www/blog&lt;/code&gt; from &lt;code&gt;blog&lt;/code&gt; container.&lt;/p&gt;
-
-&lt;h4 id=&#34;toc_3&#34;&gt;Nginx&lt;/h4&gt;
-
-&lt;p&gt;So, now we have container with templates and content &lt;code&gt;blog_content&lt;/code&gt;, content
-with ready to use blog &lt;code&gt;blog&lt;/code&gt;, it&amp;rsquo;s time to show this blog to the world.&lt;/p&gt;
-
-&lt;p&gt;I write simple config for nginx:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;server {
-    listen 80;
-    server_name lk4d4.darth.io;
-    location / {
-        root /var/www/blog;
-    }
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Put it to sites-enabled directory, which used in this pretty dockerfile:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;FROM dockerfile/nginx
-
-ADD sites-enabled/ /etc/nginx/sites-enabled
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Build image and run container with nginx:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;docker build -t nginx .
-docker run -p 80:80 -d --name=nginx --volumes-from=blog nginx
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;That&amp;rsquo;s it, now blog is running on &lt;a href=&#34;http://lk4d4.darth.io&#34;&gt;lk4d4.darth.io&lt;/a&gt; and
-you can read it :) I can update it just with &lt;code&gt;docker start blog_content&lt;/code&gt;.&lt;/p&gt;
-
-&lt;h4 id=&#34;toc_4&#34;&gt;Conclusions&lt;/h4&gt;
-
-&lt;p&gt;It&amp;rsquo;s really fun to use docker. You don&amp;rsquo;t need to install and remove
-tons of crap on host machine, docker can handle it all for you.&lt;/p&gt;
 </description>
     </item>
     

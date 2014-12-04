@@ -99,6 +99,66 @@ command + tab 定位到对应的 Application 然后 <code>alt</code> 然后同�
 <pre><code>sudo dscacheutil -flushcache
 </code></pre>
 
+<h3 id="toc_2">mac os x 权限位问题</h3>
+
+<p>在 mac os terminal 中我们经常可以看到 带有 <code>+</code>  和  <code>@</code>  的权限问题</p>
+
+<pre><code>-rw-r--r--@  1 knight  staff      775 Feb 26  2014 Apple.md
+-rw-r--r--   1 knight  staff     3608 Oct 25 14:23 CliDraft.md
+-rw-r--r--@  1 knight  staff     1208 Nov 16  2013 EspeakDraft.md
+-rw-r--r--@  1 knight  staff     3470 Dec 31  2013 FPDraft.md
+</code></pre>
+
+<h4 id="toc_3">@ 字符</h4>
+
+<p><code>@</code> 表示这个文件拥有扩展的属性( additional attribute) , 可以通过<code>xattr</code> 来查看详细信息:</p>
+
+<pre><code>xattr -l  &lt;filename&gt; 
+
+➜  engineerdraft git:(master) ✗ xattr -l Apple.md
+com.apple.TextEncoding: utf-8;134217984
+</code></pre>
+
+<p>扩展的属性用途是: 定义一些打开文件的程序比如 Mou 打开 markdown 文件.</p>
+
+<h4 id="toc_4">+ 字符</h4>
+
+<p>+ 表示这个文件用户 ACL(Access Control List) 相对于文件的权限能够耕细粒度的控制.</p>
+
+<pre><code>ls -le 可以查看文件的 acl 权限
+</code></pre>
+
+<p>##如何快速访问Menu或者mac访问Menu的快捷键
+在window的用户会有这样的习惯, 通过alt来快速访问菜单栏. 在mac 下怎么通过键盘来快速访问?
+终于在<a href="http://lifehacker.com/321595/access-the-dock-and-menu-bar-from-your-keyboard">access-the-dock-and-menu-bar-from-your-keyboard</a> 找到方法.    
+其实很简单就是通过 <code>ctrl+F2</code>(menubar) <code>ctrl+F3</code>(dock), 然后直接输入对应的菜单名称. 比如:<code>View</code>, 输入回车即可选择, 然后继续输入对应的名称,或者通过方向键即可选择.
+打开Menu的Help的快捷键是<code>command + shift + /</code>, 可以这样记住: shift+/ = ?  快捷键就是command + ? == help</p>
+
+<h2 id="toc_5">mac 计算md5 值</h2>
+
+<p>在linux 下有md5sum 这个命令, 在mac 下发现居然没有. 仔细查找之后发现原来叫md5. 运行之后发现和md5sum输出的结果不一样, 其实可以利用<code>md5 -r</code>就可以得到一样的结果.</p>
+
+<h2 id="toc_6">mac 版本管理</h2>
+
+<p>mac 的 keynote, pages, numbers 和原始文本编辑器是具有版本管理的. 入口在<code>File-&gt; revert to -&gt; brow all version</code>, 可以进入查看和 time machine 一样的界面.</p>
+
+<h2 id="toc_7">快速打开stikcy note 快捷键</h2>
+
+<p>shift+ command + y ,  退出:  command + q</p>
+
+<h2 id="toc_8">屏幕放大</h2>
+
+<p>ctrl + 鼠标放大,缩小</p>
+
+<h2 id="toc_9">快速预览文件( quick look)</h2>
+
+<h3 id="toc_10">背景</h3>
+
+<p>经常我们在命令行里边,看到某个文件之后, 希望能够 quick look, 一般的做法是, open File 打开, 然后关闭, 其实我们只是希望能够简单看一下, 可以利用以下命令来实现 :</p>
+
+<pre><code>qlmanage -p  File
+</code></pre>
+
         </section>
   
       
@@ -106,10 +166,14 @@ command + tab 定位到对应的 Application 然后 <code>alt</code> 然后同�
 <div class="container">
   <hr />
   
+    <span class="left">
+    &nbsp; <em>&laquo; Previous:</em> <a class="next" href="http://yujinqiu.github.io/posts/GitDraft/">Git Draft</a>
+    </span>
+  
 
   
     <span class="right">
-    <em>Next: </em><a class="next" href="http://yujinqiu.github.io/posts/GitDraft/"> &nbsp; Git Draft</a> &raquo;
+    <em>Next: </em><a class="next" href="http://yujinqiu.github.io/posts/SSHDraft/"> &nbsp; SSHDraft</a> &raquo;
     </span>
   
 </div>

@@ -1,0 +1,230 @@
+
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <base href="http://yujinqiu.github.io">
+    <title> MysqlDraft </title>
+    <link rel="canonical" href="http://yujinqiu.github.io/posts/MysqlDraft/">
+    
+
+<link rel="stylesheet" href="/css/poole.css">
+
+<link rel="stylesheet" href="/css/lanyon.css">
+
+</head>
+
+
+<body class="theme-base-0b">
+  
+
+
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+
+
+<div class="sidebar" id="sidebar">
+
+  <nav class="sidebar-nav">
+    <p><img src="img/logo.png" width="80"></p>
+    <a class="sidebar-nav-item" href="/">Home</a>
+
+    <a class="sidebar-nav-item" href="/posts">Blog</a>
+
+    <a class="sidebar-nav-item" href="https://github.com/yujinqiu">Github</a>
+  </nav>
+
+  <div class="sidebar-item">
+    <p>
+      Powered by <a href="http://hugo.spf13.com">Hugo</a>. Design reused from <a href="https://github.com/spencerlyon2">Spencer Lyon</a> which was modified from this Jekyl theme <a href="http://lanyon.getpoole.com">Lanyon</a> under this <a href="https://github.com/spencerlyon2/hugo_gh_blog/blob/master/LICENSE">licence</a>.
+    </p>
+  </div>
+</div>
+
+
+
+
+  
+  <div class="wrap">
+    <div class="masthead">
+      <div class="container">
+        <h3 class="masthead-title">
+          <a href="/posts" title="Blog">Blog Posts</a>
+        </h3>
+        <hr>
+      </div>
+    </div>
+
+    
+    <div class="container content">
+      <div class="post-tile-meta">
+        <h1 class="post-title">MysqlDraft</h1>
+        Thu Dec 4, 2014 
+<div class="container category">
+  <ul class="catlist">
+    <li><em>Categories: </em></li>
+    
+  </ul>
+</div>
+</p>
+      </div>
+        <section id="main">
+          
+
+<h2 id="toc_0">Mysql多列去重</h2>
+
+<h3 id="toc_1">背景</h3>
+
+<p>在项目中通常需要我们对数据进行去重, 第一反应应该是使用<code>distinct</code> 来进行去重, 假设数据如下</p>
+
+<table>
+<thead>
+<tr>
+<th>id</th>
+<th>name</th>
+<th>age</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>1</td>
+<td>monalisa</td>
+<td>100</td>
+</tr>
+
+<tr>
+<td>2</td>
+<td>foo</td>
+<td>100</td>
+</tr>
+
+<tr>
+<td>3</td>
+<td>monalisa</td>
+<td>26</td>
+</tr>
+
+<tr>
+<td>4</td>
+<td>foo</td>
+<td>100</td>
+</tr>
+
+<tr>
+<td>5</td>
+<td>bar</td>
+<td>100</td>
+</tr>
+
+<tr>
+<td>6</td>
+<td>test</td>
+<td>100</td>
+</tr>
+
+<tr>
+<td>7</td>
+<td>demo</td>
+<td>100</td>
+</tr>
+</tbody>
+</table>
+
+<pre><code>select distinct name , age from driver; 但是很多时候我们需要保留 id
+
+mysql&gt; select distinct name , age from driver;
++----------+------+
+| name     | age  |
++----------+------+
+| monalisa |  100 |
+| foo      |  100 |
+| monalisa |   26 |
+| bar      |  100 |
+| test     |  100 |
+| demo     |  100 |
++----------+------+
+</code></pre>
+
+<p>采用 <code>select distinct id, name, age from driver</code> 无法实现想要的效果, 因为 distinct 看来是三元组 [id, name, age], 均不一样.</p>
+
+<p>可以采用 <code>select id, name, age from driver group by name, age</code> 来实现.</p>
+
+<h2 id="toc_2">Mysql 复制行</h2>
+
+<h3 id="toc_3">背景</h3>
+
+<p>在开发中, 经常需要初始数据, INSERT INTO <TABLE> values (&hellip;.), (&hellip;) , 效率比较慢,  我们经常需要充以后的内容中复制几行.</p>
+
+<pre><code>mysql&gt; select * from driver;
++----+----------+------+
+| id | name     | age  |
++----+----------+------+
+|  1 | monalisa |  100 |
+|  2 | foo      |  100 |
+|  3 | monalisa |   26 |
+|  4 | foo      |  100 |
+|  5 | bar      |  100 |
+|  6 | test     |  100 |
+|  7 | demo     |  100 |
++----+----------+------+
+</code></pre>
+
+<p>假设我们需要复制 monalisa 行到新行里边, 然后就可以修改新行内容.</p>
+
+<pre><code>insert into driver (name, age) select name,  age from driver where name = 'monalisa' ; 
+</code></pre>
+
+<h2 id="toc_4">Mysql 输出取消 table 内容</h2>
+
+<h3 id="toc_5">背景</h3>
+
+<p>我们在 Mysql 查询内容的时候, 为方便数据处理, 有时候我们不需要输出结果中带有 table 边框.</p>
+
+<pre><code>-s, --silent        Be more silent. Print results with a tab as separator,
+                  each row on new line.
+</code></pre>
+
+        </section>
+  
+      
+
+<div class="container">
+  <hr />
+  
+    <span class="left">
+    &nbsp; <em>&laquo; Previous:</em> <a class="next" href="http://yujinqiu.github.io/posts/NmapHack/">Nmap Draft</a>
+    </span>
+  
+
+  
+    <span class="right">
+    <em>Next: </em><a class="next" href="http://yujinqiu.github.io/posts/Apple/"> &nbsp; AppleDraft</a> &raquo;
+    </span>
+  
+</div>
+
+    </div>
+  </div>
+
+  <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+
+  <br />
+
+
+  
+  
+
+<div class="container content">
+<footer>
+</footer>
+</div>
+
+</body>
+</html>
+
+
+
+

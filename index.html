@@ -68,24 +68,36 @@
 
 <article class="post">
     <header>
-      <h2><a href='http://yujinqiu.github.io/posts/Mac/'> Mac os X Draft</a> </h2>
-      <div class="meta">Tue, Nov 25, 2014</div>
+      <h2><a href='http://yujinqiu.github.io/posts/NmapHack/'> Nmap Draft</a> </h2>
+      <div class="meta">Thu, Dec 4, 2014</div>
     </header>
 
-    <p>#Mac os X
-##Yosemite 升级之后应该进行什么操作?<br />
-1. 从 mavericks 升级到 mac os x 之后, 会遇到一些比较诡异的问题(比如找不到 clang), 下面的命令会帮助你提前避免一些问题.</p>
+    <p>#nmap 简单介绍</p>
 
-<pre><code class="language-bash">sudo xcode-select --install  
-sudo xcode-select --switch /Applications/Xcode.app   
-sudo xcodebuild -license  
-sudo gem update --system  
-sudo gem install xcodeproj   
-sudo brew update   
+<p>本文的切入点:hacker使用Nmap的流程角度来介绍如何掌握Nmap这个强大的工具,帮助安全管理员发现自己网站的漏洞, 并逐步加固自己的安全.</p>
+
+<p>nmap(network mapper) 主要用途<br />
+- 网络发现<br />
+- 安全扫描
+- 端口扫描
+- 网络审查</p>
+
+<h3>nmap 命令选项</h3>
+
+<pre><code>nmap [-s (Scan Type)] [Options] {target specification}
+</code></pre>
+
+<h2>Let&rsquo;s start hack</h2>
+
+<h3>确定网络的主机</h3>
+
+<p>hacker使用Nmap来扫描整个网络。</p>
+
+<pre><code>nmap -sP 192.168.1.0/24  
 </code></pre>
 
     <footer style="text-align:right; ">
-        <a href='http://yujinqiu.github.io/posts/Mac/'><nobr>Read more →</nobr></a>
+        <a href='http://yujinqiu.github.io/posts/NmapHack/'><nobr>Read more →</nobr></a>
     </footer>
     <hr/>
 </article>
@@ -95,33 +107,72 @@ sudo brew update
 
 <article class="post">
     <header>
-      <h2><a href='http://yujinqiu.github.io/posts/GitDraft/'> Git Draft</a> </h2>
-      <div class="meta">Tue, Nov 25, 2014</div>
+      <h2><a href='http://yujinqiu.github.io/posts/MysqlDraft/'> MysqlDraft</a> </h2>
+      <div class="meta">Thu, Dec 4, 2014</div>
     </header>
 
-    <h1>Git</h1>
+    <h2>Mysql多列去重</h2>
 
-<h2>原子提交</h2>
+<h3>背景</h3>
 
-<p>在我们修改文件的时候, 通常是希望一次提交只包含该次功能修改相关的操作.<br />
-但是如果一个文件包含多个操作该怎么办 ?<br />
-或者你的一个程序文件里边,为了调试写了很多的log日志输出, 你不希望这些语句ci 到server上, 该怎么办 ?</p>
+<p>在项目中通常需要我们对数据进行去重, 第一反应应该是使用<code>distinct</code> 来进行去重, 假设数据如下</p>
 
-<p><code>git add -p</code> 能够解决上面的场景(虽然已经add 过,还是需要add 到 stage 进去).<br />
-执行之后会提示:</p>
+<table>
+<thead>
+<tr>
+<th>id</th>
+<th>name</th>
+<th>age</th>
+</tr>
+</thead>
 
-<pre><code>Stage this hunk [y,n,q,a,d,/,e,?]?
-</code></pre>
+<tbody>
+<tr>
+<td>1</td>
+<td>monalisa</td>
+<td>100</td>
+</tr>
 
-<p>hit <code>s</code> to split whatever change into smaller chunks. This only works if there is at least one unchanged line in the &ldquo;middle&rdquo; of the hunk, which is where hunk will be split<br />
-then hit <code>y</code> to stage that chunk<br />
-or <code>n</code> to not stage that hunk<br />
-or <code>e</code> to manually edit the chunk (useful when git can&rsquo;t split it automatically)<br />
-and <code>d</code> to exit or go to the next file.<br />
-Use <code>?</code> to get the whole list of available options.</p>
+<tr>
+<td>2</td>
+<td>foo</td>
+<td>100</td>
+</tr>
+
+<tr>
+<td>3</td>
+<td>monalisa</td>
+<td>26</td>
+</tr>
+
+<tr>
+<td>4</td>
+<td>foo</td>
+<td>100</td>
+</tr>
+
+<tr>
+<td>5</td>
+<td>bar</td>
+<td>100</td>
+</tr>
+
+<tr>
+<td>6</td>
+<td>test</td>
+<td>100</td>
+</tr>
+
+<tr>
+<td>7</td>
+<td>demo</td>
+<td>100</td>
+</tr>
+</tbody>
+</table>
 
     <footer style="text-align:right; ">
-        <a href='http://yujinqiu.github.io/posts/GitDraft/'><nobr>Read more →</nobr></a>
+        <a href='http://yujinqiu.github.io/posts/MysqlDraft/'><nobr>Read more →</nobr></a>
     </footer>
     <hr/>
 </article>
@@ -187,6 +238,69 @@ for host in $( &lt; machines ) ; do ssh ${host} &ldquo; uptime &rdquo; ;done</p>
 
     <footer style="text-align:right; ">
         <a href='http://yujinqiu.github.io/posts/ParallelDraft/'><nobr>Read more →</nobr></a>
+    </footer>
+    <hr/>
+</article>
+
+            
+            
+
+<article class="post">
+    <header>
+      <h2><a href='http://yujinqiu.github.io/posts/GitDraft/'> Git Draft</a> </h2>
+      <div class="meta">Tue, Nov 25, 2014</div>
+    </header>
+
+    <h1>Git</h1>
+
+<h2>原子提交</h2>
+
+<p>在我们修改文件的时候, 通常是希望一次提交只包含该次功能修改相关的操作.<br />
+但是如果一个文件包含多个操作该怎么办 ?<br />
+或者你的一个程序文件里边,为了调试写了很多的log日志输出, 你不希望这些语句ci 到server上, 该怎么办 ?</p>
+
+<p><code>git add -p</code> 能够解决上面的场景(虽然已经add 过,还是需要add 到 stage 进去).<br />
+执行之后会提示:</p>
+
+<pre><code>Stage this hunk [y,n,q,a,d,/,e,?]?
+</code></pre>
+
+<p>hit <code>s</code> to split whatever change into smaller chunks. This only works if there is at least one unchanged line in the &ldquo;middle&rdquo; of the hunk, which is where hunk will be split<br />
+then hit <code>y</code> to stage that chunk<br />
+or <code>n</code> to not stage that hunk<br />
+or <code>e</code> to manually edit the chunk (useful when git can&rsquo;t split it automatically)<br />
+and <code>d</code> to exit or go to the next file.<br />
+Use <code>?</code> to get the whole list of available options.</p>
+
+    <footer style="text-align:right; ">
+        <a href='http://yujinqiu.github.io/posts/GitDraft/'><nobr>Read more →</nobr></a>
+    </footer>
+    <hr/>
+</article>
+
+            
+            
+
+<article class="post">
+    <header>
+      <h2><a href='http://yujinqiu.github.io/posts/Mac/'> Mac os X Draft</a> </h2>
+      <div class="meta">Tue, Nov 25, 2014</div>
+    </header>
+
+    <p>#Mac os X
+##Yosemite 升级之后应该进行什么操作?<br />
+1. 从 mavericks 升级到 mac os x 之后, 会遇到一些比较诡异的问题(比如找不到 clang), 下面的命令会帮助你提前避免一些问题.</p>
+
+<pre><code class="language-bash">sudo xcode-select --install  
+sudo xcode-select --switch /Applications/Xcode.app   
+sudo xcodebuild -license  
+sudo gem update --system  
+sudo gem install xcodeproj   
+sudo brew update   
+</code></pre>
+
+    <footer style="text-align:right; ">
+        <a href='http://yujinqiu.github.io/posts/Mac/'><nobr>Read more →</nobr></a>
     </footer>
     <hr/>
 </article>
@@ -352,47 +466,6 @@ host1 --&gt;  X  --&gt; host3
 
     <footer style="text-align:right; ">
         <a href='http://yujinqiu.github.io/posts/embedded_gists/'><nobr>Read more →</nobr></a>
-    </footer>
-    <hr/>
-</article>
-
-            
-            
-
-<article class="post">
-    <header>
-      <h2><a href='http://yujinqiu.github.io/posts/hugo_summary/'> Making Your Own Summary</a> </h2>
-      <div class="meta">Sat, Jun 28, 2014</div>
-    </header>
-
-    <p>Hugo allows you to specify where the summary stops - and allows the full markdown including shortcodes.</p>
-
-<p>You just need to construct the first bit of your article so that it makes a nice summary and then end it with&hellip;</p>
-
-<pre><code></code></pre>
-
-<p>(of course dont include the space :) )</p>
-
-<!-- here is the real more... -->
-
-    <footer style="text-align:right; ">
-        <a href='http://yujinqiu.github.io/posts/hugo_summary/'><nobr>Read more →</nobr></a>
-    </footer>
-    <hr/>
-</article>
-
-            
-            
-
-<article class="post">
-    <header>
-      <h2><a href='http://yujinqiu.github.io/posts/streak/'> 30 days of hacking Docker</a> </h2>
-      <div class="meta">Wed, Jun 11, 2014</div>
-    </header>
-
-    Prelude Yesterday I finished my first 30-day streak on GitHub. Most of contributions were to Docker &ndash; the biggest opensource project on Go. I learned a lot in this month, and it was really cool. I think that this is mostly because of Go language. I&rsquo;ve been programming on Python for five years and I was never so excited about open source, because Python is not even half so fun as Go.
-    <footer style="text-align:right; ">
-        <a href='http://yujinqiu.github.io/posts/streak/'><nobr>Read more →</nobr></a>
     </footer>
     <hr/>
 </article>
