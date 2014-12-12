@@ -7,7 +7,28 @@
     
     
     
-    <updated>Thu, 04 Dec 2014 21:36:12 CST</updated>
+    <updated>Fri, 12 Dec 2014 12:17:54 CST</updated>
+    
+    <item>
+      <title>GolangDraft</title>
+      <link>http://yujinqiu.github.io/posts/GolangDraft/</link>
+      <pubDate>Fri, 12 Dec 2014 12:17:54 CST</pubDate>
+      
+      <guid>http://yujinqiu.github.io/posts/GolangDraft/</guid>
+      <description>
+
+&lt;h2 id=&#34;toc_0&#34;&gt;Golang 相关 tools 安装&lt;/h2&gt;
+
+&lt;h3 id=&#34;toc_1&#34;&gt;背景&lt;/h3&gt;
+
+&lt;p&gt;在学习 golang 过程中, 看到 Rob Pike 大神的 &lt;a href=&#34;https://talks.golang.org/2012/waza.slide#19&#34;&gt;slide&lt;/a&gt; , 感觉炫酷.  安装过程如下:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;go get golang.org/x/tools/cmd/present
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;注意&lt;/strong&gt; 如果期望手工 build, 进入目录:  &lt;code&gt;go/src/golang.org/x/tools/cmd/present&lt;/code&gt;  不要搞错.&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>Nmap Draft</title>
@@ -540,98 +561,31 @@ ls | grep -E &#39;\.log$&#39; | parallel -m mv {} destdir
     </item>
     
     <item>
-      <title>Mac os X Draft</title>
-      <link>http://yujinqiu.github.io/posts/Mac/</link>
+      <title>AppleDraft</title>
+      <link>http://yujinqiu.github.io/posts/Apple/</link>
       <pubDate>Tue, 25 Nov 2014 21:36:12 CST</pubDate>
       
-      <guid>http://yujinqiu.github.io/posts/Mac/</guid>
+      <guid>http://yujinqiu.github.io/posts/Apple/</guid>
       <description>
 
-&lt;p&gt;#Mac os X
-##Yosemite 升级之后应该进行什么操作?&lt;br /&gt;
-1. 从 mavericks 升级到 mac os x 之后, 会遇到一些比较诡异的问题(比如找不到 clang), 下面的命令会帮助你提前避免一些问题.&lt;/p&gt;
+&lt;h1 id=&#34;toc_0&#34;&gt;Apple&lt;/h1&gt;
 
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;sudo xcode-select --install  
-sudo xcode-select --switch /Applications/Xcode.app   
-sudo xcodebuild -license  
-sudo gem update --system  
-sudo gem install xcodeproj   
-sudo brew update   
-&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&#34;toc_1&#34;&gt;iphone 屏幕小白点怎么开启?&lt;/h2&gt;
+
+&lt;p&gt;看到别人的屏幕有一个小白点, 点击之后出现siri, device, favorites 和 home 怎么打开?&lt;br /&gt;
+那个东西叫Assistive Touch , 在 /setting/general/Accessibility/AssistiveTouch 里边可以打开.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_2&#34;&gt;iphone越狱&lt;/h2&gt;
+
+&lt;p&gt;其实不想一开始就写这篇文章,实在受不了美国v版的中文输入法, 就动起了越狱的心思.网上看了有什么pp助手,91助手之类的工具, 本着对国内流氓公司的不信任的关系,另外恰巧在安装&lt;a href=&#34;http://justgetflux.com/&#34;&gt;f.lux&lt;/a&gt; 遇到&lt;a href=&#34;http://evasi0n.com/&#34;&gt;破解的说明&lt;/a&gt;, 具体操作说明很清楚不到10min就越狱完成. 需要注意点:&lt;/p&gt;
 
 &lt;ol&gt;
-&lt;li&gt;同时 Yosemite 会收集用户的隐私数据, 建议通过&lt;a href=&#34;https://fix-macosx.com/&#34;&gt;fix-macosx&lt;/a&gt;进行修复&lt;/li&gt;
+&lt;li&gt;越狱前强烈建议利用itunes来进行完整备份&lt;/li&gt;
+&lt;li&gt;关闭passcode功能&lt;/li&gt;
+&lt;li&gt;退出所有的应用&lt;/li&gt;
 &lt;/ol&gt;
 
-&lt;h3 id=&#34;toc_0&#34;&gt;Mac os X 窗体最小化之后恢复&lt;/h3&gt;
-
-&lt;p&gt;Mac os X 在最小化窗体之后, &lt;code&gt;command + tab&lt;/code&gt; 是不能够直接恢复, 具体操作如下&lt;br /&gt;
-command + tab 定位到对应的 Application 然后 &lt;code&gt;alt&lt;/code&gt; 然后同时放开 &lt;code&gt;alt command&lt;/code&gt;&lt;/p&gt;
-
-&lt;h3 id=&#34;toc_1&#34;&gt;清除 DNS cache&lt;/h3&gt;
-
-&lt;pre&gt;&lt;code&gt;sudo dscacheutil -flushcache
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;toc_2&#34;&gt;mac os x 权限位问题&lt;/h3&gt;
-
-&lt;p&gt;在 mac os terminal 中我们经常可以看到 带有 &lt;code&gt;+&lt;/code&gt;  和  &lt;code&gt;@&lt;/code&gt;  的权限问题&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;-rw-r--r--@  1 knight  staff      775 Feb 26  2014 Apple.md
--rw-r--r--   1 knight  staff     3608 Oct 25 14:23 CliDraft.md
--rw-r--r--@  1 knight  staff     1208 Nov 16  2013 EspeakDraft.md
--rw-r--r--@  1 knight  staff     3470 Dec 31  2013 FPDraft.md
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h4 id=&#34;toc_3&#34;&gt;@ 字符&lt;/h4&gt;
-
-&lt;p&gt;&lt;code&gt;@&lt;/code&gt; 表示这个文件拥有扩展的属性( additional attribute) , 可以通过&lt;code&gt;xattr&lt;/code&gt; 来查看详细信息:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;xattr -l  &amp;lt;filename&amp;gt; 
-
-➜  engineerdraft git:(master) ✗ xattr -l Apple.md
-com.apple.TextEncoding: utf-8;134217984
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;扩展的属性用途是: 定义一些打开文件的程序比如 Mou 打开 markdown 文件.&lt;/p&gt;
-
-&lt;h4 id=&#34;toc_4&#34;&gt;+ 字符&lt;/h4&gt;
-
-&lt;p&gt;+ 表示这个文件用户 ACL(Access Control List) 相对于文件的权限能够耕细粒度的控制.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;ls -le 可以查看文件的 acl 权限
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;##如何快速访问Menu或者mac访问Menu的快捷键
-在window的用户会有这样的习惯, 通过alt来快速访问菜单栏. 在mac 下怎么通过键盘来快速访问?
-终于在&lt;a href=&#34;http://lifehacker.com/321595/access-the-dock-and-menu-bar-from-your-keyboard&#34;&gt;access-the-dock-and-menu-bar-from-your-keyboard&lt;/a&gt; 找到方法.    
-其实很简单就是通过 &lt;code&gt;ctrl+F2&lt;/code&gt;(menubar) &lt;code&gt;ctrl+F3&lt;/code&gt;(dock), 然后直接输入对应的菜单名称. 比如:&lt;code&gt;View&lt;/code&gt;, 输入回车即可选择, 然后继续输入对应的名称,或者通过方向键即可选择.
-打开Menu的Help的快捷键是&lt;code&gt;command + shift + /&lt;/code&gt;, 可以这样记住: shift+/ = ?  快捷键就是command + ? == help&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_5&#34;&gt;mac 计算md5 值&lt;/h2&gt;
-
-&lt;p&gt;在linux 下有md5sum 这个命令, 在mac 下发现居然没有. 仔细查找之后发现原来叫md5. 运行之后发现和md5sum输出的结果不一样, 其实可以利用&lt;code&gt;md5 -r&lt;/code&gt;就可以得到一样的结果.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_6&#34;&gt;mac 版本管理&lt;/h2&gt;
-
-&lt;p&gt;mac 的 keynote, pages, numbers 和原始文本编辑器是具有版本管理的. 入口在&lt;code&gt;File-&amp;gt; revert to -&amp;gt; brow all version&lt;/code&gt;, 可以进入查看和 time machine 一样的界面.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_7&#34;&gt;快速打开stikcy note 快捷键&lt;/h2&gt;
-
-&lt;p&gt;shift+ command + y ,  退出:  command + q&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_8&#34;&gt;屏幕放大&lt;/h2&gt;
-
-&lt;p&gt;ctrl + 鼠标放大,缩小&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_9&#34;&gt;快速预览文件( quick look)&lt;/h2&gt;
-
-&lt;h3 id=&#34;toc_10&#34;&gt;背景&lt;/h3&gt;
-
-&lt;p&gt;经常我们在命令行里边,看到某个文件之后, 希望能够 quick look, 一般的做法是, open File 打开, 然后关闭, 其实我们只是希望能够简单看一下, 可以利用以下命令来实现 :&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;qlmanage -p  File
-&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;I&lt;/p&gt;
 </description>
     </item>
     
@@ -734,31 +688,98 @@ git push
     </item>
     
     <item>
-      <title>AppleDraft</title>
-      <link>http://yujinqiu.github.io/posts/Apple/</link>
+      <title>Mac os X Draft</title>
+      <link>http://yujinqiu.github.io/posts/Mac/</link>
       <pubDate>Tue, 25 Nov 2014 21:36:12 CST</pubDate>
       
-      <guid>http://yujinqiu.github.io/posts/Apple/</guid>
+      <guid>http://yujinqiu.github.io/posts/Mac/</guid>
       <description>
 
-&lt;h1 id=&#34;toc_0&#34;&gt;Apple&lt;/h1&gt;
+&lt;p&gt;#Mac os X
+##Yosemite 升级之后应该进行什么操作?&lt;br /&gt;
+1. 从 mavericks 升级到 mac os x 之后, 会遇到一些比较诡异的问题(比如找不到 clang), 下面的命令会帮助你提前避免一些问题.&lt;/p&gt;
 
-&lt;h2 id=&#34;toc_1&#34;&gt;iphone 屏幕小白点怎么开启?&lt;/h2&gt;
-
-&lt;p&gt;看到别人的屏幕有一个小白点, 点击之后出现siri, device, favorites 和 home 怎么打开?&lt;br /&gt;
-那个东西叫Assistive Touch , 在 /setting/general/Accessibility/AssistiveTouch 里边可以打开.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_2&#34;&gt;iphone越狱&lt;/h2&gt;
-
-&lt;p&gt;其实不想一开始就写这篇文章,实在受不了美国v版的中文输入法, 就动起了越狱的心思.网上看了有什么pp助手,91助手之类的工具, 本着对国内流氓公司的不信任的关系,另外恰巧在安装&lt;a href=&#34;http://justgetflux.com/&#34;&gt;f.lux&lt;/a&gt; 遇到&lt;a href=&#34;http://evasi0n.com/&#34;&gt;破解的说明&lt;/a&gt;, 具体操作说明很清楚不到10min就越狱完成. 需要注意点:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;sudo xcode-select --install  
+sudo xcode-select --switch /Applications/Xcode.app   
+sudo xcodebuild -license  
+sudo gem update --system  
+sudo gem install xcodeproj   
+sudo brew update   
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;ol&gt;
-&lt;li&gt;越狱前强烈建议利用itunes来进行完整备份&lt;/li&gt;
-&lt;li&gt;关闭passcode功能&lt;/li&gt;
-&lt;li&gt;退出所有的应用&lt;/li&gt;
+&lt;li&gt;同时 Yosemite 会收集用户的隐私数据, 建议通过&lt;a href=&#34;https://fix-macosx.com/&#34;&gt;fix-macosx&lt;/a&gt;进行修复&lt;/li&gt;
 &lt;/ol&gt;
 
-&lt;p&gt;I&lt;/p&gt;
+&lt;h3 id=&#34;toc_0&#34;&gt;Mac os X 窗体最小化之后恢复&lt;/h3&gt;
+
+&lt;p&gt;Mac os X 在最小化窗体之后, &lt;code&gt;command + tab&lt;/code&gt; 是不能够直接恢复, 具体操作如下&lt;br /&gt;
+command + tab 定位到对应的 Application 然后 &lt;code&gt;alt&lt;/code&gt; 然后同时放开 &lt;code&gt;alt command&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;toc_1&#34;&gt;清除 DNS cache&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;sudo dscacheutil -flushcache
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;toc_2&#34;&gt;mac os x 权限位问题&lt;/h3&gt;
+
+&lt;p&gt;在 mac os terminal 中我们经常可以看到 带有 &lt;code&gt;+&lt;/code&gt;  和  &lt;code&gt;@&lt;/code&gt;  的权限问题&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;-rw-r--r--@  1 knight  staff      775 Feb 26  2014 Apple.md
+-rw-r--r--   1 knight  staff     3608 Oct 25 14:23 CliDraft.md
+-rw-r--r--@  1 knight  staff     1208 Nov 16  2013 EspeakDraft.md
+-rw-r--r--@  1 knight  staff     3470 Dec 31  2013 FPDraft.md
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;toc_3&#34;&gt;@ 字符&lt;/h4&gt;
+
+&lt;p&gt;&lt;code&gt;@&lt;/code&gt; 表示这个文件拥有扩展的属性( additional attribute) , 可以通过&lt;code&gt;xattr&lt;/code&gt; 来查看详细信息:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;xattr -l  &amp;lt;filename&amp;gt; 
+
+➜  engineerdraft git:(master) ✗ xattr -l Apple.md
+com.apple.TextEncoding: utf-8;134217984
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;扩展的属性用途是: 定义一些打开文件的程序比如 Mou 打开 markdown 文件.&lt;/p&gt;
+
+&lt;h4 id=&#34;toc_4&#34;&gt;+ 字符&lt;/h4&gt;
+
+&lt;p&gt;+ 表示这个文件用户 ACL(Access Control List) 相对于文件的权限能够耕细粒度的控制.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;ls -le 可以查看文件的 acl 权限
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;##如何快速访问Menu或者mac访问Menu的快捷键
+在window的用户会有这样的习惯, 通过alt来快速访问菜单栏. 在mac 下怎么通过键盘来快速访问?
+终于在&lt;a href=&#34;http://lifehacker.com/321595/access-the-dock-and-menu-bar-from-your-keyboard&#34;&gt;access-the-dock-and-menu-bar-from-your-keyboard&lt;/a&gt; 找到方法.    
+其实很简单就是通过 &lt;code&gt;ctrl+F2&lt;/code&gt;(menubar) &lt;code&gt;ctrl+F3&lt;/code&gt;(dock), 然后直接输入对应的菜单名称. 比如:&lt;code&gt;View&lt;/code&gt;, 输入回车即可选择, 然后继续输入对应的名称,或者通过方向键即可选择.
+打开Menu的Help的快捷键是&lt;code&gt;command + shift + /&lt;/code&gt;, 可以这样记住: shift+/ = ?  快捷键就是command + ? == help&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_5&#34;&gt;mac 计算md5 值&lt;/h2&gt;
+
+&lt;p&gt;在linux 下有md5sum 这个命令, 在mac 下发现居然没有. 仔细查找之后发现原来叫md5. 运行之后发现和md5sum输出的结果不一样, 其实可以利用&lt;code&gt;md5 -r&lt;/code&gt;就可以得到一样的结果.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_6&#34;&gt;mac 版本管理&lt;/h2&gt;
+
+&lt;p&gt;mac 的 keynote, pages, numbers 和原始文本编辑器是具有版本管理的. 入口在&lt;code&gt;File-&amp;gt; revert to -&amp;gt; brow all version&lt;/code&gt;, 可以进入查看和 time machine 一样的界面.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_7&#34;&gt;快速打开stikcy note 快捷键&lt;/h2&gt;
+
+&lt;p&gt;shift+ command + y ,  退出:  command + q&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_8&#34;&gt;屏幕放大&lt;/h2&gt;
+
+&lt;p&gt;ctrl + 鼠标放大,缩小&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_9&#34;&gt;快速预览文件( quick look)&lt;/h2&gt;
+
+&lt;h3 id=&#34;toc_10&#34;&gt;背景&lt;/h3&gt;
+
+&lt;p&gt;经常我们在命令行里边,看到某个文件之后, 希望能够 quick look, 一般的做法是, open File 打开, 然后关闭, 其实我们只是希望能够简单看一下, 可以利用以下命令来实现 :&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;qlmanage -p  File
+&lt;/code&gt;&lt;/pre&gt;
 </description>
     </item>
     
@@ -1598,104 +1619,6 @@ BenchmarkPutDefer  10000            102971 ns/op
 BenchmarkGet       50000             65148 ns/op
 BenchmarkGetDefer  10000            180839 ns/op
 &lt;/code&gt;&lt;/pre&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Coverage for multiple packages in go</title>
-      <link>http://yujinqiu.github.io/posts/multicover/</link>
-      <pubDate>Tue, 06 May 2014 00:00:00 UTC</pubDate>
-      
-      <guid>http://yujinqiu.github.io/posts/multicover/</guid>
-      <description>
-
-&lt;h4 id=&#34;toc_0&#34;&gt;Prelude&lt;/h4&gt;
-
-&lt;p&gt;There is awesome coverage in go. You can read about
-it &lt;a href=&#34;http://blog.golang.org/cover&#34;&gt;here&lt;/a&gt;. But also it has some limitations.
-For example let&amp;rsquo;s assume that we have next code structure:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;src
-├── pkg1
-│   ├── pkg11
-│   └── pkg12
-└── pkg2
-    ├── pkg21
-    └── pkg22
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;code&gt;pkg2&lt;/code&gt;, &lt;code&gt;pkg21&lt;/code&gt;, &lt;code&gt;pkg22&lt;/code&gt; uses &lt;code&gt;pkg1&lt;/code&gt;, &lt;code&gt;pkg11&lt;/code&gt; and &lt;code&gt;pkg12&lt;/code&gt; in different cases.
-So question is &amp;ndash; how we can compute &lt;strong&gt;overall&lt;/strong&gt; coverage for our code base?&lt;/p&gt;
-
-&lt;h4 id=&#34;toc_1&#34;&gt;Generating cover profiles&lt;/h4&gt;
-
-&lt;p&gt;Let&amp;rsquo;s consider some possible go test commands with &lt;code&gt;-coveprofile&lt;/code&gt;:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;go test -coverprofile=cover.out pkg2
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;tests run only for &lt;code&gt;pkg1&lt;/code&gt; and cover profile generated only for pkg2&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;go test -coverprofile=cover.out -coverpkg=./... pkg2
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;tests run only for &lt;code&gt;pkg2&lt;/code&gt; and cover profile generated for all packages&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;go test -coverprofile=cover.out -coverpkg=./... ./...
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;boo hoo: &lt;code&gt;cannot use test profile flag with multiple packages&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;So, what we can do for running tests on all packages and get cover profile
-for all packages?&lt;/p&gt;
-
-&lt;h4 id=&#34;toc_2&#34;&gt;Merging cover profiles&lt;/h4&gt;
-
-&lt;p&gt;Now we able to get overall profile for each package individually.
-It seems that we can merge this files. Profile file has next structure,
-according to
-&lt;a href=&#34;https://code.google.com/p/go/source/browse/cover/profile.go?repo=tools&#34;&gt;cover code&lt;/a&gt;:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;// First line is &amp;quot;mode: foo&amp;quot;, where foo is &amp;quot;set&amp;quot;, &amp;quot;count&amp;quot;, or &amp;quot;atomic&amp;quot;.
-// Rest of file is in the format
-//      encoding/base64/base64.go:34.44,37.40 3 1
-// where the fields are: name.go:line.column,line.column numberOfStatements count
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;So, using magic of &lt;code&gt;awk&lt;/code&gt; I found next solution to this problem:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;go test -coverprofile=pkg1.cover.out -coverpkg=./... pkg1
-go test -coverprofile=pkg11.cover.out -coverpkg=./... pkg1/pkg11
-go test -coverprofile=pkg12.cover.out -coverpkg=./... pkg1/pkg12
-go test -coverprofile=pkg2.cover.out -coverpkg=./... pkg2
-go test -coverprofile=pkg21.cover.out -coverpkg=./... pkg2/pkg21
-go test -coverprofile=pkg22.cover.out -coverpkg=./... pkg2/pkg22
-echo &amp;quot;mode: set&amp;quot; &amp;gt; coverage.out &amp;amp;&amp;amp; cat *.cover.out | grep -v mode: | sort -r | \
-awk &#39;{if($1 != last) {print $0;last=$1}}&#39; &amp;gt;&amp;gt; coverage.out
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;The true meaning of last line I leave as an exercise for user :)
-Now we have profile for all code, that was executed by all tests. We can use
-this merged profile &lt;code&gt;coverage.out&lt;/code&gt; for go cover tool:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;go tool cover -html=coverage.out
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;or for generating &lt;a href=&#34;https://github.com/t-yuki/gocover-cobertura&#34;&gt;cobertura report&lt;/a&gt;:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;gocover-cobertura &amp;lt; coverage.txt &amp;gt; coverage.xml
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h4 id=&#34;toc_3&#34;&gt;Conclusion&lt;/h4&gt;
-
-&lt;p&gt;Of course this solution is only workaround. And it works only for &lt;code&gt;mode: set&lt;/code&gt;.
-Similar logic must be embedded to cover tool. I am really hope that one day we
-will be able to run&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;go test -coverprofile=cover.out -coverpkg=./... ./...
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;and leaning back in chair, enjoying perfect cover profiles.&lt;/p&gt;
 </description>
     </item>
     

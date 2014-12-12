@@ -3,8 +3,13 @@
   
   <url>
     <loc>http://yujinqiu.github.io/</loc>
-    <lastmod>2014-12-04T21:36:12+08:00</lastmod>
+    <lastmod>2014-12-12T12:17:54+08:00</lastmod>
     <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://yujinqiu.github.io/posts/GolangDraft/</loc>
+    <lastmod>2014-12-12T12:17:54+08:00</lastmod>
   </url>
   
   <url>
@@ -18,22 +23,22 @@
   </url>
   
   <url>
-    <loc>http://yujinqiu.github.io/posts/Apple/</loc>
-    <lastmod>2014-11-25T21:36:12+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://yujinqiu.github.io/posts/ParallelDraft/</loc>
-    <lastmod>2014-11-25T21:36:12+08:00</lastmod>
-  </url>
-  
-  <url>
     <loc>http://yujinqiu.github.io/posts/GitDraft/</loc>
     <lastmod>2014-11-25T21:36:12+08:00</lastmod>
   </url>
   
   <url>
+    <loc>http://yujinqiu.github.io/posts/Apple/</loc>
+    <lastmod>2014-11-25T21:36:12+08:00</lastmod>
+  </url>
+  
+  <url>
     <loc>http://yujinqiu.github.io/posts/Mac/</loc>
+    <lastmod>2014-11-25T21:36:12+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://yujinqiu.github.io/posts/ParallelDraft/</loc>
     <lastmod>2014-11-25T21:36:12+08:00</lastmod>
   </url>
   

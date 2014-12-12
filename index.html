@@ -68,6 +68,22 @@
 
 <article class="post">
     <header>
+      <h2><a href='http://yujinqiu.github.io/posts/GolangDraft/'> GolangDraft</a> </h2>
+      <div class="meta">Fri, Dec 12, 2014</div>
+    </header>
+
+    Golang 相关 tools 安装 背景 在学习 golang 过程中, 看到 Rob Pike 大神的 slide , 感觉炫酷. 安装过程如下: go get golang.org/x/tools/cmd/present 注意 如果期望手工 build, 进入目录: go/src/golang.org/x/tools/cmd/present 不要搞错.
+    <footer style="text-align:right; ">
+        <a href='http://yujinqiu.github.io/posts/GolangDraft/'><nobr>Read more →</nobr></a>
+    </footer>
+    <hr/>
+</article>
+
+            
+            
+
+<article class="post">
+    <header>
       <h2><a href='http://yujinqiu.github.io/posts/NmapHack/'> Nmap Draft</a> </h2>
       <div class="meta">Thu, Dec 4, 2014</div>
     </header>
@@ -182,6 +198,42 @@
 
 <article class="post">
     <header>
+      <h2><a href='http://yujinqiu.github.io/posts/GitDraft/'> Git Draft</a> </h2>
+      <div class="meta">Tue, Nov 25, 2014</div>
+    </header>
+
+    <h1>Git</h1>
+
+<h2>原子提交</h2>
+
+<p>在我们修改文件的时候, 通常是希望一次提交只包含该次功能修改相关的操作.<br />
+但是如果一个文件包含多个操作该怎么办 ?<br />
+或者你的一个程序文件里边,为了调试写了很多的log日志输出, 你不希望这些语句ci 到server上, 该怎么办 ?</p>
+
+<p><code>git add -p</code> 能够解决上面的场景(虽然已经add 过,还是需要add 到 stage 进去).<br />
+执行之后会提示:</p>
+
+<pre><code>Stage this hunk [y,n,q,a,d,/,e,?]?
+</code></pre>
+
+<p>hit <code>s</code> to split whatever change into smaller chunks. This only works if there is at least one unchanged line in the &ldquo;middle&rdquo; of the hunk, which is where hunk will be split<br />
+then hit <code>y</code> to stage that chunk<br />
+or <code>n</code> to not stage that hunk<br />
+or <code>e</code> to manually edit the chunk (useful when git can&rsquo;t split it automatically)<br />
+and <code>d</code> to exit or go to the next file.<br />
+Use <code>?</code> to get the whole list of available options.</p>
+
+    <footer style="text-align:right; ">
+        <a href='http://yujinqiu.github.io/posts/GitDraft/'><nobr>Read more →</nobr></a>
+    </footer>
+    <hr/>
+</article>
+
+            
+            
+
+<article class="post">
+    <header>
       <h2><a href='http://yujinqiu.github.io/posts/Apple/'> AppleDraft</a> </h2>
       <div class="meta">Tue, Nov 25, 2014</div>
     </header>
@@ -195,6 +247,33 @@
 
     <footer style="text-align:right; ">
         <a href='http://yujinqiu.github.io/posts/Apple/'><nobr>Read more →</nobr></a>
+    </footer>
+    <hr/>
+</article>
+
+            
+            
+
+<article class="post">
+    <header>
+      <h2><a href='http://yujinqiu.github.io/posts/Mac/'> Mac os X Draft</a> </h2>
+      <div class="meta">Tue, Nov 25, 2014</div>
+    </header>
+
+    <p>#Mac os X
+##Yosemite 升级之后应该进行什么操作?<br />
+1. 从 mavericks 升级到 mac os x 之后, 会遇到一些比较诡异的问题(比如找不到 clang), 下面的命令会帮助你提前避免一些问题.</p>
+
+<pre><code class="language-bash">sudo xcode-select --install  
+sudo xcode-select --switch /Applications/Xcode.app   
+sudo xcodebuild -license  
+sudo gem update --system  
+sudo gem install xcodeproj   
+sudo brew update   
+</code></pre>
+
+    <footer style="text-align:right; ">
+        <a href='http://yujinqiu.github.io/posts/Mac/'><nobr>Read more →</nobr></a>
     </footer>
     <hr/>
 </article>
@@ -238,69 +317,6 @@ for host in $( &lt; machines ) ; do ssh ${host} &ldquo; uptime &rdquo; ;done</p>
 
     <footer style="text-align:right; ">
         <a href='http://yujinqiu.github.io/posts/ParallelDraft/'><nobr>Read more →</nobr></a>
-    </footer>
-    <hr/>
-</article>
-
-            
-            
-
-<article class="post">
-    <header>
-      <h2><a href='http://yujinqiu.github.io/posts/GitDraft/'> Git Draft</a> </h2>
-      <div class="meta">Tue, Nov 25, 2014</div>
-    </header>
-
-    <h1>Git</h1>
-
-<h2>原子提交</h2>
-
-<p>在我们修改文件的时候, 通常是希望一次提交只包含该次功能修改相关的操作.<br />
-但是如果一个文件包含多个操作该怎么办 ?<br />
-或者你的一个程序文件里边,为了调试写了很多的log日志输出, 你不希望这些语句ci 到server上, 该怎么办 ?</p>
-
-<p><code>git add -p</code> 能够解决上面的场景(虽然已经add 过,还是需要add 到 stage 进去).<br />
-执行之后会提示:</p>
-
-<pre><code>Stage this hunk [y,n,q,a,d,/,e,?]?
-</code></pre>
-
-<p>hit <code>s</code> to split whatever change into smaller chunks. This only works if there is at least one unchanged line in the &ldquo;middle&rdquo; of the hunk, which is where hunk will be split<br />
-then hit <code>y</code> to stage that chunk<br />
-or <code>n</code> to not stage that hunk<br />
-or <code>e</code> to manually edit the chunk (useful when git can&rsquo;t split it automatically)<br />
-and <code>d</code> to exit or go to the next file.<br />
-Use <code>?</code> to get the whole list of available options.</p>
-
-    <footer style="text-align:right; ">
-        <a href='http://yujinqiu.github.io/posts/GitDraft/'><nobr>Read more →</nobr></a>
-    </footer>
-    <hr/>
-</article>
-
-            
-            
-
-<article class="post">
-    <header>
-      <h2><a href='http://yujinqiu.github.io/posts/Mac/'> Mac os X Draft</a> </h2>
-      <div class="meta">Tue, Nov 25, 2014</div>
-    </header>
-
-    <p>#Mac os X
-##Yosemite 升级之后应该进行什么操作?<br />
-1. 从 mavericks 升级到 mac os x 之后, 会遇到一些比较诡异的问题(比如找不到 clang), 下面的命令会帮助你提前避免一些问题.</p>
-
-<pre><code class="language-bash">sudo xcode-select --install  
-sudo xcode-select --switch /Applications/Xcode.app   
-sudo xcodebuild -license  
-sudo gem update --system  
-sudo gem install xcodeproj   
-sudo brew update   
-</code></pre>
-
-    <footer style="text-align:right; ">
-        <a href='http://yujinqiu.github.io/posts/Mac/'><nobr>Read more →</nobr></a>
     </footer>
     <hr/>
 </article>
@@ -420,52 +436,6 @@ host1 --&gt;  X  --&gt; host3
 
     <footer style="text-align:right; ">
         <a href='http://yujinqiu.github.io/posts/CliDraft/'><nobr>Read more →</nobr></a>
-    </footer>
-    <hr/>
-</article>
-
-            
-            
-
-<article class="post">
-    <header>
-      <h2><a href='http://yujinqiu.github.io/posts/embedded_gists/'> Embedded Gists</a> </h2>
-      <div class="meta">Sat, Jul 5, 2014</div>
-    </header>
-
-    <h2>Syntax Highlighting - or Embedded Gists</h2>
-
-<p>I was quite excited by the inline syntax highlighting that Hugo provides via the python plugin <a href="http://pygments.org/">Pygments</a>. But also wanted to try embedding gists</p>
-
-<p>So here is an example&hellip;</p>
-
-<div class="highlight" style="background: #202020"><pre style="line-height: 125%"><span style="color: #d0d0d0">&lt;p&gt;</span><span style="color: #6ab825; font-weight: bold">def</span> <span style="color: #447fcf">digit_sum</span><span style="color: #d0d0d0">(n):</span>
-    <span style="color: #d0d0d0">s</span> <span style="color: #d0d0d0">=</span> <span style="color: #3677a9">0</span>
-    <span style="color: #6ab825; font-weight: bold">while</span> <span style="color: #d0d0d0">n:</span>   <span style="color: #999999; font-style: italic"># while n is ‘truthy’ for an integer that means not 0</span>
-        <span style="color: #d0d0d0">s</span> <span style="color: #d0d0d0">=</span> <span style="color: #d0d0d0">s</span> <span style="color: #d0d0d0">+</span> <span style="color: #d0d0d0">(n</span> <span style="color: #d0d0d0">%</span> <span style="color: #3677a9">10</span><span style="color: #d0d0d0">)</span>   <span style="color: #999999; font-style: italic"># the sum is the sum + the remainder of dividing the incoming number (n) by 10  157 % 10 = 7</span>
-        <span style="color: #d0d0d0">n</span> <span style="color: #d0d0d0">=</span> <span style="color: #d0d0d0">n</span> <span style="color: #d0d0d0">/</span> <span style="color: #3677a9">10</span>         <span style="color: #999999; font-style: italic"># n = the integer of n / 10   int(15.7) = 15</span>
-    <span style="color: #6ab825; font-weight: bold">return</span> <span style="color: #d0d0d0">s&lt;/p&gt;&lt;/p&gt;</span>
-
-<span style="color: #d0d0d0">&lt;p&gt;</span><span style="color: #6ab825; font-weight: bold">print</span> <span style="color: #d0d0d0">digit_sum(</span><span style="color: #3677a9">157</span><span style="color: #d0d0d0">)&lt;/p&gt;</span>
-
-<span style="color: #d0d0d0">&lt;p&gt;</span><span style="color: #a61717; background-color: #e3d2d2">”’</span>
-<span style="color: #d0d0d0">calling</span> <span style="color: #d0d0d0">digit_sum(</span><span style="color: #3677a9">157</span><span style="color: #d0d0d0">)&lt;/p&gt;</span>
-
-<span style="color: #d0d0d0">&lt;h2&gt;loop</span>  <span style="color: #d0d0d0">|</span> <span style="color: #d0d0d0">s</span>   <span style="color: #d0d0d0">|</span> <span style="color: #d0d0d0">n</span>   <span style="color: #d0d0d0">|</span> <span style="color: #d0d0d0">n</span> <span style="color: #d0d0d0">%</span> <span style="color: #3677a9">10</span>  <span style="color: #d0d0d0">|</span> <span style="color: #d0d0d0">n</span> <span style="color: #d0d0d0">/</span> <span style="color: #3677a9">10</span><span style="color: #d0d0d0">&lt;/h2&gt;</span>
-
-<span style="color: #d0d0d0">&lt;p&gt;&lt;p&gt;</span><span style="color: #3677a9">0</span>     <span style="color: #d0d0d0">|</span> <span style="color: #3677a9">0</span>   <span style="color: #d0d0d0">|</span> <span style="color: #3677a9">157</span> <span style="color: #d0d0d0">|</span>   <span style="color: #3677a9">7</span>     <span style="color: #d0d0d0">|</span>  <span style="color: #3677a9">15</span>
-<span style="color: #3677a9">1</span>     <span style="color: #d0d0d0">|</span> <span style="color: #3677a9">7</span>   <span style="color: #d0d0d0">|</span> <span style="color: #3677a9">15</span>  <span style="color: #d0d0d0">|</span>   <span style="color: #3677a9">5</span>     <span style="color: #d0d0d0">|</span>  <span style="color: #3677a9">1</span>
-<span style="color: #3677a9">2</span>     <span style="color: #d0d0d0">|</span> <span style="color: #3677a9">12</span>  <span style="color: #d0d0d0">|</span> <span style="color: #3677a9">1</span>   <span style="color: #d0d0d0">|</span>   <span style="color: #3677a9">1</span>     <span style="color: #d0d0d0">|</span>  <span style="color: #3677a9">0</span>
-<span style="color: #3677a9">3</span>     <span style="color: #d0d0d0">|</span> <span style="color: #3677a9">13</span>  <span style="color: #d0d0d0">|</span> <span style="color: #3677a9">0</span>   <span style="color: #d0d0d0">|</span>         <span style="color: #d0d0d0">|&lt;br</span> <span style="color: #d0d0d0">/&gt;</span>
-<span style="color: #a61717; background-color: #e3d2d2">”’</span><span style="color: #d0d0d0">&lt;/p&gt;</span>
-</pre></div>
-
-<p>But then thought perhaps it is better to embed gists than have inline markup in blog posts then folk can fork the code and comment there.</p>
-
-<p>So on embedding a gist as follows (but without syntax highlighting) failed&hellip;</p>
-
-    <footer style="text-align:right; ">
-        <a href='http://yujinqiu.github.io/posts/embedded_gists/'><nobr>Read more →</nobr></a>
     </footer>
     <hr/>
 </article>
