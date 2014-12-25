@@ -7,7 +7,43 @@
     
     
     
-    <updated>Fri, 12 Dec 2014 12:17:54 CST</updated>
+    <updated>Thu, 25 Dec 2014 14:13:36 CST</updated>
+    
+    <item>
+      <title>CurlDraft</title>
+      <link>http://yujinqiu.github.io/posts/CurlDraft/</link>
+      <pubDate>Thu, 25 Dec 2014 14:13:36 CST</pubDate>
+      
+      <guid>http://yujinqiu.github.io/posts/CurlDraft/</guid>
+      <description>
+
+&lt;h2 id=&#34;toc_0&#34;&gt;CURL 有用操作&lt;/h2&gt;
+
+&lt;h3 id=&#34;toc_1&#34;&gt;curl post 数据&lt;/h3&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;提交 key:value 格式数据&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;curl -d &#39;username=xyz&amp;amp;password=xyz&#39; http://localhost:3000/api/login
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;提交 json格式数据&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;curl -d &#39;{&amp;quot;username&amp;quot;:&amp;quot;xyz&amp;quot;,&amp;quot;password&amp;quot;:&amp;quot;xyz&amp;quot;}&#39; http://localhost:3000/api/login
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;参数内容较多,直接写入到一个文件中&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;curl -d @param.json  http://localhost:3000/api/login
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;上传附件&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;curl -F &amp;quot;blob=@card.txt;type=text/plain&amp;quot; http://localhost:3000/upload
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;/ol&gt;
+</description>
+    </item>
     
     <item>
       <title>GolangDraft</title>
@@ -292,6 +328,120 @@ mysql&amp;gt; select distinct name , age from driver;
 
 &lt;pre&gt;&lt;code&gt;-s, --silent        Be more silent. Print results with a tab as separator,
                   each row on new line.
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Git Draft</title>
+      <link>http://yujinqiu.github.io/posts/GitDraft/</link>
+      <pubDate>Tue, 25 Nov 2014 21:36:12 CST</pubDate>
+      
+      <guid>http://yujinqiu.github.io/posts/GitDraft/</guid>
+      <description>
+
+&lt;h1 id=&#34;toc_0&#34;&gt;Git&lt;/h1&gt;
+
+&lt;h2 id=&#34;toc_1&#34;&gt;原子提交&lt;/h2&gt;
+
+&lt;p&gt;在我们修改文件的时候, 通常是希望一次提交只包含该次功能修改相关的操作.&lt;br /&gt;
+但是如果一个文件包含多个操作该怎么办 ?&lt;br /&gt;
+或者你的一个程序文件里边,为了调试写了很多的log日志输出, 你不希望这些语句ci 到server上, 该怎么办 ?&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;git add -p&lt;/code&gt; 能够解决上面的场景(虽然已经add 过,还是需要add 到 stage 进去).&lt;br /&gt;
+执行之后会提示:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Stage this hunk [y,n,q,a,d,/,e,?]?
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;hit &lt;code&gt;s&lt;/code&gt; to split whatever change into smaller chunks. This only works if there is at least one unchanged line in the &amp;ldquo;middle&amp;rdquo; of the hunk, which is where hunk will be split&lt;br /&gt;
+then hit &lt;code&gt;y&lt;/code&gt; to stage that chunk&lt;br /&gt;
+or &lt;code&gt;n&lt;/code&gt; to not stage that hunk&lt;br /&gt;
+or &lt;code&gt;e&lt;/code&gt; to manually edit the chunk (useful when git can&amp;rsquo;t split it automatically)&lt;br /&gt;
+and &lt;code&gt;d&lt;/code&gt; to exit or go to the next file.&lt;br /&gt;
+Use &lt;code&gt;?&lt;/code&gt; to get the whole list of available options.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_2&#34;&gt;Git checkout 某个分支&lt;/h2&gt;
+
+&lt;h3 id=&#34;toc_3&#34;&gt;背景&lt;/h3&gt;
+
+&lt;p&gt;在使用 git 的时候, 经常会使用第三方开发的程序/lib 的特定版本(兼容性问题) ,&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;git tag -l
+git checkout tags/&amp;lt;tag_name&amp;gt; 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;toc_4&#34;&gt;Git checkout 远程的一个分支&lt;/h2&gt;
+
+&lt;h3 id=&#34;toc_5&#34;&gt;背景&lt;/h3&gt;
+
+&lt;p&gt;在多人协作的开发场景下, Dev B 提交了一个分支, 需要拉到本地.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;git fetch origin 
+git branch -v -a 
+git checkout -b test origin/test
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;toc_6&#34;&gt;Git 多人开发流程&lt;/h2&gt;
+
+&lt;h3 id=&#34;toc_7&#34;&gt;如何发 PR&lt;/h3&gt;
+
+&lt;p&gt;以下以 wiki-pages 为例&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;把项目 fork 到自己名下，然后 clone 到本地&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;git clone git@git.xiaojukeji.com:yexiliang/wiki-pages.git
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;将原始项目加为上游&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;git remote add upstream git@git.xiaojukeji.com:op/wiki-pages.git
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;在本地项目建立分支并切换到该分支&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;git checkout -b dev
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;在 dev 分支上开发，提交&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;touch foo.txt
+git add foo.txt
+git commit
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;切换到 master 分支并合并上游&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;git checkout master
+git fetch upstream
+git merge upstream/master
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;切换到 dev 分支，合并 master，推送代码&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;git checkout dev
+git rebase master
+git push
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;到 github / gitlab 选 dev 分支发 pull request&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;toc_8&#34;&gt;Git conflict 如何保持一方修改&lt;/h2&gt;
+
+&lt;h3 id=&#34;toc_9&#34;&gt;背景&lt;/h3&gt;
+
+&lt;p&gt;在多人协作的情况下, 经常会出现冲突, 有时候不想 merge conflict, 直接使用双方的修改内容.&lt;/p&gt;
+
+&lt;h4 id=&#34;toc_10&#34;&gt;保持本地修改, 放弃远程版本&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code&gt;git checkout --ours filename.c
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;toc_11&#34;&gt;使用远程版本, 放弃本地修改&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code&gt;git checkout --theirs filename.c
 &lt;/code&gt;&lt;/pre&gt;
 </description>
     </item>
@@ -652,120 +802,6 @@ ls | grep -E &#39;\.log$&#39; | parallel -m mv {} destdir
 &lt;p&gt;如最开始的case 讲的那样.&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;    parallel -S server1,server2,...,server N --tag --cleanup --basefile $HOME/tmp/nginx_reload.sh &#39;sh {}&#39; ::: $HOME/tmp/nginx_reload.sh
-&lt;/code&gt;&lt;/pre&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Git Draft</title>
-      <link>http://yujinqiu.github.io/posts/GitDraft/</link>
-      <pubDate>Tue, 25 Nov 2014 21:36:12 CST</pubDate>
-      
-      <guid>http://yujinqiu.github.io/posts/GitDraft/</guid>
-      <description>
-
-&lt;h1 id=&#34;toc_0&#34;&gt;Git&lt;/h1&gt;
-
-&lt;h2 id=&#34;toc_1&#34;&gt;原子提交&lt;/h2&gt;
-
-&lt;p&gt;在我们修改文件的时候, 通常是希望一次提交只包含该次功能修改相关的操作.&lt;br /&gt;
-但是如果一个文件包含多个操作该怎么办 ?&lt;br /&gt;
-或者你的一个程序文件里边,为了调试写了很多的log日志输出, 你不希望这些语句ci 到server上, 该怎么办 ?&lt;/p&gt;
-
-&lt;p&gt;&lt;code&gt;git add -p&lt;/code&gt; 能够解决上面的场景(虽然已经add 过,还是需要add 到 stage 进去).&lt;br /&gt;
-执行之后会提示:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;Stage this hunk [y,n,q,a,d,/,e,?]?
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;hit &lt;code&gt;s&lt;/code&gt; to split whatever change into smaller chunks. This only works if there is at least one unchanged line in the &amp;ldquo;middle&amp;rdquo; of the hunk, which is where hunk will be split&lt;br /&gt;
-then hit &lt;code&gt;y&lt;/code&gt; to stage that chunk&lt;br /&gt;
-or &lt;code&gt;n&lt;/code&gt; to not stage that hunk&lt;br /&gt;
-or &lt;code&gt;e&lt;/code&gt; to manually edit the chunk (useful when git can&amp;rsquo;t split it automatically)&lt;br /&gt;
-and &lt;code&gt;d&lt;/code&gt; to exit or go to the next file.&lt;br /&gt;
-Use &lt;code&gt;?&lt;/code&gt; to get the whole list of available options.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_2&#34;&gt;Git checkout 某个分支&lt;/h2&gt;
-
-&lt;h3 id=&#34;toc_3&#34;&gt;背景&lt;/h3&gt;
-
-&lt;p&gt;在使用 git 的时候, 经常会使用第三方开发的程序/lib 的特定版本(兼容性问题) ,&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;git tag -l
-git checkout tags/&amp;lt;tag_name&amp;gt; 
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;toc_4&#34;&gt;Git checkout 远程的一个分支&lt;/h2&gt;
-
-&lt;h3 id=&#34;toc_5&#34;&gt;背景&lt;/h3&gt;
-
-&lt;p&gt;在多人协作的开发场景下, Dev B 提交了一个分支, 需要拉到本地.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;git fetch origin 
-git branch -v -a 
-git checkout -b test origin/test
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;toc_6&#34;&gt;Git 多人开发流程&lt;/h2&gt;
-
-&lt;h3 id=&#34;toc_7&#34;&gt;如何发 PR&lt;/h3&gt;
-
-&lt;p&gt;以下以 wiki-pages 为例&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;p&gt;把项目 fork 到自己名下，然后 clone 到本地&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;git clone git@git.xiaojukeji.com:yexiliang/wiki-pages.git
-&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;将原始项目加为上游&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;git remote add upstream git@git.xiaojukeji.com:op/wiki-pages.git
-&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;在本地项目建立分支并切换到该分支&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;git checkout -b dev
-&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;在 dev 分支上开发，提交&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;touch foo.txt
-git add foo.txt
-git commit
-&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;切换到 master 分支并合并上游&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;git checkout master
-git fetch upstream
-git merge upstream/master
-&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;切换到 dev 分支，合并 master，推送代码&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;git checkout dev
-git rebase master
-git push
-&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;到 github / gitlab 选 dev 分支发 pull request&lt;/p&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&#34;toc_8&#34;&gt;Git conflict 如何保持一方修改&lt;/h2&gt;
-
-&lt;h3 id=&#34;toc_9&#34;&gt;背景&lt;/h3&gt;
-
-&lt;p&gt;在多人协作的情况下, 经常会出现冲突, 有时候不想 merge conflict, 直接使用双方的修改内容.&lt;/p&gt;
-
-&lt;h4 id=&#34;toc_10&#34;&gt;保持本地修改, 放弃远程版本&lt;/h4&gt;
-
-&lt;pre&gt;&lt;code&gt;git checkout --ours filename.c
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h4 id=&#34;toc_11&#34;&gt;使用远程版本, 放弃本地修改&lt;/h4&gt;
-
-&lt;pre&gt;&lt;code&gt;git checkout --theirs filename.c
 &lt;/code&gt;&lt;/pre&gt;
 </description>
     </item>
@@ -1488,162 +1524,6 @@ of course, Docker.&lt;/p&gt;
 &lt;h2 id=&#34;toc_1&#34;&gt;Hugo&lt;/h2&gt;
 
 &lt;p&gt;I&amp;rsquo;m a little bit in love with go - so &lt;a href=&#34;http://hugo.spf13.com/&#34;&gt;Hugo&lt;/a&gt; was the perfect choice as well, and its been great so far, other than is typical of newish open source projects slightly lacking in the documentation department.&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Defer overhead in go</title>
-      <link>http://yujinqiu.github.io/posts/defer/</link>
-      <pubDate>Wed, 14 May 2014 00:00:00 UTC</pubDate>
-      
-      <guid>http://yujinqiu.github.io/posts/defer/</guid>
-      <description>
-
-&lt;h4 id=&#34;toc_0&#34;&gt;Prelude&lt;/h4&gt;
-
-&lt;p&gt;This post based on
-&lt;a href=&#34;https://github.com/dotcloud/docker/commit/5128feb690e8fd0244d1fecef5f3f5f77598bbfa&#34;&gt;real events&lt;/a&gt;
-in docker repository.
-When I revealed that my 20-percent-cooler refactoring made &lt;code&gt;Pop&lt;/code&gt; function x4-x5
-times slower, I did some research and concluded, that problem was in using
-&lt;code&gt;defer&lt;/code&gt; statement for unlocking everywhere.&lt;/p&gt;
-
-&lt;p&gt;In this post I&amp;rsquo;ll write simple program and benchmarks from which we will see,
-that sometimes &lt;code&gt;defer&lt;/code&gt; statement can slowdown your program a lot.&lt;/p&gt;
-
-&lt;p&gt;Let&amp;rsquo;s create simple queue with methods &lt;code&gt;Put&lt;/code&gt; and &lt;code&gt;Get&lt;/code&gt;. Next snippets shows such
-queue and benchmarks for it. Also I wrote duplicate methods with &lt;code&gt;defer&lt;/code&gt; and
-without it.&lt;/p&gt;
-
-&lt;h4 id=&#34;toc_1&#34;&gt;Code&lt;/h4&gt;
-
-&lt;div class=&#34;highlight&#34; style=&#34;background: #202020&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;&lt;span style=&#34;color: #d0d0d0&#34;&gt;&amp;lt;p&amp;gt;&lt;/span&gt;&lt;span style=&#34;color: #6ab825; font-weight: bold&#34;&gt;package&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;defertest&amp;lt;/p&amp;gt;&lt;/span&gt;
-
-&lt;span style=&#34;color: #d0d0d0&#34;&gt;&amp;lt;p&amp;gt;&lt;/span&gt;&lt;span style=&#34;color: #6ab825; font-weight: bold&#34;&gt;import&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;(&lt;/span&gt;
-    &lt;span style=&#34;color: #a61717; background-color: #e3d2d2&#34;&gt;“&lt;/span&gt;&lt;span style=&#34;color: #d0d0d0&#34;&gt;sync&lt;/span&gt;&lt;span style=&#34;color: #a61717; background-color: #e3d2d2&#34;&gt;”&lt;/span&gt;
-&lt;span style=&#34;color: #d0d0d0&#34;&gt;)&amp;lt;/p&amp;gt;&lt;/span&gt;
-
-&lt;span style=&#34;color: #d0d0d0&#34;&gt;&amp;lt;p&amp;gt;&lt;/span&gt;&lt;span style=&#34;color: #6ab825; font-weight: bold&#34;&gt;type&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;Queue&lt;/span&gt; &lt;span style=&#34;color: #6ab825; font-weight: bold&#34;&gt;struct&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;{&lt;/span&gt;
-    &lt;span style=&#34;color: #d0d0d0&#34;&gt;sync.Mutex&lt;/span&gt;
-    &lt;span style=&#34;color: #d0d0d0&#34;&gt;arr&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;[]&lt;/span&gt;&lt;span style=&#34;color: #6ab825; font-weight: bold&#34;&gt;int&lt;/span&gt;
-&lt;span style=&#34;color: #d0d0d0&#34;&gt;}&amp;lt;/p&amp;gt;&lt;/span&gt;
-
-&lt;span style=&#34;color: #d0d0d0&#34;&gt;&amp;lt;p&amp;gt;&lt;/span&gt;&lt;span style=&#34;color: #6ab825; font-weight: bold&#34;&gt;func&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;New()&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;*Queue&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;{&lt;/span&gt;
-    &lt;span style=&#34;color: #6ab825; font-weight: bold&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;&amp;amp;Queue{}&lt;/span&gt;
-&lt;span style=&#34;color: #d0d0d0&#34;&gt;}&amp;lt;/p&amp;gt;&lt;/span&gt;
-
-&lt;span style=&#34;color: #d0d0d0&#34;&gt;&amp;lt;p&amp;gt;&lt;/span&gt;&lt;span style=&#34;color: #6ab825; font-weight: bold&#34;&gt;func&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;(q&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;*Queue)&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;Put(elem&lt;/span&gt; &lt;span style=&#34;color: #6ab825; font-weight: bold&#34;&gt;int&lt;/span&gt;&lt;span style=&#34;color: #d0d0d0&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;{&lt;/span&gt;
-    &lt;span style=&#34;color: #d0d0d0&#34;&gt;q.Lock()&lt;/span&gt;
-    &lt;span style=&#34;color: #d0d0d0&#34;&gt;q.arr&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color: #24909d&#34;&gt;append&lt;/span&gt;&lt;span style=&#34;color: #d0d0d0&#34;&gt;(q.arr,&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;elem)&lt;/span&gt;
-    &lt;span style=&#34;color: #d0d0d0&#34;&gt;q.Unlock()&lt;/span&gt;
-&lt;span style=&#34;color: #d0d0d0&#34;&gt;}&amp;lt;/p&amp;gt;&lt;/span&gt;
-
-&lt;span style=&#34;color: #d0d0d0&#34;&gt;&amp;lt;p&amp;gt;&lt;/span&gt;&lt;span style=&#34;color: #6ab825; font-weight: bold&#34;&gt;func&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;(q&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;*Queue)&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;PutDefer(elem&lt;/span&gt; &lt;span style=&#34;color: #6ab825; font-weight: bold&#34;&gt;int&lt;/span&gt;&lt;span style=&#34;color: #d0d0d0&#34;&gt;)&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;{&lt;/span&gt;
-    &lt;span style=&#34;color: #d0d0d0&#34;&gt;q.Lock()&lt;/span&gt;
-    &lt;span style=&#34;color: #6ab825; font-weight: bold&#34;&gt;defer&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;q.Unlock()&lt;/span&gt;
-    &lt;span style=&#34;color: #d0d0d0&#34;&gt;q.arr&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color: #24909d&#34;&gt;append&lt;/span&gt;&lt;span style=&#34;color: #d0d0d0&#34;&gt;(q.arr,&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;elem)&lt;/span&gt;
-&lt;span style=&#34;color: #d0d0d0&#34;&gt;}&amp;lt;/p&amp;gt;&lt;/span&gt;
-
-&lt;span style=&#34;color: #d0d0d0&#34;&gt;&amp;lt;p&amp;gt;&lt;/span&gt;&lt;span style=&#34;color: #6ab825; font-weight: bold&#34;&gt;func&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;(q&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;*Queue)&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;Get()&lt;/span&gt; &lt;span style=&#34;color: #6ab825; font-weight: bold&#34;&gt;int&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;{&lt;/span&gt;
-    &lt;span style=&#34;color: #d0d0d0&#34;&gt;q.Lock()&lt;/span&gt;
-    &lt;span style=&#34;color: #6ab825; font-weight: bold&#34;&gt;if&lt;/span&gt; &lt;span style=&#34;color: #24909d&#34;&gt;len&lt;/span&gt;&lt;span style=&#34;color: #d0d0d0&#34;&gt;(q.arr)&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color: #3677a9&#34;&gt;0&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;{&lt;/span&gt;
-        &lt;span style=&#34;color: #d0d0d0&#34;&gt;q.Unlock()&lt;/span&gt;
-        &lt;span style=&#34;color: #6ab825; font-weight: bold&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color: #3677a9&#34;&gt;0&lt;/span&gt;
-    &lt;span style=&#34;color: #d0d0d0&#34;&gt;}&lt;/span&gt;
-    &lt;span style=&#34;color: #d0d0d0&#34;&gt;res&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;q.arr[&lt;/span&gt;&lt;span style=&#34;color: #3677a9&#34;&gt;0&lt;/span&gt;&lt;span style=&#34;color: #d0d0d0&#34;&gt;]&lt;/span&gt;
-    &lt;span style=&#34;color: #d0d0d0&#34;&gt;q.arr&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;q.arr[&lt;/span&gt;&lt;span style=&#34;color: #3677a9&#34;&gt;1&lt;/span&gt;&lt;span style=&#34;color: #d0d0d0&#34;&gt;:]&lt;/span&gt;
-    &lt;span style=&#34;color: #d0d0d0&#34;&gt;q.Unlock()&lt;/span&gt;
-    &lt;span style=&#34;color: #6ab825; font-weight: bold&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;res&lt;/span&gt;
-&lt;span style=&#34;color: #d0d0d0&#34;&gt;}&amp;lt;/p&amp;gt;&lt;/span&gt;
-
-&lt;span style=&#34;color: #d0d0d0&#34;&gt;&amp;lt;p&amp;gt;&lt;/span&gt;&lt;span style=&#34;color: #6ab825; font-weight: bold&#34;&gt;func&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;(q&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;*Queue)&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;GetDefer()&lt;/span&gt; &lt;span style=&#34;color: #6ab825; font-weight: bold&#34;&gt;int&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;{&lt;/span&gt;
-    &lt;span style=&#34;color: #d0d0d0&#34;&gt;q.Lock()&lt;/span&gt;
-    &lt;span style=&#34;color: #6ab825; font-weight: bold&#34;&gt;defer&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;q.Unlock()&lt;/span&gt;
-    &lt;span style=&#34;color: #6ab825; font-weight: bold&#34;&gt;if&lt;/span&gt; &lt;span style=&#34;color: #24909d&#34;&gt;len&lt;/span&gt;&lt;span style=&#34;color: #d0d0d0&#34;&gt;(q.arr)&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color: #3677a9&#34;&gt;0&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;{&lt;/span&gt;
-        &lt;span style=&#34;color: #6ab825; font-weight: bold&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color: #3677a9&#34;&gt;0&lt;/span&gt;
-    &lt;span style=&#34;color: #d0d0d0&#34;&gt;}&lt;/span&gt;
-    &lt;span style=&#34;color: #d0d0d0&#34;&gt;res&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;q.arr[&lt;/span&gt;&lt;span style=&#34;color: #3677a9&#34;&gt;0&lt;/span&gt;&lt;span style=&#34;color: #d0d0d0&#34;&gt;]&lt;/span&gt;
-    &lt;span style=&#34;color: #d0d0d0&#34;&gt;q.arr&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;q.arr[&lt;/span&gt;&lt;span style=&#34;color: #3677a9&#34;&gt;1&lt;/span&gt;&lt;span style=&#34;color: #d0d0d0&#34;&gt;:]&lt;/span&gt;
-    &lt;span style=&#34;color: #6ab825; font-weight: bold&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;res&lt;/span&gt;
-&lt;span style=&#34;color: #d0d0d0&#34;&gt;}&amp;lt;/p&amp;gt;&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-&lt;h4 id=&#34;toc_2&#34;&gt;Benchmarks&lt;/h4&gt;
-
-&lt;div class=&#34;highlight&#34; style=&#34;background: #202020&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;&lt;span style=&#34;color: #d0d0d0&#34;&gt;&amp;lt;p&amp;gt;&lt;/span&gt;&lt;span style=&#34;color: #6ab825; font-weight: bold&#34;&gt;package&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;defertest&amp;lt;/p&amp;gt;&lt;/span&gt;
-
-&lt;span style=&#34;color: #d0d0d0&#34;&gt;&amp;lt;p&amp;gt;&lt;/span&gt;&lt;span style=&#34;color: #6ab825; font-weight: bold&#34;&gt;import&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;(&lt;/span&gt;
-    &lt;span style=&#34;color: #a61717; background-color: #e3d2d2&#34;&gt;“&lt;/span&gt;&lt;span style=&#34;color: #d0d0d0&#34;&gt;testing&lt;/span&gt;&lt;span style=&#34;color: #a61717; background-color: #e3d2d2&#34;&gt;”&lt;/span&gt;
-&lt;span style=&#34;color: #d0d0d0&#34;&gt;)&amp;lt;/p&amp;gt;&lt;/span&gt;
-
-&lt;span style=&#34;color: #d0d0d0&#34;&gt;&amp;lt;p&amp;gt;&lt;/span&gt;&lt;span style=&#34;color: #6ab825; font-weight: bold&#34;&gt;func&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;BenchmarkPut(b&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;*testing.B)&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;{&lt;/span&gt;
-    &lt;span style=&#34;color: #d0d0d0&#34;&gt;q&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;New()&lt;/span&gt;
-    &lt;span style=&#34;color: #d0d0d0&#34;&gt;b.ResetTimer()&lt;/span&gt;
-    &lt;span style=&#34;color: #6ab825; font-weight: bold&#34;&gt;for&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;i&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color: #3677a9&#34;&gt;0&lt;/span&gt;&lt;span style=&#34;color: #d0d0d0&#34;&gt;;&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;i&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;b.N;&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;i++&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;{&lt;/span&gt;
-        &lt;span style=&#34;color: #6ab825; font-weight: bold&#34;&gt;for&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;j&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color: #3677a9&#34;&gt;0&lt;/span&gt;&lt;span style=&#34;color: #d0d0d0&#34;&gt;;&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;j&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color: #3677a9&#34;&gt;1000&lt;/span&gt;&lt;span style=&#34;color: #d0d0d0&#34;&gt;;&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;j++&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;{&lt;/span&gt;
-            &lt;span style=&#34;color: #d0d0d0&#34;&gt;q.Put(j)&lt;/span&gt;
-        &lt;span style=&#34;color: #d0d0d0&#34;&gt;}&lt;/span&gt;
-    &lt;span style=&#34;color: #d0d0d0&#34;&gt;}&lt;/span&gt;
-&lt;span style=&#34;color: #d0d0d0&#34;&gt;}&amp;lt;/p&amp;gt;&lt;/span&gt;
-
-&lt;span style=&#34;color: #d0d0d0&#34;&gt;&amp;lt;p&amp;gt;&lt;/span&gt;&lt;span style=&#34;color: #6ab825; font-weight: bold&#34;&gt;func&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;BenchmarkPutDefer(b&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;*testing.B)&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;{&lt;/span&gt;
-    &lt;span style=&#34;color: #d0d0d0&#34;&gt;q&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;New()&lt;/span&gt;
-    &lt;span style=&#34;color: #d0d0d0&#34;&gt;b.ResetTimer()&lt;/span&gt;
-    &lt;span style=&#34;color: #6ab825; font-weight: bold&#34;&gt;for&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;i&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color: #3677a9&#34;&gt;0&lt;/span&gt;&lt;span style=&#34;color: #d0d0d0&#34;&gt;;&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;i&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;b.N;&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;i++&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;{&lt;/span&gt;
-        &lt;span style=&#34;color: #6ab825; font-weight: bold&#34;&gt;for&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;j&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color: #3677a9&#34;&gt;0&lt;/span&gt;&lt;span style=&#34;color: #d0d0d0&#34;&gt;;&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;j&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color: #3677a9&#34;&gt;1000&lt;/span&gt;&lt;span style=&#34;color: #d0d0d0&#34;&gt;;&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;j++&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;{&lt;/span&gt;
-            &lt;span style=&#34;color: #d0d0d0&#34;&gt;q.PutDefer(j)&lt;/span&gt;
-        &lt;span style=&#34;color: #d0d0d0&#34;&gt;}&lt;/span&gt;
-    &lt;span style=&#34;color: #d0d0d0&#34;&gt;}&lt;/span&gt;
-&lt;span style=&#34;color: #d0d0d0&#34;&gt;}&amp;lt;/p&amp;gt;&lt;/span&gt;
-
-&lt;span style=&#34;color: #d0d0d0&#34;&gt;&amp;lt;p&amp;gt;&lt;/span&gt;&lt;span style=&#34;color: #6ab825; font-weight: bold&#34;&gt;func&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;BenchmarkGet(b&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;*testing.B)&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;{&lt;/span&gt;
-    &lt;span style=&#34;color: #d0d0d0&#34;&gt;q&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;New()&lt;/span&gt;
-    &lt;span style=&#34;color: #6ab825; font-weight: bold&#34;&gt;for&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;i&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color: #3677a9&#34;&gt;0&lt;/span&gt;&lt;span style=&#34;color: #d0d0d0&#34;&gt;;&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;i&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color: #3677a9&#34;&gt;1000&lt;/span&gt;&lt;span style=&#34;color: #d0d0d0&#34;&gt;;&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;i++&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;{&lt;/span&gt;
-        &lt;span style=&#34;color: #d0d0d0&#34;&gt;q.Put(i)&lt;/span&gt;
-    &lt;span style=&#34;color: #d0d0d0&#34;&gt;}&lt;/span&gt;
-    &lt;span style=&#34;color: #d0d0d0&#34;&gt;b.ResetTimer()&lt;/span&gt;
-    &lt;span style=&#34;color: #6ab825; font-weight: bold&#34;&gt;for&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;i&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color: #3677a9&#34;&gt;0&lt;/span&gt;&lt;span style=&#34;color: #d0d0d0&#34;&gt;;&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;i&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;b.N;&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;i++&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;{&lt;/span&gt;
-        &lt;span style=&#34;color: #6ab825; font-weight: bold&#34;&gt;for&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;j&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color: #3677a9&#34;&gt;0&lt;/span&gt;&lt;span style=&#34;color: #d0d0d0&#34;&gt;;&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;j&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color: #3677a9&#34;&gt;2000&lt;/span&gt;&lt;span style=&#34;color: #d0d0d0&#34;&gt;;&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;j++&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;{&lt;/span&gt;
-            &lt;span style=&#34;color: #d0d0d0&#34;&gt;q.Get()&lt;/span&gt;
-        &lt;span style=&#34;color: #d0d0d0&#34;&gt;}&lt;/span&gt;
-    &lt;span style=&#34;color: #d0d0d0&#34;&gt;}&lt;/span&gt;
-&lt;span style=&#34;color: #d0d0d0&#34;&gt;}&amp;lt;/p&amp;gt;&lt;/span&gt;
-
-&lt;span style=&#34;color: #d0d0d0&#34;&gt;&amp;lt;p&amp;gt;&lt;/span&gt;&lt;span style=&#34;color: #6ab825; font-weight: bold&#34;&gt;func&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;BenchmarkGetDefer(b&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;*testing.B)&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;{&lt;/span&gt;
-    &lt;span style=&#34;color: #d0d0d0&#34;&gt;q&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;New()&lt;/span&gt;
-    &lt;span style=&#34;color: #6ab825; font-weight: bold&#34;&gt;for&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;i&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color: #3677a9&#34;&gt;0&lt;/span&gt;&lt;span style=&#34;color: #d0d0d0&#34;&gt;;&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;i&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color: #3677a9&#34;&gt;1000&lt;/span&gt;&lt;span style=&#34;color: #d0d0d0&#34;&gt;;&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;i++&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;{&lt;/span&gt;
-        &lt;span style=&#34;color: #d0d0d0&#34;&gt;q.Put(i)&lt;/span&gt;
-    &lt;span style=&#34;color: #d0d0d0&#34;&gt;}&lt;/span&gt;
-    &lt;span style=&#34;color: #d0d0d0&#34;&gt;b.ResetTimer()&lt;/span&gt;
-    &lt;span style=&#34;color: #6ab825; font-weight: bold&#34;&gt;for&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;i&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color: #3677a9&#34;&gt;0&lt;/span&gt;&lt;span style=&#34;color: #d0d0d0&#34;&gt;;&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;i&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;b.N;&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;i++&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;{&lt;/span&gt;
-        &lt;span style=&#34;color: #6ab825; font-weight: bold&#34;&gt;for&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;j&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;:=&lt;/span&gt; &lt;span style=&#34;color: #3677a9&#34;&gt;0&lt;/span&gt;&lt;span style=&#34;color: #d0d0d0&#34;&gt;;&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;j&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color: #3677a9&#34;&gt;2000&lt;/span&gt;&lt;span style=&#34;color: #d0d0d0&#34;&gt;;&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;j++&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;{&lt;/span&gt;
-            &lt;span style=&#34;color: #d0d0d0&#34;&gt;q.GetDefer()&lt;/span&gt;
-        &lt;span style=&#34;color: #d0d0d0&#34;&gt;}&lt;/span&gt;
-    &lt;span style=&#34;color: #d0d0d0&#34;&gt;}&lt;/span&gt;
-&lt;span style=&#34;color: #d0d0d0&#34;&gt;}&amp;lt;/p&amp;gt;&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-&lt;h4 id=&#34;toc_3&#34;&gt;Results&lt;/h4&gt;
-
-&lt;pre&gt;&lt;code&gt;BenchmarkPut       50000             63002 ns/op
-BenchmarkPutDefer  10000            143391 ns/op
-BenchmarkGet       50000             72045 ns/op
-BenchmarkGetDefer  10000            249029 ns/op
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h4 id=&#34;toc_4&#34;&gt;Conclusion&lt;/h4&gt;
-
-&lt;p&gt;You don&amp;rsquo;t need defers in small functions with one-two exit points.&lt;/p&gt;
-
-&lt;h4 id=&#34;toc_5&#34;&gt;Update&lt;/h4&gt;
-
-&lt;p&gt;Retested with go from &lt;code&gt;tip&lt;/code&gt; as Cezar Sá Espinola suggested. So, here results:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;BenchmarkPut       50000             54633 ns/op
-BenchmarkPutDefer  10000            102971 ns/op
-BenchmarkGet       50000             65148 ns/op
-BenchmarkGetDefer  10000            180839 ns/op
-&lt;/code&gt;&lt;/pre&gt;
 </description>
     </item>
     

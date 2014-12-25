@@ -68,6 +68,22 @@
 
 <article class="post">
     <header>
+      <h2><a href='http://yujinqiu.github.io/posts/CurlDraft/'> CurlDraft</a> </h2>
+      <div class="meta">Thu, Dec 25, 2014</div>
+    </header>
+
+    CURL 有用操作 curl post 数据 提交 key:value 格式数据 curl -d 'username=xyz&amp;password=xyz' http://localhost:3000/api/login 提交 json格式数据 curl -d '{&quot;username&quot;:&quot;xyz&quot;,&quot;password&quot;:&quot;xyz&quot;}' http://localhost:3000/api/login 参数内容较多,直接写入到一个文件中 curl -d @param.json http://localhost:3000/api/login 上传附件 curl -F &quot;blob=@card.txt;type=text/plain&quot; http://localhost:3000/upload
+    <footer style="text-align:right; ">
+        <a href='http://yujinqiu.github.io/posts/CurlDraft/'><nobr>Read more →</nobr></a>
+    </footer>
+    <hr/>
+</article>
+
+            
+            
+
+<article class="post">
+    <header>
       <h2><a href='http://yujinqiu.github.io/posts/GolangDraft/'> GolangDraft</a> </h2>
       <div class="meta">Fri, Dec 12, 2014</div>
     </header>
@@ -234,6 +250,33 @@ Use <code>?</code> to get the whole list of available options.</p>
 
 <article class="post">
     <header>
+      <h2><a href='http://yujinqiu.github.io/posts/Mac/'> Mac os X Draft</a> </h2>
+      <div class="meta">Tue, Nov 25, 2014</div>
+    </header>
+
+    <p>#Mac os X
+##Yosemite 升级之后应该进行什么操作?<br />
+1. 从 mavericks 升级到 mac os x 之后, 会遇到一些比较诡异的问题(比如找不到 clang), 下面的命令会帮助你提前避免一些问题.</p>
+
+<pre><code class="language-bash">sudo xcode-select --install  
+sudo xcode-select --switch /Applications/Xcode.app   
+sudo xcodebuild -license  
+sudo gem update --system  
+sudo gem install xcodeproj   
+sudo brew update   
+</code></pre>
+
+    <footer style="text-align:right; ">
+        <a href='http://yujinqiu.github.io/posts/Mac/'><nobr>Read more →</nobr></a>
+    </footer>
+    <hr/>
+</article>
+
+            
+            
+
+<article class="post">
+    <header>
       <h2><a href='http://yujinqiu.github.io/posts/ParallelDraft/'> CliDraft</a> </h2>
       <div class="meta">Tue, Nov 25, 2014</div>
     </header>
@@ -290,33 +333,6 @@ for host in $( &lt; machines ) ; do ssh ${host} &ldquo; uptime &rdquo; ;done</p>
 
     <footer style="text-align:right; ">
         <a href='http://yujinqiu.github.io/posts/Apple/'><nobr>Read more →</nobr></a>
-    </footer>
-    <hr/>
-</article>
-
-            
-            
-
-<article class="post">
-    <header>
-      <h2><a href='http://yujinqiu.github.io/posts/Mac/'> Mac os X Draft</a> </h2>
-      <div class="meta">Tue, Nov 25, 2014</div>
-    </header>
-
-    <p>#Mac os X
-##Yosemite 升级之后应该进行什么操作?<br />
-1. 从 mavericks 升级到 mac os x 之后, 会遇到一些比较诡异的问题(比如找不到 clang), 下面的命令会帮助你提前避免一些问题.</p>
-
-<pre><code class="language-bash">sudo xcode-select --install  
-sudo xcode-select --switch /Applications/Xcode.app   
-sudo xcodebuild -license  
-sudo gem update --system  
-sudo gem install xcodeproj   
-sudo brew update   
-</code></pre>
-
-    <footer style="text-align:right; ">
-        <a href='http://yujinqiu.github.io/posts/Mac/'><nobr>Read more →</nobr></a>
     </footer>
     <hr/>
 </article>
@@ -390,52 +406,6 @@ host1 --&gt;  X  --&gt; host3
 
     <footer style="text-align:right; ">
         <a href='http://yujinqiu.github.io/posts/fileserver/'><nobr>Read more →</nobr></a>
-    </footer>
-    <hr/>
-</article>
-
-            
-            
-
-<article class="post">
-    <header>
-      <h2><a href='http://yujinqiu.github.io/posts/CliDraft/'> CliDraft</a> </h2>
-      <div class="meta">Wed, Nov 19, 2014</div>
-    </header>
-
-    <h2>命令行控</h2>
-
-<h3>ubuntu (命令行)</h3>
-
-<h4>moc(music on console)</h4>
-
-<p>安装命令 <code>sudo apt-get -y install  moc</code></p>
-
-<h4>特点</h4>
-
-<p>mod 很类似 tmux 能够attach(输入命令<code>mocp</code>) 和 detach(<code>q</code>)</p>
-
-<p>特点:<br />
-1. &gt;  音量increase  &lt; 音量 decrease<br />
-2. <code>h</code> for help<br />
-3. <code>Q</code> for quit</p>
-
-<h3>MAC</h3>
-
-<h4>afplay(Audio File Play)</h4>
-
-<p>很简单的命令, 帮助文档就一个选项<code>-h</code></p>
-
-<pre><code>{-t | --time} TIME  
-    play for TIME seconds
-{-r | --rate} RATE
-    play at playback rate
-{-q | --rQuality} QUALITY
-    set the quality used for rate-scaled playback (default is 0 - low quality, 1 - high quality)
-</code></pre>
-
-    <footer style="text-align:right; ">
-        <a href='http://yujinqiu.github.io/posts/CliDraft/'><nobr>Read more →</nobr></a>
     </footer>
     <hr/>
 </article>
