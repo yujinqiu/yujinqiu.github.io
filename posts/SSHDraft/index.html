@@ -83,13 +83,20 @@ ssh 通过加密传输数据, 特别适合**国情, 加入我们要让8080 端�
 <pre><code>ssh  -D 8080 user@host
 </code></pre>
 
-<h4 id="toc_2">应用场景</h4>
+<h3 id="toc_2">遇到错误</h3>
+
+<pre><code>Bad dynamic forwarding specification
+</code></pre>
+
+<p>原因: ssh -D user@host 忘记了指定端口</p>
+
+<h4 id="toc_3">应用场景</h4>
 
 <p>在咖啡厅等公共场所, 为了上网安全, 可以使用 ssh动态转发来保证安全.</p>
 
-<h3 id="toc_3">本地端口转发( Local Port Forwarding)</h3>
+<h3 id="toc_4">本地端口转发( Local Port Forwarding)</h3>
 
-<h4 id="toc_4">背景</h4>
+<h4 id="toc_5">背景</h4>
 
 <p>公司从安全性上考虑, 通常会隔离网络, 不允许直接访问, 简单拓扑如下:</p>
 
@@ -119,11 +126,11 @@ host1 --&gt;  X  --&gt; host3
 
 <p>本地端口转发的意思是:  绑定本地机器端口, 进行数据转发.</p>
 
-<h3 id="toc_5">远程端口转发(Remote Port Forwarding)</h3>
+<h3 id="toc_6">远程端口转发(Remote Port Forwarding)</h3>
 
 <p>远程端口转发: 对应就是 绑定远程机器端口, 进行数据转发.</p>
 
-<h4 id="toc_6">背景</h4>
+<h4 id="toc_7">背景</h4>
 
 <p>公司又从安全性上考虑, host2 通过 NAT 出去可以访问 host1,  host1 机器无法访问 host2, 同时 host2 和 host3 机器间能够相互访问.   我们希望能够 host1 直接访问 host3</p>
 
@@ -146,14 +153,14 @@ host1 --&gt;  X  --&gt; host3
 <pre><code>ftp localhost:2121
 </code></pre>
 
-<h5 id="toc_7">注意点</h5>
+<h5 id="toc_8">注意点</h5>
 
 <ol>
 <li>2121 远程机器端口会在 ssh 运行之后, 自动在 host1 机器上启动.</li>
 <li>localhost 是针对host2 而言. 对比 Local 和 Remote 本质上 <strong>localhost</strong> 是针对 proxy 角色而言的,  在 local forwarding proxy 是:  host2,  remote 的 proxy 也是 host2</li>
 </ol>
 
-<h4 id="toc_8">典型应用场景</h4>
+<h4 id="toc_9">典型应用场景</h4>
 
 <p>你在本机上开发了一个 web (9000端口) , 然后你想向你的朋友演示, 但是你没有外网 ip, 所有不可能直接访问.<br />
 幸运的是你有一个外网可以访问的 VPS(3000端口), 这时候的解决方案是:</p>
@@ -168,9 +175,9 @@ host1 --&gt;  X  --&gt; host3
     sudo service ssh restart 
 </code></pre>
 
-<h3 id="toc_9">SSH Agent Forwarding</h3>
+<h3 id="toc_10">SSH Agent Forwarding</h3>
 
-<h4 id="toc_10">典型应用场景</h4>
+<h4 id="toc_11">典型应用场景</h4>
 
 <p>本机 laptop 和 github.com 建立了信任关系, 可以直接 ssh 上去,  然后登陆自己的 vps, 希望能够在 vps 上登陆 github.com , 正常情况是把 vps 的 public key 放到 github.com 但是这样有点麻烦, 可以直接用下面:</p>
 
@@ -178,9 +185,9 @@ host1 --&gt;  X  --&gt; host3
 vpsservr$  ssh github.com
 </code></pre>
 
-<h3 id="toc_11">SSH 别名</h3>
+<h3 id="toc_12">SSH 别名</h3>
 
-<h4 id="toc_12">典型应用场景</h4>
+<h4 id="toc_13">典型应用场景</h4>
 
 <p>自己手上有几台机器, 名字都比较长, 可以采用 ssh 别名来进行.<br />
 <code>~/.ssh/config</code></p>
@@ -189,12 +196,12 @@ vpsservr$  ssh github.com
 Hostname bastin.east.doc.example.com
 </code></pre>
 
-<h3 id="toc_13">SSH 嵌套</h3>
+<h3 id="toc_14">SSH 嵌套</h3>
 
 <pre><code>ssh -t hostA  ssh -t hostB ssh -t hostC
 </code></pre>
 
-<h3 id="toc_14">SSH 有用参数</h3>
+<h3 id="toc_15">SSH 有用参数</h3>
 
 <pre><code>-N Do not execute a remote command.  This is useful for just forwarding
          ports (protocol version 2 only).
@@ -217,7 +224,7 @@ Hostname bastin.east.doc.example.com
 <pre><code>-nNT
 </code></pre>
 
-<h4 id="toc_15">Reference</h4>
+<h4 id="toc_16">Reference</h4>
 
 <p><a href="http://blog.trackets.com/2014/05/17/ssh-tunnel-local-and-remote-port-forwarding-explained-with-examples.html">SSH Tunnel - Local and Remote Port Forwarding Explained With Examples</a></p>
 
@@ -229,7 +236,7 @@ Hostname bastin.east.doc.example.com
   <hr />
   
     <span class="left">
-    &nbsp; <em>&laquo; Previous:</em> <a class="next" href="http://yujinqiu.github.io/posts/Apple/">AppleDraft</a>
+    &nbsp; <em>&laquo; Previous:</em> <a class="next" href="http://yujinqiu.github.io/posts/Mac/">Mac os X Draft</a>
     </span>
   
 

@@ -7,8 +7,8 @@
 <head>
     <meta charset="utf-8">
     <base href="http://yujinqiu.github.io">
-    <title> Categories </title>
-    <link rel="canonical" href="http://yujinqiu.github.io/categories/">
+    <title> CurlDraft </title>
+    <link rel="canonical" href="http://yujinqiu.github.io/posts/CurlDraft/">
     
 
 <link rel="stylesheet" href="/css/poole.css">
@@ -53,40 +53,78 @@
         <h3 class="masthead-title">
           <a href="/posts" title="Blog">Blog Posts</a>
         </h3>
+        <hr>
       </div>
     </div>
 
     
     <div class="container content">
+      <div class="post-tile-meta">
+        <h1 class="post-title">CurlDraft</h1>
+        Thu Dec 25, 2014 
+<div class="container category">
+  <ul class="catlist">
+    <li><em>Categories: </em></li>
+    
+  </ul>
+</div>
+</p>
+      </div>
         <section id="main">
-          <div>
-            <h1>Archive of Posts, by category</h1>
-            <ul class="category">
-              
-              
-              <li><a href="/categories/hugo"> hugo </a> (4 entries) </li>
-              
-              <li><a href="/categories/tech"> tech </a> (3 entries) </li>
-              
-              <li><a href="/categories/go"> go </a> (3 entries) </li>
-              
-              <li><a href="/categories/docker"> docker </a> (2 entries) </li>
-              
-              <li><a href="/categories/golang"> golang </a> (2 entries) </li>
-              
-              <li><a href="/categories/github"> github </a> (2 entries) </li>
-              
-              <li><a href="/categories/template"> template </a> (1 entries) </li>
-              
-              <li><a href="/categories/gists"> gists </a> (1 entries) </li>
-              
-            </ul>
-          </div>
+          
+
+<h2 id="toc_0">CURL 有用操作</h2>
+
+<h3 id="toc_1">curl post 数据</h3>
+
+<ol>
+<li><p>提交 key:value 格式数据</p>
+
+<pre><code>curl -d 'username=xyz&amp;password=xyz' http://localhost:3000/api/login
+</code></pre></li>
+
+<li><p>提交 json格式数据</p>
+
+<pre><code>curl -d '{&quot;username&quot;:&quot;xyz&quot;,&quot;password&quot;:&quot;xyz&quot;}' http://localhost:3000/api/login
+</code></pre></li>
+
+<li><p>参数内容较多,直接写入到一个文件中</p>
+
+<pre><code>curl -d @param.json  http://localhost:3000/api/login
+</code></pre></li>
+
+<li><p>上传附件</p>
+
+<pre><code>curl -F &quot;blob=@card.txt;type=text/plain&quot; http://localhost:3000/upload
+</code></pre></li>
+</ol>
+
         </section>
+  
+      
+
+<div class="container">
+  <hr />
+  
+    <span class="left">
+    &nbsp; <em>&laquo; Previous:</em> <a class="next" href="http://yujinqiu.github.io/posts/BeegoDraft/">BeegoDraft</a>
+    </span>
+  
+
+  
+    <span class="right">
+    <em>Next: </em><a class="next" href="http://yujinqiu.github.io/posts/GolangDraft/"> &nbsp; GolangDraft</a> &raquo;
+    </span>
+  
+</div>
+
     </div>
   </div>
 
   <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+
+  <br />
+
 
   
   

@@ -68,11 +68,100 @@
 
 <article class="post">
     <header>
+      <h2><a href='http://yujinqiu.github.io/posts/AndroidDraft/'> AndroidDraft</a> </h2>
+      <div class="meta">Sat, Jan 3, 2015</div>
+    </header>
+
+    创建 Android Virtual Device(AVD) android list targets 查看已经下载好的 sdks 查看 adb devices 能够查看配置好的 android 物理设备 ➜ bin git:(master) ✗ adb devices List of devices attached MX21CA1ALJZM4D2227 device 破解 Android 程序通常方法是将apk 文件利用 ApkTool反编译, 生成 Smali 格式的反汇编代码, 然后阅读 Smali 文件的代码来理解程序的运行机制, 找到突破口进行修改, 最后利用 ApkTool 重新编译生成apk 文件, 并签名, 最后进行测试 apktool 安装 注意点 mac os x 利用 brew 安装之后,建议确认 apktool 的版本,使用2.0.0 以上版本, 1.5.2 版本个人测试存在问题. mac os x 安装 Mac OS X: Download Mac wrapper script (Right click, Save Link As apktool) Download apktool-2 (find newest here) Rename downloaded jar to apktool.jar Move both files (apktool.jar &amp; apktool) to /usr/local/bin (root needed) Make sure both files are executable (chmod +x) Try running apktool via cli Note - Wrapper scripts are not needed, but helpful so you don&rsquo;t have to type java -jar apktool.jar over and over.
+    <footer style="text-align:right; ">
+        <a href='http://yujinqiu.github.io/posts/AndroidDraft/'><nobr>Read more →</nobr></a>
+    </footer>
+    <hr/>
+</article>
+
+            
+            
+
+<article class="post">
+    <header>
+      <h2><a href='http://yujinqiu.github.io/posts/MetaDraft/'> MetaDraft</a> </h2>
+      <div class="meta">Fri, Jan 2, 2015</div>
+    </header>
+
+    如何高效学习 该内容为翻译内容, 源地址 我相信学校里的优等生和差生的差距是由于学习习惯导致. 坦诚的说大多数学生非常低效地学习. 更糟糕的是, 大多数老师无法传授给学生高效的学习习惯. 学习和努力成比例 坐在教室里边听着教授演讲感觉在学习&hellip;翻看一本书的一个新的话题感觉在读书&hellip;但是这些行为是复杂的被动式活动, 是低效的. 这些行为可能会导致更糟糕的结果, 它们会给你造成你已经学会了的假象. 你可以在教室里边听关于量子力学的演讲, 在一定程度上你熟悉这个话题的和一些术语. 可悲的是你在欺骗你自己你已经学会, 这比什么都不会还要糟糕. 相反, 你应该给自己寻找挑战. 如果某些内容你觉得简单, 那么
+    <footer style="text-align:right; ">
+        <a href='http://yujinqiu.github.io/posts/MetaDraft/'><nobr>Read more →</nobr></a>
+    </footer>
+    <hr/>
+</article>
+
+            
+            
+
+<article class="post">
+    <header>
+      <h2><a href='http://yujinqiu.github.io/posts/FqDraft/'> fq</a> </h2>
+      <div class="meta">Sun, Dec 28, 2014</div>
+    </header>
+
+    FQ Across the Great Wall we can reach every corner of the world. shadowsocks (ss) 原理 app &lt;- 本地 client 解密 &lt;- 墙外 vps(加密) &lt;- 目标 site 本质上 sshd -D 就是一个 Shadowsocks . ssh -D 0.0.0.0:10086 user@vps 注意事项 ssh -D 的本质上是一个 sock5 的代理, 不是 http/https 代理, 所以在 firefox 配置里边不能够把 HTTP Proxy 和 SSL Proxy 配置为127.0.0.1:10086, 只能设置socks 代理 为了避免 DNS 污染, 建议在 firefox 中设置Remote DNS, 进行远端解析 相关命令代理 curl --socks5-hostname &lt;host[:port]&gt; Use the specified SOCKS5 proxy (and let the proxy resolve the hostname) 避免 DNS 污染 --socks5 &lt;host[:port]&gt; Use the specified SOCKS proxy - but resolve the hostname locally.
+    <footer style="text-align:right; ">
+        <a href='http://yujinqiu.github.io/posts/FqDraft/'><nobr>Read more →</nobr></a>
+    </footer>
+    <hr/>
+</article>
+
+            
+            
+
+<article class="post">
+    <header>
+      <h2><a href='http://yujinqiu.github.io/posts/BeegoDraft/'> BeegoDraft</a> </h2>
+      <div class="meta">Sat, Dec 27, 2014</div>
+    </header>
+
+    beego session 失效时间 背景 使用 beego 进行开发过程中为了减少大家登陆时间特定设置1个月有效期, 结果发现需要经常登陆 原因 session 的过期失效时间由两个方面决定 存储sessionid 的 cookie (SessionCookieLifetime) 存储在服务器端的 session 文件( SessionGCMaxLifetime 默认3600) 开始的时候只是设置了 SessionCookieLifetime, 虽然 cookie 的内容不会被删除, 但是在服务器端的 session 文件会被删除, 在代码中 ctx.Inut.Session(&quot;username&quot;).(string) 无法获取对应的内容, 重定向到登陆页面.
+    <footer style="text-align:right; ">
+        <a href='http://yujinqiu.github.io/posts/BeegoDraft/'><nobr>Read more →</nobr></a>
+    </footer>
+    <hr/>
+</article>
+
+            
+            
+
+<article class="post">
+    <header>
       <h2><a href='http://yujinqiu.github.io/posts/CurlDraft/'> CurlDraft</a> </h2>
       <div class="meta">Thu, Dec 25, 2014</div>
     </header>
 
-    CURL 有用操作 curl post 数据 提交 key:value 格式数据 curl -d 'username=xyz&amp;password=xyz' http://localhost:3000/api/login 提交 json格式数据 curl -d '{&quot;username&quot;:&quot;xyz&quot;,&quot;password&quot;:&quot;xyz&quot;}' http://localhost:3000/api/login 参数内容较多,直接写入到一个文件中 curl -d @param.json http://localhost:3000/api/login 上传附件 curl -F &quot;blob=@card.txt;type=text/plain&quot; http://localhost:3000/upload
+    <h2>CURL 有用操作</h2>
+
+<h3>curl post 数据</h3>
+
+<ol>
+<li><p>提交 key:value 格式数据</p>
+
+<pre><code>curl -d 'username=xyz&amp;password=xyz' http://localhost:3000/api/login
+</code></pre></li>
+
+<li><p>提交 json格式数据</p>
+
+<pre><code>curl -d '{&quot;username&quot;:&quot;xyz&quot;,&quot;password&quot;:&quot;xyz&quot;}' http://localhost:3000/api/login
+</code></pre></li>
+
+<li><p>参数内容较多,直接写入到一个文件中</p>
+
+<pre><code>curl -d @param.json  http://localhost:3000/api/login
+</code></pre></li>
+
+<li><p>上传附件</p>
+
+<pre><code>curl -F &quot;blob=@card.txt;type=text/plain&quot; http://localhost:3000/upload
+</code></pre></li>
+</ol>
+
     <footer style="text-align:right; ">
         <a href='http://yujinqiu.github.io/posts/CurlDraft/'><nobr>Read more →</nobr></a>
     </footer>
@@ -250,33 +339,6 @@ Use <code>?</code> to get the whole list of available options.</p>
 
 <article class="post">
     <header>
-      <h2><a href='http://yujinqiu.github.io/posts/Mac/'> Mac os X Draft</a> </h2>
-      <div class="meta">Tue, Nov 25, 2014</div>
-    </header>
-
-    <p>#Mac os X
-##Yosemite 升级之后应该进行什么操作?<br />
-1. 从 mavericks 升级到 mac os x 之后, 会遇到一些比较诡异的问题(比如找不到 clang), 下面的命令会帮助你提前避免一些问题.</p>
-
-<pre><code class="language-bash">sudo xcode-select --install  
-sudo xcode-select --switch /Applications/Xcode.app   
-sudo xcodebuild -license  
-sudo gem update --system  
-sudo gem install xcodeproj   
-sudo brew update   
-</code></pre>
-
-    <footer style="text-align:right; ">
-        <a href='http://yujinqiu.github.io/posts/Mac/'><nobr>Read more →</nobr></a>
-    </footer>
-    <hr/>
-</article>
-
-            
-            
-
-<article class="post">
-    <header>
       <h2><a href='http://yujinqiu.github.io/posts/ParallelDraft/'> CliDraft</a> </h2>
       <div class="meta">Tue, Nov 25, 2014</div>
     </header>
@@ -311,101 +373,6 @@ for host in $( &lt; machines ) ; do ssh ${host} &ldquo; uptime &rdquo; ;done</p>
 
     <footer style="text-align:right; ">
         <a href='http://yujinqiu.github.io/posts/ParallelDraft/'><nobr>Read more →</nobr></a>
-    </footer>
-    <hr/>
-</article>
-
-            
-            
-
-<article class="post">
-    <header>
-      <h2><a href='http://yujinqiu.github.io/posts/Apple/'> AppleDraft</a> </h2>
-      <div class="meta">Tue, Nov 25, 2014</div>
-    </header>
-
-    <h1>Apple</h1>
-
-<h2>iphone 屏幕小白点怎么开启?</h2>
-
-<p>看到别人的屏幕有一个小白点, 点击之后出现siri, device, favorites 和 home 怎么打开?<br />
-那个东西叫Assistive Touch , 在 /setting/general/Accessibility/AssistiveTouch 里边可以打开.</p>
-
-    <footer style="text-align:right; ">
-        <a href='http://yujinqiu.github.io/posts/Apple/'><nobr>Read more →</nobr></a>
-    </footer>
-    <hr/>
-</article>
-
-            
-            
-
-<article class="post">
-    <header>
-      <h2><a href='http://yujinqiu.github.io/posts/SSHDraft/'> SSHDraft</a> </h2>
-      <div class="meta">Sun, Nov 23, 2014</div>
-    </header>
-
-    <h2>Black Magic Of SSH</h2>
-
-<h3>绑定本地端口( Dynamic Port Forwarding)</h3>
-
-<p>其实本质上就是一个 SOCKS5 proxy<br />
-ssh 通过加密传输数据, 特别适合**国情, 加入我们要让8080 端口的数据, 全部通过 SSH  加密转发到远程主机上</p>
-
-<pre><code>ssh  -D 8080 user@host
-</code></pre>
-
-<h4>应用场景</h4>
-
-<p>在咖啡厅等公共场所, 为了上网安全, 可以使用 ssh动态转发来保证安全.</p>
-
-<h3>本地端口转发( Local Port Forwarding)</h3>
-
-<h4>背景</h4>
-
-<p>公司从安全性上考虑, 通常会隔离网络, 不允许直接访问, 简单拓扑如下:</p>
-
-<pre><code>          host2
-host1 --&gt;  X  --&gt; host3
-</code></pre>
-
-<p>host1 无法直接访问 host3, host1 可以访问 host2, host2 可以访问 host3.<br />
-可以通过 ssh 的 <strong>本地端口转发</strong> 来进行</p>
-
-<pre><code>ssh -L 2121:host3:21 user@host2
-</code></pre>
-
-    <footer style="text-align:right; ">
-        <a href='http://yujinqiu.github.io/posts/SSHDraft/'><nobr>Read more →</nobr></a>
-    </footer>
-    <hr/>
-</article>
-
-            
-            
-
-<article class="post">
-    <header>
-      <h2><a href='http://yujinqiu.github.io/posts/fileserver/'> fileserver</a> </h2>
-      <div class="meta">Sun, Nov 23, 2014</div>
-    </header>
-
-    <h1>文件服务器</h1>
-
-<h2>背景</h2>
-
-<p>我们经常需要下载远程的一台服务器的一个文件, 比如临时线上的某台服务器的一个日志文件需要下载到本地 windows, 没有办法使用 scp, 搭建一个 ftp 又太费劲.</p>
-
-<h3>解决方案</h3>
-
-<h4>python</h4>
-
-<pre><code>python -m SimpleHTTPServer 8080
-</code></pre>
-
-    <footer style="text-align:right; ">
-        <a href='http://yujinqiu.github.io/posts/fileserver/'><nobr>Read more →</nobr></a>
     </footer>
     <hr/>
 </article>

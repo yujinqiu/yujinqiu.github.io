@@ -7,7 +7,258 @@
     
     
     
-    <updated>Thu, 25 Dec 2014 14:13:36 CST</updated>
+    <updated>Sat, 03 Jan 2015 13:20:13 CST</updated>
+    
+    <item>
+      <title>AndroidDraft</title>
+      <link>http://yujinqiu.github.io/posts/AndroidDraft/</link>
+      <pubDate>Sat, 03 Jan 2015 13:20:13 CST</pubDate>
+      
+      <guid>http://yujinqiu.github.io/posts/AndroidDraft/</guid>
+      <description>
+
+&lt;h2 id=&#34;toc_0&#34;&gt;创建 Android Virtual Device(AVD)&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code&gt;android list  targets 查看已经下载好的 sdks
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;toc_1&#34;&gt;查看&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code&gt;adb devices 能够查看配置好的 android 物理设备
+➜  bin git:(master) ✗ adb devices
+List of devices attached
+MX21CA1ALJZM4D2227  device
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;toc_2&#34;&gt;破解 Android 程序通常方法是将apk&lt;/h2&gt;
+
+&lt;p&gt;文件利用 ApkTool反编译, 生成 Smali 格式的反汇编代码, 然后阅读 Smali 文件的代码来理解程序的运行机制, 找到突破口进行修改, 最后利用 ApkTool 重新编译生成apk 文件, 并签名, 最后进行测试&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_3&#34;&gt;apktool 安装&lt;/h2&gt;
+
+&lt;h3 id=&#34;toc_4&#34;&gt;注意点&lt;/h3&gt;
+
+&lt;p&gt;mac os x 利用 brew 安装之后,建议确认 apktool 的版本,使用2.0.0 以上版本, 1.5.2 版本个人测试存在问题.&lt;/p&gt;
+
+&lt;h3 id=&#34;toc_5&#34;&gt;mac os x  安装&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;Mac OS X:
+    Download Mac wrapper script (Right click, Save Link As apktool)
+    Download apktool-2 (find newest here)
+    Rename downloaded jar to apktool.jar
+    Move both files (apktool.jar &amp;amp; apktool) to /usr/local/bin (root needed)
+    Make sure both files are executable (chmod +x)
+    Try running apktool via cli 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Note - Wrapper scripts are not needed, but helpful so you don&amp;rsquo;t have to type java -jar apktool.jar over and over.&lt;/p&gt;
+
+&lt;h3 id=&#34;toc_6&#34;&gt;反编译 apk 文件&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;apktool d  &amp;lt;file_apk&amp;gt; -o  &amp;lt;output_dir&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;toc_7&#34;&gt;修改反编译文件之后重新打包&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code&gt;apktool  b &amp;lt;output_dir&amp;gt; 
+
+#默认会生成在 output_dir/dist/ 下面
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;toc_8&#34;&gt;重新签名 apk&lt;/h4&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;在签名之前需要有 keystore&lt;br /&gt;
+创建 keystore&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;keytool -genkey -keystore &amp;lt;name.keystore&amp;gt; -alias &amp;lt;alias_name&amp;gt; -keyalg RSA -keysize 2048 -validity 1000  
+keystore:是用来存储keys 和 certificates
+其中 alias_name 用来标记 key 的名称
+name.keystore 是 keystore 的名称
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;对 apk 进行签名&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore my-release-key.keystore my_application.apk alias_name
+
+alias_name 对应上面的创建 keystore 的名字
+签名完成之后,会把签名信息直接写入 apk 文件中
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;验证 apk 签名&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;jarsigner -verify -verbose -certs &amp;lt;name.apk&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;对齐 apk&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;zipalign -v 4 your_project_name-unaligned.apk your_project_name.apk
+
+zipalign 用来是apk 内存字节对齐, 减低内存消耗
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;注意：&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;CN（Common Name – 名字与姓氏）：其实这个“名字与姓氏”应该是域名，比如说localhost或是blog.devep.net之类的。输成了姓名，和真正运行的时候域名不符，会出问题。浏览器访问时，弹出一个对话框，提示“安全证书上的名称无效，或者与站点名称不匹配”，用户选择继续还是可以浏览网页。但是用http client写程序访问的时候，会抛出类似于“javax.servlet.ServletException: HTTPS hostname wrong: should be ”的异常。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;在用keytool生成数字证书时必须保证：-keystore androidapp.keystore -alias androidapp.keystore 两者名称必须相同。否则下一步签名时会出现错误：jarsigner： 找不到 androidapp.keystore 的证书链。androidapp.keystore 必须引用包含专用密钥和相应的公共密钥证书链的有效密钥库密钥条目。&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h4 id=&#34;toc_9&#34;&gt;adb 重新安装 apk&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code&gt;adb install  -r &amp;lt;name.apk&amp;gt; 
+-r : replace existing application
+-s : install application on sdcard
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;toc_10&#34;&gt;adb 重新安装 apk 报错和解决方案&lt;/h4&gt;
+
+&lt;p&gt;INSTALL_PARSE_FAILED_INCONSISTENT_CERTIFICATES:
+是由于破解之后的 app 的签名和编译的原apk 签名不一致导致&lt;br /&gt;
+&lt;strong&gt;解决方法:&lt;/strong&gt; 删除设备或者模拟器中的 apk, 然后 再 &lt;code&gt;adb install  -r &amp;lt;name.apk&amp;gt;&lt;/code&gt; 即可&lt;/p&gt;
+
+&lt;h4 id=&#34;toc_11&#34;&gt;android studio 常用技巧&lt;/h4&gt;
+
+&lt;ol&gt;
+&lt;li&gt;command + shift + a : 输入对应的命令, 类似 alfred&lt;/li&gt;
+&lt;li&gt;要修改一个控件的文件, go to definition( command + b)&lt;/li&gt;
+&lt;li&gt;&lt;/li&gt;
+&lt;/ol&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>MetaDraft</title>
+      <link>http://yujinqiu.github.io/posts/MetaDraft/</link>
+      <pubDate>Fri, 02 Jan 2015 11:31:02 CST</pubDate>
+      
+      <guid>http://yujinqiu.github.io/posts/MetaDraft/</guid>
+      <description>
+
+&lt;h2 id=&#34;toc_0&#34;&gt;如何高效学习&lt;/h2&gt;
+
+&lt;p&gt;该内容为翻译内容, &lt;a href=&#34;http://lemire.me/blog/archives/2014/12/30/how-to-learn-efficiently/&#34;&gt;源地址&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;我相信学校里的优等生和差生的差距是由于学习习惯导致. 坦诚的说大多数学生非常低效地学习. 更糟糕的是, 大多数老师无法传授给学生高效的学习习惯.&lt;/p&gt;
+
+&lt;h3 id=&#34;toc_1&#34;&gt;学习和努力成比例&lt;/h3&gt;
+
+&lt;p&gt;坐在教室里边听着教授演讲感觉在学习&amp;hellip;翻看一本书的一个新的话题感觉在读书&amp;hellip;但是这些行为是复杂的&lt;strong&gt;被动式活动&lt;/strong&gt;, 是低效的. 这些行为可能会导致更糟糕的结果, 它们会给你&lt;strong&gt;造成你已经学会了的假象&lt;/strong&gt;. 你可以在教室里边听关于量子力学的演讲, 在一定程度上你熟悉这个话题的和一些术语. 可悲的是你在欺骗你自己你已经学会, 这比什么都不会还要糟糕.&lt;br /&gt;
+相反, 你应该给自己寻找挑战. 如果某些内容你觉得简单, 那么&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>fq</title>
+      <link>http://yujinqiu.github.io/posts/FqDraft/</link>
+      <pubDate>Sun, 28 Dec 2014 11:42:25 CST</pubDate>
+      
+      <guid>http://yujinqiu.github.io/posts/FqDraft/</guid>
+      <description>
+
+&lt;h2 id=&#34;toc_0&#34;&gt;FQ&lt;/h2&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;Across the Great Wall we can reach every corner of the world.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h3 id=&#34;toc_1&#34;&gt;shadowsocks (ss)&lt;/h3&gt;
+
+&lt;h4 id=&#34;toc_2&#34;&gt;原理&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code&gt;app &amp;lt;- 本地 client 解密 &amp;lt;- 墙外 vps(加密) &amp;lt;- 目标 site  
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;本质上 sshd -D 就是一个 Shadowsocks .&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;ssh -D 0.0.0.0:10086 user@vps
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;toc_3&#34;&gt;注意事项&lt;/h4&gt;
+
+&lt;ol&gt;
+&lt;li&gt;
+ssh -D 的本质上是一个 sock5 的代理, 不是 http/https 代理, 所以在 firefox 配置里边&lt;strong&gt;不能&lt;/strong&gt;够把 HTTP Proxy 和 SSL Proxy 配置为&lt;code&gt;127.0.0.1:10086&lt;/code&gt;, 只能设置socks 代理&lt;/li&gt;
+&lt;li&gt;为了避免 &lt;a href=&#34;http://en.wikipedia.org/wiki/DNS_spoofing&#34;&gt;DNS 污染&lt;/a&gt;, 建议在 firefox 中设置&lt;code&gt;Remote DNS&lt;/code&gt;, 进行远端解析&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&#34;toc_4&#34;&gt;相关命令代理&lt;/h3&gt;
+
+&lt;h4 id=&#34;toc_5&#34;&gt;curl&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code&gt;--socks5-hostname &amp;lt;host[:port]&amp;gt; 
+    Use the specified SOCKS5 proxy (and let the proxy resolve the hostname) 避免 DNS 污染
+
+--socks5 &amp;lt;host[:port]&amp;gt;
+    Use the specified SOCKS proxy - but resolve the hostname locally. 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;建议在使用&lt;code&gt;curl&lt;/code&gt; 的时候习惯加上 &lt;code&gt;-v&lt;/code&gt; 这样对应 DNS污染问题很容易发现.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;直接访问(DNS 污染) 
+➜  local git:(master) ✗ curl -v  www.facebook.com
+* Rebuilt URL to: www.facebook.com/
+* Hostname was NOT found in DNS cache
+
+远程DNS, 防火墙直接 reset
+    ➜  local git:(master) ✗ curl -v --socks5-hostname 127.0.0.1:10086 http://www.facebook.com
+* Rebuilt URL to: http://www.facebook.com/
+* Hostname was NOT found in DNS cache
+*   Trying 127.0.0.1...
+* Connected to 127.0.0.1 (127.0.0.1) port 10086 (#0)
+&amp;gt; GET / HTTP/1.1
+&amp;gt; User-Agent: curl/7.37.1
+&amp;gt; Host: www.facebook.com
+&amp;gt; Accept: */*
+&amp;gt;
+&amp;lt; HTTP/1.1 302 Found
+&amp;lt; Location: https://www.facebook.com/
+&amp;lt; Content-Type: text/html; charset=utf-8
+&amp;lt; X-FB-Debug: fHuVWgR/eAX8mxPiJViAIVoy4HBehbfOkYb7ngC2xmLWoEfEwT0O+gTVFzHI4TJdzaxw8s9IGn4fzKDFN5GtmA==
+&amp;lt; Date: Sun, 28 Dec 2014 06:22:56 GMT
+&amp;lt; Connection: keep-alive
+&amp;lt; Content-Length: 0
+&amp;lt;
+* Connection #0 to host www.facebook.com left intact
+
+使用 HTTPS 访问, 正常
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>BeegoDraft</title>
+      <link>http://yujinqiu.github.io/posts/BeegoDraft/</link>
+      <pubDate>Sat, 27 Dec 2014 20:49:46 CST</pubDate>
+      
+      <guid>http://yujinqiu.github.io/posts/BeegoDraft/</guid>
+      <description>
+
+&lt;h2 id=&#34;toc_0&#34;&gt;beego session 失效时间&lt;/h2&gt;
+
+&lt;h3 id=&#34;toc_1&#34;&gt;背景&lt;/h3&gt;
+
+&lt;p&gt;使用 beego 进行开发过程中为了减少大家登陆时间特定设置1个月有效期, 结果发现需要经常登陆&lt;/p&gt;
+
+&lt;h3 id=&#34;toc_2&#34;&gt;原因&lt;/h3&gt;
+
+&lt;p&gt;session 的过期失效时间由两个方面决定&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;存储sessionid 的 cookie (SessionCookieLifetime)&lt;/li&gt;
+&lt;li&gt;存储在服务器端的 session 文件( SessionGCMaxLifetime 默认3600)&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;开始的时候只是设置了 SessionCookieLifetime, 虽然 cookie 的内容不会被删除, 但是在服务器端的 session 文件会被删除, 在代码中&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;ctx.Inut.Session(&amp;quot;username&amp;quot;).(string)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;无法获取对应的内容, 重定向到登陆页面.&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>CurlDraft</title>
@@ -443,102 +694,35 @@ git push
 
 &lt;pre&gt;&lt;code&gt;git checkout --theirs filename.c
 &lt;/code&gt;&lt;/pre&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Mac os X Draft</title>
-      <link>http://yujinqiu.github.io/posts/Mac/</link>
-      <pubDate>Tue, 25 Nov 2014 21:36:12 CST</pubDate>
-      
-      <guid>http://yujinqiu.github.io/posts/Mac/</guid>
-      <description>
 
-&lt;p&gt;#Mac os X
-##Yosemite 升级之后应该进行什么操作?&lt;br /&gt;
-1. 从 mavericks 升级到 mac os x 之后, 会遇到一些比较诡异的问题(比如找不到 clang), 下面的命令会帮助你提前避免一些问题.&lt;/p&gt;
+&lt;h2 id=&#34;toc_12&#34;&gt;Git 回滚到上一个版本&lt;/h2&gt;
 
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;sudo xcode-select --install  
-sudo xcode-select --switch /Applications/Xcode.app   
-sudo xcodebuild -license  
-sudo gem update --system  
-sudo gem install xcodeproj   
-sudo brew update   
+&lt;p&gt;作为项目的负责人, 通过 code review 并不能保证其中提交内容ok, 如果出现异常, 需要仅限回滚.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;branch1    branch2
+    \        /
+     \      /
+      \    /
+       \  /
+       new branch (hashcode)
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;ol&gt;
-&lt;li&gt;同时 Yosemite 会收集用户的隐私数据, 建议通过&lt;a href=&#34;https://fix-macosx.com/&#34;&gt;fix-macosx&lt;/a&gt;进行修复&lt;/li&gt;
-&lt;/ol&gt;
+&lt;p&gt;假设用户提交的 branch2  有问题, 需要回滚回 branch1&lt;/p&gt;
 
-&lt;h3 id=&#34;toc_0&#34;&gt;Mac os X 窗体最小化之后恢复&lt;/h3&gt;
-
-&lt;p&gt;Mac os X 在最小化窗体之后, &lt;code&gt;command + tab&lt;/code&gt; 是不能够直接恢复, 具体操作如下&lt;br /&gt;
-command + tab 定位到对应的 Application 然后 &lt;code&gt;alt&lt;/code&gt; 然后同时放开 &lt;code&gt;alt command&lt;/code&gt;&lt;/p&gt;
-
-&lt;h3 id=&#34;toc_1&#34;&gt;清除 DNS cache&lt;/h3&gt;
-
-&lt;pre&gt;&lt;code&gt;sudo dscacheutil -flushcache
+&lt;pre&gt;&lt;code&gt;git  revert  -m 1  hashcode
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h3 id=&#34;toc_2&#34;&gt;mac os x 权限位问题&lt;/h3&gt;
+&lt;p&gt;如何得到 &lt;code&gt;-m&lt;/code&gt; 之后对应的 branch  是  1 ? 2 ?&lt;/p&gt;
 
-&lt;p&gt;在 mac os terminal 中我们经常可以看到 带有 &lt;code&gt;+&lt;/code&gt;  和  &lt;code&gt;@&lt;/code&gt;  的权限问题&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;/go/src/ServiceTree$ git show af24b57a530adcf24d098676809bc88939336063  
+commit af24b57a530adcf24d098676809bc88939336063  
+Merge: 609bb8e d160c3f   #注意这里
+Date:   Sat Dec 27 11:30:37 2014 +0800   
 
-&lt;pre&gt;&lt;code&gt;-rw-r--r--@  1 knight  staff      775 Feb 26  2014 Apple.md
--rw-r--r--   1 knight  staff     3608 Oct 25 14:23 CliDraft.md
--rw-r--r--@  1 knight  staff     1208 Nov 16  2013 EspeakDraft.md
--rw-r--r--@  1 knight  staff     3470 Dec 31  2013 FPDraft.md
+Merge branch &#39;dev&#39; of ssh://git.xiaojukeji.com:22/op/servicetree into dev
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h4 id=&#34;toc_3&#34;&gt;@ 字符&lt;/h4&gt;
-
-&lt;p&gt;&lt;code&gt;@&lt;/code&gt; 表示这个文件拥有扩展的属性( additional attribute) , 可以通过&lt;code&gt;xattr&lt;/code&gt; 来查看详细信息:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;xattr -l  &amp;lt;filename&amp;gt; 
-
-➜  engineerdraft git:(master) ✗ xattr -l Apple.md
-com.apple.TextEncoding: utf-8;134217984
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;扩展的属性用途是: 定义一些打开文件的程序比如 Mou 打开 markdown 文件.&lt;/p&gt;
-
-&lt;h4 id=&#34;toc_4&#34;&gt;+ 字符&lt;/h4&gt;
-
-&lt;p&gt;+ 表示这个文件用户 ACL(Access Control List) 相对于文件的权限能够耕细粒度的控制.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;ls -le 可以查看文件的 acl 权限
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;##如何快速访问Menu或者mac访问Menu的快捷键
-在window的用户会有这样的习惯, 通过alt来快速访问菜单栏. 在mac 下怎么通过键盘来快速访问?
-终于在&lt;a href=&#34;http://lifehacker.com/321595/access-the-dock-and-menu-bar-from-your-keyboard&#34;&gt;access-the-dock-and-menu-bar-from-your-keyboard&lt;/a&gt; 找到方法.    
-其实很简单就是通过 &lt;code&gt;ctrl+F2&lt;/code&gt;(menubar) &lt;code&gt;ctrl+F3&lt;/code&gt;(dock), 然后直接输入对应的菜单名称. 比如:&lt;code&gt;View&lt;/code&gt;, 输入回车即可选择, 然后继续输入对应的名称,或者通过方向键即可选择.
-打开Menu的Help的快捷键是&lt;code&gt;command + shift + /&lt;/code&gt;, 可以这样记住: shift+/ = ?  快捷键就是command + ? == help&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_5&#34;&gt;mac 计算md5 值&lt;/h2&gt;
-
-&lt;p&gt;在linux 下有md5sum 这个命令, 在mac 下发现居然没有. 仔细查找之后发现原来叫md5. 运行之后发现和md5sum输出的结果不一样, 其实可以利用&lt;code&gt;md5 -r&lt;/code&gt;就可以得到一样的结果.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_6&#34;&gt;mac 版本管理&lt;/h2&gt;
-
-&lt;p&gt;mac 的 keynote, pages, numbers 和原始文本编辑器是具有版本管理的. 入口在&lt;code&gt;File-&amp;gt; revert to -&amp;gt; brow all version&lt;/code&gt;, 可以进入查看和 time machine 一样的界面.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_7&#34;&gt;快速打开stikcy note 快捷键&lt;/h2&gt;
-
-&lt;p&gt;shift+ command + y ,  退出:  command + q&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_8&#34;&gt;屏幕放大&lt;/h2&gt;
-
-&lt;p&gt;ctrl + 鼠标放大,缩小&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_9&#34;&gt;快速预览文件( quick look)&lt;/h2&gt;
-
-&lt;h3 id=&#34;toc_10&#34;&gt;背景&lt;/h3&gt;
-
-&lt;p&gt;经常我们在命令行里边,看到某个文件之后, 希望能够 quick look, 一般的做法是, open File 打开, 然后关闭, 其实我们只是希望能够简单看一下, 可以利用以下命令来实现 :&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;qlmanage -p  File
-&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;从 Merge 中可以选择 &lt;code&gt;-m&lt;/code&gt; 对应的选项.&lt;/p&gt;
 </description>
     </item>
     
@@ -836,6 +1020,102 @@ ls | grep -E &#39;\.log$&#39; | parallel -m mv {} destdir
     </item>
     
     <item>
+      <title>Mac os X Draft</title>
+      <link>http://yujinqiu.github.io/posts/Mac/</link>
+      <pubDate>Tue, 25 Nov 2014 21:36:12 CST</pubDate>
+      
+      <guid>http://yujinqiu.github.io/posts/Mac/</guid>
+      <description>
+
+&lt;p&gt;#Mac os X
+##Yosemite 升级之后应该进行什么操作?&lt;br /&gt;
+1. 从 mavericks 升级到 mac os x 之后, 会遇到一些比较诡异的问题(比如找不到 clang), 下面的命令会帮助你提前避免一些问题.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;sudo xcode-select --install  
+sudo xcode-select --switch /Applications/Xcode.app   
+sudo xcodebuild -license  
+sudo gem update --system  
+sudo gem install xcodeproj   
+sudo brew update   
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ol&gt;
+&lt;li&gt;同时 Yosemite 会收集用户的隐私数据, 建议通过&lt;a href=&#34;https://fix-macosx.com/&#34;&gt;fix-macosx&lt;/a&gt;进行修复&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&#34;toc_0&#34;&gt;Mac os X 窗体最小化之后恢复&lt;/h3&gt;
+
+&lt;p&gt;Mac os X 在最小化窗体之后, &lt;code&gt;command + tab&lt;/code&gt; 是不能够直接恢复, 具体操作如下&lt;br /&gt;
+command + tab 定位到对应的 Application 然后 &lt;code&gt;alt&lt;/code&gt; 然后同时放开 &lt;code&gt;alt command&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;toc_1&#34;&gt;清除 DNS cache&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;sudo dscacheutil -flushcache
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;toc_2&#34;&gt;mac os x 权限位问题&lt;/h3&gt;
+
+&lt;p&gt;在 mac os terminal 中我们经常可以看到 带有 &lt;code&gt;+&lt;/code&gt;  和  &lt;code&gt;@&lt;/code&gt;  的权限问题&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;-rw-r--r--@  1 knight  staff      775 Feb 26  2014 Apple.md
+-rw-r--r--   1 knight  staff     3608 Oct 25 14:23 CliDraft.md
+-rw-r--r--@  1 knight  staff     1208 Nov 16  2013 EspeakDraft.md
+-rw-r--r--@  1 knight  staff     3470 Dec 31  2013 FPDraft.md
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;toc_3&#34;&gt;@ 字符&lt;/h4&gt;
+
+&lt;p&gt;&lt;code&gt;@&lt;/code&gt; 表示这个文件拥有扩展的属性( additional attribute) , 可以通过&lt;code&gt;xattr&lt;/code&gt; 来查看详细信息:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;xattr -l  &amp;lt;filename&amp;gt; 
+
+➜  engineerdraft git:(master) ✗ xattr -l Apple.md
+com.apple.TextEncoding: utf-8;134217984
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;扩展的属性用途是: 定义一些打开文件的程序比如 Mou 打开 markdown 文件.&lt;/p&gt;
+
+&lt;h4 id=&#34;toc_4&#34;&gt;+ 字符&lt;/h4&gt;
+
+&lt;p&gt;+ 表示这个文件用户 ACL(Access Control List) 相对于文件的权限能够耕细粒度的控制.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;ls -le 可以查看文件的 acl 权限
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;##如何快速访问Menu或者mac访问Menu的快捷键
+在window的用户会有这样的习惯, 通过alt来快速访问菜单栏. 在mac 下怎么通过键盘来快速访问?
+终于在&lt;a href=&#34;http://lifehacker.com/321595/access-the-dock-and-menu-bar-from-your-keyboard&#34;&gt;access-the-dock-and-menu-bar-from-your-keyboard&lt;/a&gt; 找到方法.    
+其实很简单就是通过 &lt;code&gt;ctrl+F2&lt;/code&gt;(menubar) &lt;code&gt;ctrl+F3&lt;/code&gt;(dock), 然后直接输入对应的菜单名称. 比如:&lt;code&gt;View&lt;/code&gt;, 输入回车即可选择, 然后继续输入对应的名称,或者通过方向键即可选择.
+打开Menu的Help的快捷键是&lt;code&gt;command + shift + /&lt;/code&gt;, 可以这样记住: shift+/ = ?  快捷键就是command + ? == help&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_5&#34;&gt;mac 计算md5 值&lt;/h2&gt;
+
+&lt;p&gt;在linux 下有md5sum 这个命令, 在mac 下发现居然没有. 仔细查找之后发现原来叫md5. 运行之后发现和md5sum输出的结果不一样, 其实可以利用&lt;code&gt;md5 -r&lt;/code&gt;就可以得到一样的结果.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_6&#34;&gt;mac 版本管理&lt;/h2&gt;
+
+&lt;p&gt;mac 的 keynote, pages, numbers 和原始文本编辑器是具有版本管理的. 入口在&lt;code&gt;File-&amp;gt; revert to -&amp;gt; brow all version&lt;/code&gt;, 可以进入查看和 time machine 一样的界面.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_7&#34;&gt;快速打开stikcy note 快捷键&lt;/h2&gt;
+
+&lt;p&gt;shift+ command + y ,  退出:  command + q&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_8&#34;&gt;屏幕放大&lt;/h2&gt;
+
+&lt;p&gt;ctrl + 鼠标放大,缩小&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_9&#34;&gt;快速预览文件( quick look)&lt;/h2&gt;
+
+&lt;h3 id=&#34;toc_10&#34;&gt;背景&lt;/h3&gt;
+
+&lt;p&gt;经常我们在命令行里边,看到某个文件之后, 希望能够 quick look, 一般的做法是, open File 打开, 然后关闭, 其实我们只是希望能够简单看一下, 可以利用以下命令来实现 :&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;qlmanage -p  File
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
       <title>SSHDraft</title>
       <link>http://yujinqiu.github.io/posts/SSHDraft/</link>
       <pubDate>Sun, 23 Nov 2014 11:47:25 CST</pubDate>
@@ -853,13 +1133,20 @@ ssh 通过加密传输数据, 特别适合**国情, 加入我们要让8080 端�
 &lt;pre&gt;&lt;code&gt;ssh  -D 8080 user@host
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h4 id=&#34;toc_2&#34;&gt;应用场景&lt;/h4&gt;
+&lt;h3 id=&#34;toc_2&#34;&gt;遇到错误&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;Bad dynamic forwarding specification
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;原因: ssh -D user@host 忘记了指定端口&lt;/p&gt;
+
+&lt;h4 id=&#34;toc_3&#34;&gt;应用场景&lt;/h4&gt;
 
 &lt;p&gt;在咖啡厅等公共场所, 为了上网安全, 可以使用 ssh动态转发来保证安全.&lt;/p&gt;
 
-&lt;h3 id=&#34;toc_3&#34;&gt;本地端口转发( Local Port Forwarding)&lt;/h3&gt;
+&lt;h3 id=&#34;toc_4&#34;&gt;本地端口转发( Local Port Forwarding)&lt;/h3&gt;
 
-&lt;h4 id=&#34;toc_4&#34;&gt;背景&lt;/h4&gt;
+&lt;h4 id=&#34;toc_5&#34;&gt;背景&lt;/h4&gt;
 
 &lt;p&gt;公司从安全性上考虑, 通常会隔离网络, 不允许直接访问, 简单拓扑如下:&lt;/p&gt;
 
@@ -889,11 +1176,11 @@ host1 --&amp;gt;  X  --&amp;gt; host3
 
 &lt;p&gt;本地端口转发的意思是:  绑定本地机器端口, 进行数据转发.&lt;/p&gt;
 
-&lt;h3 id=&#34;toc_5&#34;&gt;远程端口转发(Remote Port Forwarding)&lt;/h3&gt;
+&lt;h3 id=&#34;toc_6&#34;&gt;远程端口转发(Remote Port Forwarding)&lt;/h3&gt;
 
 &lt;p&gt;远程端口转发: 对应就是 绑定远程机器端口, 进行数据转发.&lt;/p&gt;
 
-&lt;h4 id=&#34;toc_6&#34;&gt;背景&lt;/h4&gt;
+&lt;h4 id=&#34;toc_7&#34;&gt;背景&lt;/h4&gt;
 
 &lt;p&gt;公司又从安全性上考虑, host2 通过 NAT 出去可以访问 host1,  host1 机器无法访问 host2, 同时 host2 和 host3 机器间能够相互访问.   我们希望能够 host1 直接访问 host3&lt;/p&gt;
 
@@ -916,14 +1203,14 @@ host1 --&amp;gt;  X  --&amp;gt; host3
 &lt;pre&gt;&lt;code&gt;ftp localhost:2121
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h5 id=&#34;toc_7&#34;&gt;注意点&lt;/h5&gt;
+&lt;h5 id=&#34;toc_8&#34;&gt;注意点&lt;/h5&gt;
 
 &lt;ol&gt;
 &lt;li&gt;2121 远程机器端口会在 ssh 运行之后, 自动在 host1 机器上启动.&lt;/li&gt;
 &lt;li&gt;localhost 是针对host2 而言. 对比 Local 和 Remote 本质上 &lt;strong&gt;localhost&lt;/strong&gt; 是针对 proxy 角色而言的,  在 local forwarding proxy 是:  host2,  remote 的 proxy 也是 host2&lt;/li&gt;
 &lt;/ol&gt;
 
-&lt;h4 id=&#34;toc_8&#34;&gt;典型应用场景&lt;/h4&gt;
+&lt;h4 id=&#34;toc_9&#34;&gt;典型应用场景&lt;/h4&gt;
 
 &lt;p&gt;你在本机上开发了一个 web (9000端口) , 然后你想向你的朋友演示, 但是你没有外网 ip, 所有不可能直接访问.&lt;br /&gt;
 幸运的是你有一个外网可以访问的 VPS(3000端口), 这时候的解决方案是:&lt;/p&gt;
@@ -938,9 +1225,9 @@ host1 --&amp;gt;  X  --&amp;gt; host3
     sudo service ssh restart 
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h3 id=&#34;toc_9&#34;&gt;SSH Agent Forwarding&lt;/h3&gt;
+&lt;h3 id=&#34;toc_10&#34;&gt;SSH Agent Forwarding&lt;/h3&gt;
 
-&lt;h4 id=&#34;toc_10&#34;&gt;典型应用场景&lt;/h4&gt;
+&lt;h4 id=&#34;toc_11&#34;&gt;典型应用场景&lt;/h4&gt;
 
 &lt;p&gt;本机 laptop 和 github.com 建立了信任关系, 可以直接 ssh 上去,  然后登陆自己的 vps, 希望能够在 vps 上登陆 github.com , 正常情况是把 vps 的 public key 放到 github.com 但是这样有点麻烦, 可以直接用下面:&lt;/p&gt;
 
@@ -948,9 +1235,9 @@ host1 --&amp;gt;  X  --&amp;gt; host3
 vpsservr$  ssh github.com
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h3 id=&#34;toc_11&#34;&gt;SSH 别名&lt;/h3&gt;
+&lt;h3 id=&#34;toc_12&#34;&gt;SSH 别名&lt;/h3&gt;
 
-&lt;h4 id=&#34;toc_12&#34;&gt;典型应用场景&lt;/h4&gt;
+&lt;h4 id=&#34;toc_13&#34;&gt;典型应用场景&lt;/h4&gt;
 
 &lt;p&gt;自己手上有几台机器, 名字都比较长, 可以采用 ssh 别名来进行.&lt;br /&gt;
 &lt;code&gt;~/.ssh/config&lt;/code&gt;&lt;/p&gt;
@@ -959,12 +1246,12 @@ vpsservr$  ssh github.com
 Hostname bastin.east.doc.example.com
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h3 id=&#34;toc_13&#34;&gt;SSH 嵌套&lt;/h3&gt;
+&lt;h3 id=&#34;toc_14&#34;&gt;SSH 嵌套&lt;/h3&gt;
 
 &lt;pre&gt;&lt;code&gt;ssh -t hostA  ssh -t hostB ssh -t hostC
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h3 id=&#34;toc_14&#34;&gt;SSH 有用参数&lt;/h3&gt;
+&lt;h3 id=&#34;toc_15&#34;&gt;SSH 有用参数&lt;/h3&gt;
 
 &lt;pre&gt;&lt;code&gt;-N Do not execute a remote command.  This is useful for just forwarding
          ports (protocol version 2 only).
@@ -987,7 +1274,7 @@ Hostname bastin.east.doc.example.com
 &lt;pre&gt;&lt;code&gt;-nNT
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h4 id=&#34;toc_15&#34;&gt;Reference&lt;/h4&gt;
+&lt;h4 id=&#34;toc_16&#34;&gt;Reference&lt;/h4&gt;
 
 &lt;p&gt;&lt;a href=&#34;http://blog.trackets.com/2014/05/17/ssh-tunnel-local-and-remote-port-forwarding-explained-with-examples.html&#34;&gt;SSH Tunnel - Local and Remote Port Forwarding Explained With Examples&lt;/a&gt;&lt;/p&gt;
 </description>
@@ -1217,313 +1504,6 @@ quit
 
 &lt;pre&gt;&lt;code&gt;echo &amp;quot;cmd &amp;quot;  | nc  host  port
 &lt;/code&gt;&lt;/pre&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Embedded Gists</title>
-      <link>http://yujinqiu.github.io/posts/embedded_gists/</link>
-      <pubDate>Sat, 05 Jul 2014 00:00:00 UTC</pubDate>
-      
-      <guid>http://yujinqiu.github.io/posts/embedded_gists/</guid>
-      <description>
-
-&lt;h2 id=&#34;toc_0&#34;&gt;Syntax Highlighting - or Embedded Gists&lt;/h2&gt;
-
-&lt;p&gt;I was quite excited by the inline syntax highlighting that Hugo provides via the python plugin &lt;a href=&#34;http://pygments.org/&#34;&gt;Pygments&lt;/a&gt;. But also wanted to try embedding gists&lt;/p&gt;
-
-&lt;p&gt;So here is an example&amp;hellip;&lt;/p&gt;
-
-&lt;div class=&#34;highlight&#34; style=&#34;background: #202020&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;&lt;span style=&#34;color: #d0d0d0&#34;&gt;&amp;lt;p&amp;gt;&lt;/span&gt;&lt;span style=&#34;color: #6ab825; font-weight: bold&#34;&gt;def&lt;/span&gt; &lt;span style=&#34;color: #447fcf&#34;&gt;digit_sum&lt;/span&gt;&lt;span style=&#34;color: #d0d0d0&#34;&gt;(n):&lt;/span&gt;
-    &lt;span style=&#34;color: #d0d0d0&#34;&gt;s&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color: #3677a9&#34;&gt;0&lt;/span&gt;
-    &lt;span style=&#34;color: #6ab825; font-weight: bold&#34;&gt;while&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;n:&lt;/span&gt;   &lt;span style=&#34;color: #999999; font-style: italic&#34;&gt;# while n is ‘truthy’ for an integer that means not 0&lt;/span&gt;
-        &lt;span style=&#34;color: #d0d0d0&#34;&gt;s&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;s&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;(n&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;%&lt;/span&gt; &lt;span style=&#34;color: #3677a9&#34;&gt;10&lt;/span&gt;&lt;span style=&#34;color: #d0d0d0&#34;&gt;)&lt;/span&gt;   &lt;span style=&#34;color: #999999; font-style: italic&#34;&gt;# the sum is the sum + the remainder of dividing the incoming number (n) by 10  157 % 10 = 7&lt;/span&gt;
-        &lt;span style=&#34;color: #d0d0d0&#34;&gt;n&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;n&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;/&lt;/span&gt; &lt;span style=&#34;color: #3677a9&#34;&gt;10&lt;/span&gt;         &lt;span style=&#34;color: #999999; font-style: italic&#34;&gt;# n = the integer of n / 10   int(15.7) = 15&lt;/span&gt;
-    &lt;span style=&#34;color: #6ab825; font-weight: bold&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;s&amp;lt;/p&amp;gt;&lt;/span&gt;
-
-&lt;span style=&#34;color: #d0d0d0&#34;&gt;&amp;lt;p&amp;gt;&lt;/span&gt;&lt;span style=&#34;color: #6ab825; font-weight: bold&#34;&gt;print&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;digit_sum(&lt;/span&gt;&lt;span style=&#34;color: #3677a9&#34;&gt;157&lt;/span&gt;&lt;span style=&#34;color: #d0d0d0&#34;&gt;)&amp;lt;/p&amp;gt;&lt;/span&gt;
-
-&lt;span style=&#34;color: #d0d0d0&#34;&gt;&amp;lt;p&amp;gt;&lt;/span&gt;&lt;span style=&#34;color: #a61717; background-color: #e3d2d2&#34;&gt;”’&lt;/span&gt;
-&lt;span style=&#34;color: #d0d0d0&#34;&gt;calling&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;digit_sum(&lt;/span&gt;&lt;span style=&#34;color: #3677a9&#34;&gt;157&lt;/span&gt;&lt;span style=&#34;color: #d0d0d0&#34;&gt;)&amp;lt;/p&amp;gt;&lt;/span&gt;
-
-&lt;span style=&#34;color: #d0d0d0&#34;&gt;&amp;lt;h2&amp;gt;loop&lt;/span&gt;  &lt;span style=&#34;color: #d0d0d0&#34;&gt;|&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;s&lt;/span&gt;   &lt;span style=&#34;color: #d0d0d0&#34;&gt;|&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;n&lt;/span&gt;   &lt;span style=&#34;color: #d0d0d0&#34;&gt;|&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;n&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;%&lt;/span&gt; &lt;span style=&#34;color: #3677a9&#34;&gt;10&lt;/span&gt;  &lt;span style=&#34;color: #d0d0d0&#34;&gt;|&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;n&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;/&lt;/span&gt; &lt;span style=&#34;color: #3677a9&#34;&gt;10&lt;/span&gt;&lt;span style=&#34;color: #d0d0d0&#34;&gt;&amp;lt;/h2&amp;gt;&lt;/span&gt;
-
-&lt;span style=&#34;color: #d0d0d0&#34;&gt;&amp;lt;p&amp;gt;&lt;/span&gt;&lt;span style=&#34;color: #3677a9&#34;&gt;0&lt;/span&gt;     &lt;span style=&#34;color: #d0d0d0&#34;&gt;|&lt;/span&gt; &lt;span style=&#34;color: #3677a9&#34;&gt;0&lt;/span&gt;   &lt;span style=&#34;color: #d0d0d0&#34;&gt;|&lt;/span&gt; &lt;span style=&#34;color: #3677a9&#34;&gt;157&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;|&lt;/span&gt;   &lt;span style=&#34;color: #3677a9&#34;&gt;7&lt;/span&gt;     &lt;span style=&#34;color: #d0d0d0&#34;&gt;|&lt;/span&gt;  &lt;span style=&#34;color: #3677a9&#34;&gt;15&lt;/span&gt;
-&lt;span style=&#34;color: #3677a9&#34;&gt;1&lt;/span&gt;     &lt;span style=&#34;color: #d0d0d0&#34;&gt;|&lt;/span&gt; &lt;span style=&#34;color: #3677a9&#34;&gt;7&lt;/span&gt;   &lt;span style=&#34;color: #d0d0d0&#34;&gt;|&lt;/span&gt; &lt;span style=&#34;color: #3677a9&#34;&gt;15&lt;/span&gt;  &lt;span style=&#34;color: #d0d0d0&#34;&gt;|&lt;/span&gt;   &lt;span style=&#34;color: #3677a9&#34;&gt;5&lt;/span&gt;     &lt;span style=&#34;color: #d0d0d0&#34;&gt;|&lt;/span&gt;  &lt;span style=&#34;color: #3677a9&#34;&gt;1&lt;/span&gt;
-&lt;span style=&#34;color: #3677a9&#34;&gt;2&lt;/span&gt;     &lt;span style=&#34;color: #d0d0d0&#34;&gt;|&lt;/span&gt; &lt;span style=&#34;color: #3677a9&#34;&gt;12&lt;/span&gt;  &lt;span style=&#34;color: #d0d0d0&#34;&gt;|&lt;/span&gt; &lt;span style=&#34;color: #3677a9&#34;&gt;1&lt;/span&gt;   &lt;span style=&#34;color: #d0d0d0&#34;&gt;|&lt;/span&gt;   &lt;span style=&#34;color: #3677a9&#34;&gt;1&lt;/span&gt;     &lt;span style=&#34;color: #d0d0d0&#34;&gt;|&lt;/span&gt;  &lt;span style=&#34;color: #3677a9&#34;&gt;0&lt;/span&gt;
-&lt;span style=&#34;color: #3677a9&#34;&gt;3&lt;/span&gt;     &lt;span style=&#34;color: #d0d0d0&#34;&gt;|&lt;/span&gt; &lt;span style=&#34;color: #3677a9&#34;&gt;13&lt;/span&gt;  &lt;span style=&#34;color: #d0d0d0&#34;&gt;|&lt;/span&gt; &lt;span style=&#34;color: #3677a9&#34;&gt;0&lt;/span&gt;   &lt;span style=&#34;color: #d0d0d0&#34;&gt;|&lt;/span&gt;         &lt;span style=&#34;color: #d0d0d0&#34;&gt;|&amp;lt;br&lt;/span&gt; &lt;span style=&#34;color: #d0d0d0&#34;&gt;/&amp;gt;&lt;/span&gt;
-&lt;span style=&#34;color: #a61717; background-color: #e3d2d2&#34;&gt;”’&lt;/span&gt;&lt;span style=&#34;color: #d0d0d0&#34;&gt;&amp;lt;/p&amp;gt;&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-&lt;p&gt;But then thought perhaps it is better to embed gists than have inline markup in blog posts then folk can fork the code and comment there.&lt;/p&gt;
-
-&lt;p&gt;So on embedding a gist as follows (but without syntax highlighting) failed&amp;hellip;&lt;/p&gt;
-
-&lt;div class=&#34;highlight&#34; style=&#34;background: #202020&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;&lt;span style=&#34;color: #6ab825; font-weight: bold&#34;&gt;&amp;lt;script &lt;/span&gt;&lt;span style=&#34;color: #bbbbbb&#34;&gt;src=&lt;/span&gt;&lt;span style=&#34;color: #ed9d13&#34;&gt;&amp;quot;https://gist.github.com/danmux/042fa69bed3791afe658.js&amp;quot;&lt;/span&gt;&lt;span style=&#34;color: #6ab825; font-weight: bold&#34;&gt;&amp;gt;&lt;/span&gt;
-&lt;span style=&#34;color: #6ab825; font-weight: bold&#34;&gt;&amp;lt;/script&amp;gt;&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-&lt;p&gt;Putting it in another block partially worked&lt;/p&gt;
-
-&lt;div class=&#34;highlight&#34; style=&#34;background: #202020&#34;&gt;&lt;pre style=&#34;line-height: 125%&#34;&gt;&lt;span style=&#34;color: #6ab825; font-weight: bold&#34;&gt;&amp;lt;p&amp;gt;&lt;/span&gt;
-    &lt;span style=&#34;color: #6ab825; font-weight: bold&#34;&gt;&amp;lt;script &lt;/span&gt;&lt;span style=&#34;color: #bbbbbb&#34;&gt;src=&lt;/span&gt;&lt;span style=&#34;color: #ed9d13&#34;&gt;&amp;quot;https://gist.github.com/danmux/042fa69bed3791afe658.js&amp;quot;&lt;/span&gt;&lt;span style=&#34;color: #6ab825; font-weight: bold&#34;&gt;&amp;gt;&lt;/span&gt;
-    &lt;span style=&#34;color: #6ab825; font-weight: bold&#34;&gt;&amp;lt;/script&amp;gt;&lt;/span&gt;
-&lt;span style=&#34;color: #6ab825; font-weight: bold&#34;&gt;&amp;lt;/p&amp;gt;&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-&lt;p&gt;I was left with an unclosed script tag.&lt;/p&gt;
-
-&lt;p&gt;A git of googling turned up this thread&amp;hellip;&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&#34;https://groups.google.com/forum/#!topic/hugo-discuss/3GW56aMYQF8&#34;&gt;https://groups.google.com/forum/#!topic/hugo-discuss/3GW56aMYQF8&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;and this pull request &amp;hellip;&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&#34;https://github.com/spf13/hugo/pull/305&#34;&gt;https://github.com/spf13/hugo/pull/305&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;which missed the latest release by a few days&amp;hellip;&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&#34;https://github.com/spf13/hugo/releases/tag/v0.11&#34;&gt;https://github.com/spf13/hugo/releases/tag/v0.11&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;So I went ahead an built the master head - from my fork (ya know just in case I can help)&lt;/p&gt;
-
-&lt;p&gt;and added the script tag in&amp;hellip;.&lt;/p&gt;
-
-&lt;script src=&#34;https://gist.github.com/danmux/042fa69bed3791afe658.js&#34;&gt;&lt;/script&gt;
-
-&lt;h3 id=&#34;toc_1&#34;&gt;And it worked !&lt;/h3&gt;
-
-&lt;p&gt;Nice work &lt;a href=&#34;https://github.com/jmitchell&#34;&gt;jmitchell&lt;/a&gt; and &lt;a href=&#34;https://github.com/spf13&#34;&gt;Steve Francia&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;So gists it is for me&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Making Your Own Summary</title>
-      <link>http://yujinqiu.github.io/posts/hugo_summary/</link>
-      <pubDate>Sat, 28 Jun 2014 00:00:00 UTC</pubDate>
-      
-      <guid>http://yujinqiu.github.io/posts/hugo_summary/</guid>
-      <description>&lt;p&gt;Hugo allows you to specify where the summary stops - and allows the full markdown including shortcodes.&lt;/p&gt;
-
-&lt;p&gt;You just need to construct the first bit of your article so that it makes a nice summary and then end it with&amp;hellip;&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;(of course dont include the space :) )&lt;/p&gt;
-
-&lt;!-- here is the real more... --&gt;
-
-&lt;p&gt;Everything after the more comment will not make it into the summary - sweet.&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>30 days of hacking Docker</title>
-      <link>http://yujinqiu.github.io/posts/streak/</link>
-      <pubDate>Wed, 11 Jun 2014 00:00:00 UTC</pubDate>
-      
-      <guid>http://yujinqiu.github.io/posts/streak/</guid>
-      <description>
-
-&lt;h3 id=&#34;toc_0&#34;&gt;Prelude&lt;/h3&gt;
-
-&lt;p&gt;Yesterday I finished my first 30-day &lt;a href=&#34;https://github.com/LK4D4&#34;&gt;streak&lt;/a&gt; on GitHub.
-Most of contributions were to &lt;a href=&#34;https://github.com/dotcloud/docker&#34;&gt;Docker&lt;/a&gt; &amp;ndash;
-the biggest opensource project on Go. I learned a lot in this month, and it was
-really cool. I think that this is mostly because of Go language. I&amp;rsquo;ve been
-programming on Python for five years and I was never so excited about open source,
-because Python is not even half so fun as Go.&lt;/p&gt;
-
-&lt;h3 id=&#34;toc_1&#34;&gt;1. Tools&lt;/h3&gt;
-
-&lt;p&gt;There are a lot of tools for go, some of them just are &amp;ldquo;must have&amp;rdquo;.&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&#34;http://godoc.org/code.google.com/p/go.tools/cmd/goimports&#34;&gt;Goimports&lt;/a&gt; - like
-&lt;code&gt;go fmt&lt;/code&gt; but with cool imports handling, I really think that &lt;code&gt;go fmt&lt;/code&gt; needs to
-be replaced with &lt;code&gt;Goimports&lt;/code&gt; in future Go versions.&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&#34;http://godoc.org/code.google.com/p/go.tools/cmd/vet&#34;&gt;Vet&lt;/a&gt; - analyzes code for
-some suspicious constructs. You can find with it: bad format strings, unreachable
-code, passing mutex by value and etc.
-&lt;a href=&#34;https://github.com/dotcloud/docker/pull/6269&#34;&gt;PR about vet erros in Docker&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&#34;https://github.com/golang/lint&#34;&gt;Golint&lt;/a&gt; - checks code for
-&lt;a href=&#34;https://code.google.com/p/go-wiki/wiki/CodeReviewComments&#34;&gt;google style guide&lt;/a&gt;.&lt;/p&gt;
-
-&lt;h3 id=&#34;toc_2&#34;&gt;2. Editor&lt;/h3&gt;
-
-&lt;p&gt;I love my awesome vim with awesome &lt;a href=&#34;https://github.com/fatih/vim-go&#34;&gt;vim-go&lt;/a&gt; plugin,
-which is integrated with tools mentioned above.
-It formats code for me, adds needed imports, removes unused imports, shows
-documentation, supports tagbar and more. And my favourite - go to definition. I
-really suffered without it :) With vim-go my development rate became faster
-than I could imagine. You can see my config in my dotfiles
-&lt;a href=&#34;https://github.com/LK4D4/dotfiles&#34;&gt;repo&lt;/a&gt;.&lt;/p&gt;
-
-&lt;h3 id=&#34;toc_3&#34;&gt;3. Race detector&lt;/h3&gt;
-
-&lt;p&gt;This is one of the most important and one of the most underestimated thing.
-Very useful and very easy to use. You can find description and examples
-&lt;a href=&#34;http://blog.golang.org/race-detector&#34;&gt;here&lt;/a&gt;. I&amp;rsquo;ve found many race conditions
-with this tool (&lt;a href=&#34;https://github.com/dotcloud/docker/pull/6118&#34;&gt;#1&lt;/a&gt;,
-&lt;a href=&#34;https://github.com/dotcloud/docker/pull/6150&#34;&gt;#2&lt;/a&gt;,
-&lt;a href=&#34;https://github.com/dotcloud/docker/pull/6214&#34;&gt;#3&lt;/a&gt;,
-&lt;a href=&#34;https://github.com/dotcloud/docker/pull/6232&#34;&gt;#4&lt;/a&gt;,
-&lt;a href=&#34;https://github.com/gorilla/context/pull/14&#34;&gt;#5&lt;/a&gt;).&lt;/p&gt;
-
-&lt;h3 id=&#34;toc_4&#34;&gt;4. Docker specific&lt;/h3&gt;
-
-&lt;p&gt;Docker has very smart and friendly community. You can always ask for help about
-hacking in #docker-dev on Freenode. But I&amp;rsquo;ll describe some simple tasks that appears
-when you try to hack docker first time.&lt;/p&gt;
-
-&lt;h4 id=&#34;toc_5&#34;&gt;Tests&lt;/h4&gt;
-
-&lt;p&gt;There are three kinds of tests in docker repo:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;p&gt;&lt;code&gt;unit&lt;/code&gt; - unit tests(ah, we all know what unit tests are, right?). These tests
-spreaded all over repository and can be run by &lt;code&gt;make test-unit&lt;/code&gt;. You can run
-tests for one directory, specifying it in &lt;code&gt;TESTDIRS&lt;/code&gt; variable. For example&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;TESTDIRS=&amp;quot;daemon&amp;quot; make test-unit
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;will run tests only for daemon directory.&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;&lt;code&gt;integration-cli&lt;/code&gt; - integration tests, that use external docker commands
-(for example &lt;code&gt;docker build&lt;/code&gt;, &lt;code&gt;docker run&lt;/code&gt;, etc.). It is very easy to write this
-kind of tests and you should do it if you think that your changes can change
-Docker&amp;rsquo;s behavior from client&amp;rsquo;s point of view. These tests are located in &lt;code&gt;integration-cli&lt;/code&gt;
-directory and can be run by &lt;code&gt;make test-integration-cli&lt;/code&gt;. You can run one or more
-specific tests with setting &lt;code&gt;TESTFLAGS&lt;/code&gt; variable. For example&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;TESTFLAGS=&amp;quot;-run TestBuild&amp;quot; make test-integration-cli
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;will run all tests whose names starts with &lt;code&gt;TestBuild&lt;/code&gt;.&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;&lt;code&gt;integration&lt;/code&gt; - integration tests, that use internal docker datastructures.
-It is deprecated now, so if you want to write tests you should prefer
-&lt;code&gt;integration-cli&lt;/code&gt; or &lt;code&gt;unit&lt;/code&gt;. These tests are located in &lt;code&gt;integration&lt;/code&gt; directory and
-can be run by &lt;code&gt;make test-integration&lt;/code&gt;.&lt;/p&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;All tests can be run by &lt;code&gt;make test&lt;/code&gt;.&lt;/p&gt;
-
-&lt;h4 id=&#34;toc_6&#34;&gt;Build and run tests on host&lt;/h4&gt;
-
-&lt;p&gt;All &lt;code&gt;make&lt;/code&gt; commands execute in docker container, it can be pretty annoying to
-build container just for running unit tests for example.&lt;/p&gt;
-
-&lt;p&gt;So, for running unit test on host machine you need canonical Go
-&lt;a href=&#34;http://golang.org/doc/code.html#Workspaces&#34;&gt;workspace&lt;/a&gt;. When it&amp;rsquo;s ready you can
-just do symlink to docker repo in &lt;code&gt;src/github.com/dotcloud/docker&lt;/code&gt;. But we still
-need right &lt;code&gt;$GOPATH&lt;/code&gt;, here is the trick:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;export GOPATH=&amp;lt;workspace&amp;gt;/src/github.com/dotcloud/docker/vendor:&amp;lt;workspace&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;And then, for example you can run:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;go test github.com/dotcloud/docker/daemon/networkdriver/ipallocator
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Some tests require external libs for example &lt;code&gt;libdevmapper&lt;/code&gt;, you can disable
-it with &lt;code&gt;DOCKER_BUILDTAGS&lt;/code&gt; environment variable. For example:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;export DOCKER_BUILDTAGS=&#39;exclude_graphdriver_devicemapper exclude_graphdriver_aufs&#39;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;For fast building dynamic binary you can use this snippet in docker repo:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;export AUTO_GOPATH=1
-export DOCKER_BUILDTAGS=&#39;exclude_graphdriver_devicemapper exclude_graphdriver_aufs&#39;
-hack/make.sh dynbinary
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;I use that &lt;code&gt;DOCKER_BUILDTAGS&lt;/code&gt; for my &lt;code&gt;btrfs&lt;/code&gt; system, so if you use &lt;code&gt;aufs&lt;/code&gt; or
-&lt;code&gt;devicemapper&lt;/code&gt; you should change it for your driver.&lt;/p&gt;
-
-&lt;h4 id=&#34;toc_7&#34;&gt;Race detection&lt;/h4&gt;
-
-&lt;p&gt;To enable race detection in docker I&amp;rsquo;m using patch:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;diff --git a/hack/make/binary b/hack/make/binary
-index b97069a..74b202d 100755
---- a/hack/make/binary
-+++ b/hack/make/binary
-@@ -6,6 +6,7 @@ DEST=$1
- go build \
-        -o &amp;quot;$DEST/docker-$VERSION&amp;quot; \
-        &amp;quot;${BUILDFLAGS[@]}&amp;quot; \
-+       -race \
-        -ldflags &amp;quot;
-                $LDFLAGS
-                $LDFLAGS_STATIC_DOCKER
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;After that all binaries will be with race detection. Note that this will slow
-docker a lot.&lt;/p&gt;
-
-&lt;h4 id=&#34;toc_8&#34;&gt;Docker-stress&lt;/h4&gt;
-
-&lt;p&gt;There is amazing
-&lt;a href=&#34;https://github.com/spotify/docker-stress&#34;&gt;docker-stress&lt;/a&gt; from Spotify for
-Docker load testing. Usage is pretty straightforward:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;./docker-stress -c 50 -t 5
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Here 50 clients are trying to run containers, which will alive for five seconds.
-&lt;code&gt;docker-stress&lt;/code&gt; uses only &lt;code&gt;docker run&lt;/code&gt; jobs for testing, so I prefer also to run in
-parallel sort of:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;docker events
-while true; do docker inspect $(docker ps -lq); done
-while true; do docker build -t test test; done
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;and so on.&lt;/p&gt;
-
-&lt;h4 id=&#34;toc_9&#34;&gt;Useful links&lt;/h4&gt;
-
-&lt;p&gt;You definitely need to read
-&lt;a href=&#34;https://github.com/dotcloud/docker/blob/master/CONTRIBUTING.md&#34;&gt;Contributing to Docker&lt;/a&gt;
-and &lt;a href=&#34;https://github.com/dotcloud/docker/blob/master/docs/sources/contributing/devenvironment.md&#34;&gt;Setting Up a Dev Environment&lt;/a&gt;.
-I really don&amp;rsquo;t think that something else is needed for Docker hacking start.&lt;/p&gt;
-
-&lt;h3 id=&#34;toc_10&#34;&gt;Conclusion&lt;/h3&gt;
-
-&lt;p&gt;This is all that I wanted to tell you about my first big opensource experience.
-Also, just today Docker folks launched some
-&lt;a href=&#34;https://github.com/docker&#34;&gt;new projects&lt;/a&gt; and I am very excited about it.
-So, I want to invite you all to the magical world of Go, Opensource and,
-of course, Docker.&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Moving to Hugo</title>
-      <link>http://yujinqiu.github.io/posts/hugo_based_blog/</link>
-      <pubDate>Thu, 29 May 2014 00:00:00 UTC</pubDate>
-      
-      <guid>http://yujinqiu.github.io/posts/hugo_based_blog/</guid>
-      <description>
-
-&lt;p&gt;I decided that I should blog under my danmux.com domain - I often use danmux around the internet, sometimes danmull, but normally danmux for tech type things, so it makes sense.&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;danmux&lt;/strong&gt; because the &lt;strong&gt;x&lt;/strong&gt; has always been a notable part of my name - and mux reminds me of my electrical engineering days, and I think humans multiplex all the time, there it is.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_0&#34;&gt;Github Pages&lt;/h2&gt;
-
-&lt;p&gt;As this will only get a couple of hits what could be better than hosting it on &lt;a href=&#34;https://pages.github.com/&#34;&gt;github pages&lt;/a&gt; - I&amp;rsquo;m a little bit in love with github anyway so perfect choice.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_1&#34;&gt;Hugo&lt;/h2&gt;
-
-&lt;p&gt;I&amp;rsquo;m a little bit in love with go - so &lt;a href=&#34;http://hugo.spf13.com/&#34;&gt;Hugo&lt;/a&gt; was the perfect choice as well, and its been great so far, other than is typical of newish open source projects slightly lacking in the documentation department.&lt;/p&gt;
 </description>
     </item>
     

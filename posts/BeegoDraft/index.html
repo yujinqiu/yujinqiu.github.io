@@ -7,8 +7,8 @@
 <head>
     <meta charset="utf-8">
     <base href="http://yujinqiu.github.io">
-    <title> AppleDraft </title>
-    <link rel="canonical" href="http://yujinqiu.github.io/posts/Apple/">
+    <title> BeegoDraft </title>
+    <link rel="canonical" href="http://yujinqiu.github.io/posts/BeegoDraft/">
     
 
 <link rel="stylesheet" href="/css/poole.css">
@@ -60,8 +60,8 @@
     
     <div class="container content">
       <div class="post-tile-meta">
-        <h1 class="post-title">AppleDraft</h1>
-        Tue Nov 25, 2014 
+        <h1 class="post-title">BeegoDraft</h1>
+        Sat Dec 27, 2014 
 <div class="container category">
   <ul class="catlist">
     <li><em>Categories: </em></li>
@@ -73,24 +73,27 @@
         <section id="main">
           
 
-<h1 id="toc_0">Apple</h1>
+<h2 id="toc_0">beego session 失效时间</h2>
 
-<h2 id="toc_1">iphone 屏幕小白点怎么开启?</h2>
+<h3 id="toc_1">背景</h3>
 
-<p>看到别人的屏幕有一个小白点, 点击之后出现siri, device, favorites 和 home 怎么打开?<br />
-那个东西叫Assistive Touch , 在 /setting/general/Accessibility/AssistiveTouch 里边可以打开.</p>
+<p>使用 beego 进行开发过程中为了减少大家登陆时间特定设置1个月有效期, 结果发现需要经常登陆</p>
 
-<h2 id="toc_2">iphone越狱</h2>
+<h3 id="toc_2">原因</h3>
 
-<p>其实不想一开始就写这篇文章,实在受不了美国v版的中文输入法, 就动起了越狱的心思.网上看了有什么pp助手,91助手之类的工具, 本着对国内流氓公司的不信任的关系,另外恰巧在安装<a href="http://justgetflux.com/">f.lux</a> 遇到<a href="http://evasi0n.com/">破解的说明</a>, 具体操作说明很清楚不到10min就越狱完成. 需要注意点:</p>
+<p>session 的过期失效时间由两个方面决定</p>
 
 <ol>
-<li>越狱前强烈建议利用itunes来进行完整备份</li>
-<li>关闭passcode功能</li>
-<li>退出所有的应用</li>
+<li>存储sessionid 的 cookie (SessionCookieLifetime)</li>
+<li>存储在服务器端的 session 文件( SessionGCMaxLifetime 默认3600)</li>
 </ol>
 
-<p>I</p>
+<p>开始的时候只是设置了 SessionCookieLifetime, 虽然 cookie 的内容不会被删除, 但是在服务器端的 session 文件会被删除, 在代码中</p>
+
+<pre><code>ctx.Inut.Session(&quot;username&quot;).(string)
+</code></pre>
+
+<p>无法获取对应的内容, 重定向到登陆页面.</p>
 
         </section>
   
@@ -100,13 +103,13 @@
   <hr />
   
     <span class="left">
-    &nbsp; <em>&laquo; Previous:</em> <a class="next" href="http://yujinqiu.github.io/posts/ParallelDraft/">CliDraft</a>
+    &nbsp; <em>&laquo; Previous:</em> <a class="next" href="http://yujinqiu.github.io/posts/FqDraft/">fq</a>
     </span>
   
 
   
     <span class="right">
-    <em>Next: </em><a class="next" href="http://yujinqiu.github.io/posts/Mac/"> &nbsp; Mac os X Draft</a> &raquo;
+    <em>Next: </em><a class="next" href="http://yujinqiu.github.io/posts/CurlDraft/"> &nbsp; CurlDraft</a> &raquo;
     </span>
   
 </div>
