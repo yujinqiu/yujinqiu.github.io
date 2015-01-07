@@ -590,6 +590,35 @@ mysql&amp;gt; select distinct name , age from driver;
     </item>
     
     <item>
+      <title>AppleDraft</title>
+      <link>http://yujinqiu.github.io/posts/Apple/</link>
+      <pubDate>Tue, 25 Nov 2014 21:36:12 CST</pubDate>
+      
+      <guid>http://yujinqiu.github.io/posts/Apple/</guid>
+      <description>
+
+&lt;h1 id=&#34;toc_0&#34;&gt;Apple&lt;/h1&gt;
+
+&lt;h2 id=&#34;toc_1&#34;&gt;iphone 屏幕小白点怎么开启?&lt;/h2&gt;
+
+&lt;p&gt;看到别人的屏幕有一个小白点, 点击之后出现siri, device, favorites 和 home 怎么打开?&lt;br /&gt;
+那个东西叫Assistive Touch , 在 /setting/general/Accessibility/AssistiveTouch 里边可以打开.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_2&#34;&gt;iphone越狱&lt;/h2&gt;
+
+&lt;p&gt;其实不想一开始就写这篇文章,实在受不了美国v版的中文输入法, 就动起了越狱的心思.网上看了有什么pp助手,91助手之类的工具, 本着对国内流氓公司的不信任的关系,另外恰巧在安装&lt;a href=&#34;http://justgetflux.com/&#34;&gt;f.lux&lt;/a&gt; 遇到&lt;a href=&#34;http://evasi0n.com/&#34;&gt;破解的说明&lt;/a&gt;, 具体操作说明很清楚不到10min就越狱完成. 需要注意点:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;越狱前强烈建议利用itunes来进行完整备份&lt;/li&gt;
+&lt;li&gt;关闭passcode功能&lt;/li&gt;
+&lt;li&gt;退出所有的应用&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;I&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
       <title>CliDraft</title>
       <link>http://yujinqiu.github.io/posts/ParallelDraft/</link>
       <pubDate>Tue, 25 Nov 2014 21:36:12 CST</pubDate>
@@ -850,35 +879,6 @@ ls | grep -E &#39;\.log$&#39; | parallel -m mv {} destdir
 
 &lt;pre&gt;&lt;code&gt;    parallel -S server1,server2,...,server N --tag --cleanup --basefile $HOME/tmp/nginx_reload.sh &#39;sh {}&#39; ::: $HOME/tmp/nginx_reload.sh
 &lt;/code&gt;&lt;/pre&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>AppleDraft</title>
-      <link>http://yujinqiu.github.io/posts/Apple/</link>
-      <pubDate>Tue, 25 Nov 2014 21:36:12 CST</pubDate>
-      
-      <guid>http://yujinqiu.github.io/posts/Apple/</guid>
-      <description>
-
-&lt;h1 id=&#34;toc_0&#34;&gt;Apple&lt;/h1&gt;
-
-&lt;h2 id=&#34;toc_1&#34;&gt;iphone 屏幕小白点怎么开启?&lt;/h2&gt;
-
-&lt;p&gt;看到别人的屏幕有一个小白点, 点击之后出现siri, device, favorites 和 home 怎么打开?&lt;br /&gt;
-那个东西叫Assistive Touch , 在 /setting/general/Accessibility/AssistiveTouch 里边可以打开.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_2&#34;&gt;iphone越狱&lt;/h2&gt;
-
-&lt;p&gt;其实不想一开始就写这篇文章,实在受不了美国v版的中文输入法, 就动起了越狱的心思.网上看了有什么pp助手,91助手之类的工具, 本着对国内流氓公司的不信任的关系,另外恰巧在安装&lt;a href=&#34;http://justgetflux.com/&#34;&gt;f.lux&lt;/a&gt; 遇到&lt;a href=&#34;http://evasi0n.com/&#34;&gt;破解的说明&lt;/a&gt;, 具体操作说明很清楚不到10min就越狱完成. 需要注意点:&lt;/p&gt;
-
-&lt;ol&gt;
-&lt;li&gt;越狱前强烈建议利用itunes来进行完整备份&lt;/li&gt;
-&lt;li&gt;关闭passcode功能&lt;/li&gt;
-&lt;li&gt;退出所有的应用&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;I&lt;/p&gt;
 </description>
     </item>
     
@@ -1273,6 +1273,7 @@ Hostname bastin.east.doc.example.com
          is to use this to run X11 programs on a remote machine.  For example, ssh -n shadows.cs.hut.fi emacs &amp;amp; will start an emacs on shad-
          ows.cs.hut.fi, and the X11 connection will be automatically forwarded over an encrypted channel.  The ssh program will be put in the back-
          ground.  (This does not work if ssh needs to ask for a password or passphrase; see also the -f option.)
+ -o &amp;quot;StrictHostKeyChecking no&amp;quot;  取消机器 fingerprint 检查, 避免输入 yes/no 交互
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;比较常见选项组合:&lt;/p&gt;
@@ -1283,6 +1284,21 @@ Hostname bastin.east.doc.example.com
 &lt;h4 id=&#34;toc_16&#34;&gt;Reference&lt;/h4&gt;
 
 &lt;p&gt;&lt;a href=&#34;http://blog.trackets.com/2014/05/17/ssh-tunnel-local-and-remote-port-forwarding-explained-with-examples.html&#34;&gt;SSH Tunnel - Local and Remote Port Forwarding Explained With Examples&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;toc_17&#34;&gt;SSH 指定端口&lt;/h3&gt;
+
+&lt;p&gt;背景是为了安全起见, 通常会将 ssh 端口修改为非22端口, 而在使用 git 的时候, 通常是 ssh 端口, 常见的解决方法是修改 .git/conf 下调整为&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;ssh://git@domain.com:22/~/Projects/p1.git
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;每次都需要修改比较烦人, 比较简洁的方案是: 修改&lt;code&gt;.ssh/config&lt;/code&gt; 文件, 其中 &lt;code&gt;foo.com&lt;/code&gt; 是 git server 的域名&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Host foo.com
+    HostName foo.com
+    Port 22
+    GSSAPIAuthentication no
+&lt;/code&gt;&lt;/pre&gt;
 </description>
     </item>
     

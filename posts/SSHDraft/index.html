@@ -217,6 +217,7 @@ Hostname bastin.east.doc.example.com
          is to use this to run X11 programs on a remote machine.  For example, ssh -n shadows.cs.hut.fi emacs &amp; will start an emacs on shad-
          ows.cs.hut.fi, and the X11 connection will be automatically forwarded over an encrypted channel.  The ssh program will be put in the back-
          ground.  (This does not work if ssh needs to ask for a password or passphrase; see also the -f option.)
+ -o &quot;StrictHostKeyChecking no&quot;  取消机器 fingerprint 检查, 避免输入 yes/no 交互
 </code></pre>
 
 <p>比较常见选项组合:</p>
@@ -228,6 +229,21 @@ Hostname bastin.east.doc.example.com
 
 <p><a href="http://blog.trackets.com/2014/05/17/ssh-tunnel-local-and-remote-port-forwarding-explained-with-examples.html">SSH Tunnel - Local and Remote Port Forwarding Explained With Examples</a></p>
 
+<h3 id="toc_17">SSH 指定端口</h3>
+
+<p>背景是为了安全起见, 通常会将 ssh 端口修改为非22端口, 而在使用 git 的时候, 通常是 ssh 端口, 常见的解决方法是修改 .git/conf 下调整为</p>
+
+<pre><code>ssh://git@domain.com:22/~/Projects/p1.git
+</code></pre>
+
+<p>每次都需要修改比较烦人, 比较简洁的方案是: 修改<code>.ssh/config</code> 文件, 其中 <code>foo.com</code> 是 git server 的域名</p>
+
+<pre><code>Host foo.com
+    HostName foo.com
+    Port 22
+    GSSAPIAuthentication no
+</code></pre>
+
         </section>
   
       
@@ -236,7 +252,7 @@ Hostname bastin.east.doc.example.com
   <hr />
   
     <span class="left">
-    &nbsp; <em>&laquo; Previous:</em> <a class="next" href="http://yujinqiu.github.io/posts/ParallelDraft/">CliDraft</a>
+    &nbsp; <em>&laquo; Previous:</em> <a class="next" href="http://yujinqiu.github.io/posts/Apple/">AppleDraft</a>
     </span>
   
 

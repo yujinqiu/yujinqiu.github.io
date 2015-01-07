@@ -72,7 +72,19 @@
       <div class="meta">Sat, Jan 3, 2015</div>
     </header>
 
-    创建 Android Virtual Device(AVD) android list targets 查看已经下载好的 sdks 查看 adb devices 能够查看配置好的 android 物理设备 ➜ bin git:(master) ✗ adb devices List of devices attached MX21CA1ALJZM4D2227 device 破解 Android 程序通常方法是将apk 文件利用 ApkTool反编译, 生成 Smali 格式的反汇编代码, 然后阅读 Smali 文件的代码来理解程序的运行机制, 找到突破口进行修改, 最后利用 ApkTool 重新编译生成apk 文件, 并签名, 最后进行测试 apktool 安装 注意点 mac os x 利用 brew 安装之后,建议确认 apktool 的版本,使用2.0.0 以上版本, 1.5.2 版本个人测试存在问题. mac os x 安装 Mac OS X: Download Mac wrapper script (Right click, Save Link As apktool) Download apktool-2 (find newest here) Rename downloaded jar to apktool.jar Move both files (apktool.jar &amp; apktool) to /usr/local/bin (root needed) Make sure both files are executable (chmod +x) Try running apktool via cli Note - Wrapper scripts are not needed, but helpful so you don&rsquo;t have to type java -jar apktool.jar over and over.
+    <h2>创建 Android Virtual Device(AVD)</h2>
+
+<pre><code>android list  targets 查看已经下载好的 sdks
+</code></pre>
+
+<h2>查看</h2>
+
+<pre><code>adb devices 能够查看配置好的 android 物理设备
+➜  bin git:(master) ✗ adb devices
+List of devices attached
+MX21CA1ALJZM4D2227  device
+</code></pre>
+
     <footer style="text-align:right; ">
         <a href='http://yujinqiu.github.io/posts/AndroidDraft/'><nobr>Read more →</nobr></a>
     </footer>
@@ -104,7 +116,32 @@
       <div class="meta">Sun, Dec 28, 2014</div>
     </header>
 
-    FQ Across the Great Wall we can reach every corner of the world. shadowsocks (ss) 原理 app &lt;- 本地 client 解密 &lt;- 墙外 vps(加密) &lt;- 目标 site 本质上 sshd -D 就是一个 Shadowsocks . ssh -D 0.0.0.0:10086 user@vps 注意事项 ssh -D 的本质上是一个 sock5 的代理, 不是 http/https 代理, 所以在 firefox 配置里边不能够把 HTTP Proxy 和 SSL Proxy 配置为127.0.0.1:10086, 只能设置socks 代理 为了避免 DNS 污染, 建议在 firefox 中设置Remote DNS, 进行远端解析 相关命令代理 curl --socks5-hostname &lt;host[:port]&gt; Use the specified SOCKS5 proxy (and let the proxy resolve the hostname) 避免 DNS 污染 --socks5 &lt;host[:port]&gt; Use the specified SOCKS proxy - but resolve the hostname locally.
+    <h2>FQ</h2>
+
+<blockquote>
+<p>Across the Great Wall we can reach every corner of the world.</p>
+</blockquote>
+
+<h3>shadowsocks (ss)</h3>
+
+<h4>原理</h4>
+
+<pre><code>app &lt;- 本地 client 解密 &lt;- 墙外 vps(加密) &lt;- 目标 site  
+</code></pre>
+
+<p>本质上 sshd -D 就是一个 Shadowsocks .</p>
+
+<pre><code>ssh -D 0.0.0.0:10086 user@vps
+</code></pre>
+
+<h4>注意事项</h4>
+
+<ol>
+<li>
+ssh -D 的本质上是一个 sock5 的代理, 不是 http/https 代理, 所以在 firefox 配置里边<strong>不能</strong>够把 HTTP Proxy 和 SSL Proxy 配置为<code>127.0.0.1:10086</code>, 只能设置socks 代理</li>
+<li>为了避免 <a href="http://en.wikipedia.org/wiki/DNS_spoofing">DNS 污染</a>, 建议在 firefox 中设置<code>Remote DNS</code>, 进行远端解析</li>
+</ol>
+
     <footer style="text-align:right; ">
         <a href='http://yujinqiu.github.io/posts/FqDraft/'><nobr>Read more →</nobr></a>
     </footer>
@@ -120,7 +157,21 @@
       <div class="meta">Sat, Dec 27, 2014</div>
     </header>
 
-    beego session 失效时间 背景 使用 beego 进行开发过程中为了减少大家登陆时间特定设置1个月有效期, 结果发现需要经常登陆 原因 session 的过期失效时间由两个方面决定 存储sessionid 的 cookie (SessionCookieLifetime) 存储在服务器端的 session 文件( SessionGCMaxLifetime 默认3600) 开始的时候只是设置了 SessionCookieLifetime, 虽然 cookie 的内容不会被删除, 但是在服务器端的 session 文件会被删除, 在代码中 ctx.Inut.Session(&quot;username&quot;).(string) 无法获取对应的内容, 重定向到登陆页面.
+    <h2>beego session 失效时间</h2>
+
+<h3>背景</h3>
+
+<p>使用 beego 进行开发过程中为了减少大家登陆时间特定设置1个月有效期, 结果发现需要经常登陆</p>
+
+<h3>原因</h3>
+
+<p>session 的过期失效时间由两个方面决定</p>
+
+<ol>
+<li>存储sessionid 的 cookie (SessionCookieLifetime)</li>
+<li>存储在服务器端的 session 文件( SessionGCMaxLifetime 默认3600)</li>
+</ol>
+
     <footer style="text-align:right; ">
         <a href='http://yujinqiu.github.io/posts/BeegoDraft/'><nobr>Read more →</nobr></a>
     </footer>
@@ -303,19 +354,40 @@
 
 <article class="post">
     <header>
-      <h2><a href='http://yujinqiu.github.io/posts/Apple/'> AppleDraft</a> </h2>
+      <h2><a href='http://yujinqiu.github.io/posts/ParallelDraft/'> CliDraft</a> </h2>
       <div class="meta">Tue, Nov 25, 2014</div>
     </header>
 
-    <h1>Apple</h1>
+    <h1>Parallel(并行你的工作2)</h1>
 
-<h2>iphone 屏幕小白点怎么开启?</h2>
+<p>今天看到看到一篇介绍Parallel 的文章<a href="http://www.rankfocus.com/use-cpu-cores-linux-commands/">Use multiple CPU Cores with your Linux commands — awk, sed, bzip2, grep, wc, etc.</a>, 感觉和实际工作的没有太大的帮助, 因为平时其实很少去压缩和解压缩超大的文件. 因此下面主要结合个人的工作经验,总结几条Parallel的工作.
+下面看一下Parallel的图片,感觉有点眼花,很有心理学的图片效果, 相信我Parallel 是一个值得你学习的命令, 所谓事半功倍说的就是它.</p>
 
-<p>看到别人的屏幕有一个小白点, 点击之后出现siri, device, favorites 和 home 怎么打开?<br />
-那个东西叫Assistive Touch , 在 /setting/general/Accessibility/AssistiveTouch 里边可以打开.</p>
+<p><img src="http://www.gnu.org/software/parallel/logo-gray+black300.png" alt="" />
+</p>
+
+<h2>典型场景1</h2>
+
+<p>在日常运维工作中,为了管理大量的机器(1k,1w台机器)我们通常搭建一台中心控制机器, 该机器和线上所有的机器有<a href="http://todo">信任关系</a>, 因此常见的工作就是在中心控制机器上顺序登录各台机器执行命令. 举一个简单的例子, 获取机器的启动时间 <code>uptime</code> . 考虑到机器的规模,假设是1万台, 我们基本上跑一下要消耗3-5min.</p>
+
+<p>为了解决上面的问题,我曾经学习了一下 <code>xargs</code> 命令, 已经能够基本上满足我的要求. 假设机器的列表在 machines 文件内, 那么通过以下命令</p>
+
+<p><code>cat machines | xargs -i ssh {} &quot; uptime &quot;</code></p>
+
+<p>上面的命令是逐台机器执行, 好处就是可以省略在bash 里边输入各种 for 循环. 上面的效果和下面的命令一致
+&gt;
+for host in $( &lt; machines ) ; do ssh ${host} &ldquo; uptime &rdquo; ;done</p>
+
+<p>如果需要并行执行应该怎么搞? 答案很简单翻一下 xargs 的man 手册你会发现有一个<code>-P</code> 选项, 表示并发度
+<code>-P 0</code> 表示全部并发.  -P 10 表示10台并发 (<strong>在运维工程中通常需要考虑控制并发度,特别是在日志下载的时候,因为进程会出现宽度被打满的case,要特别注意</strong>)
+因此</p>
+
+<p><code>cat machines | xargs -i -P 0 ssh {} &quot; uptime &quot;</code></p>
+
+<p>就能实现全部并发. 上面的命令你执行之后会发现由于是并行执行, 因此输出基本上是乱序的. 如果某一台机器执行错误,那么基本上很难定位到是哪台.  所以个人认为 xargs 在进行简单的并行,比如批量重启服务,分发大量小文件还是蛮不错的. 我最常用的命令组合是,来实现快速的文件分发</p>
 
     <footer style="text-align:right; ">
-        <a href='http://yujinqiu.github.io/posts/Apple/'><nobr>Read more →</nobr></a>
+        <a href='http://yujinqiu.github.io/posts/ParallelDraft/'><nobr>Read more →</nobr></a>
     </footer>
     <hr/>
 </article>
