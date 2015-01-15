@@ -225,11 +225,21 @@ Hostname bastin.east.doc.example.com
 <pre><code>-nNT
 </code></pre>
 
-<h4 id="toc_16">Reference</h4>
+<h3 id="toc_16">Rsync 指定端口</h3>
+
+<h4 id="toc_17">背景</h4>
+
+<p>需要从服务器A(10086)向服务器 B(22端口) rsync 数据, 处于安全性上考虑, 服务器 A 的 ssh 隐藏为其他端口(10086 为例), 如果直接 rsync 会提示 rsync 直接采用10086 端口<br />
+无法进行数据同步.  解决方法:</p>
+
+<pre><code>rsync -HavP -e 'ssh -p 22' username@hostname:src dst
+</code></pre>
+
+<h4 id="toc_18">Reference</h4>
 
 <p><a href="http://blog.trackets.com/2014/05/17/ssh-tunnel-local-and-remote-port-forwarding-explained-with-examples.html">SSH Tunnel - Local and Remote Port Forwarding Explained With Examples</a></p>
 
-<h3 id="toc_17">SSH 指定端口</h3>
+<h3 id="toc_19">SSH 指定端口</h3>
 
 <p>背景是为了安全起见, 通常会将 ssh 端口修改为非22端口, 而在使用 git 的时候, 通常是 ssh 端口, 常见的解决方法是修改 .git/conf 下调整为</p>
 
@@ -252,7 +262,7 @@ Hostname bastin.east.doc.example.com
   <hr />
   
     <span class="left">
-    &nbsp; <em>&laquo; Previous:</em> <a class="next" href="http://yujinqiu.github.io/posts/Apple/">AppleDraft</a>
+    &nbsp; <em>&laquo; Previous:</em> <a class="next" href="http://yujinqiu.github.io/posts/ParallelDraft/">CliDraft</a>
     </span>
   
 

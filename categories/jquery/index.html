@@ -1,0 +1,105 @@
+
+
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <base href="http://yujinqiu.github.io">
+    <title> Jquery </title>
+    <link rel="canonical" href="http://yujinqiu.github.io/categories/jquery/">
+    
+
+<link rel="stylesheet" href="/css/poole.css">
+
+<link rel="stylesheet" href="/css/lanyon.css">
+
+</head>
+
+
+<body class="theme-base-0b">
+  
+
+
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+
+
+<div class="sidebar" id="sidebar">
+
+  <nav class="sidebar-nav">
+    <p><img src="img/logo.png" width="80"></p>
+    <a class="sidebar-nav-item" href="/">Home</a>
+
+    <a class="sidebar-nav-item" href="/posts">Blog</a>
+
+    <a class="sidebar-nav-item" href="https://github.com/yujinqiu">Github</a>
+  </nav>
+
+  <div class="sidebar-item">
+    <p>
+      Powered by <a href="http://hugo.spf13.com">Hugo</a>. Design reused from <a href="https://github.com/spencerlyon2">Spencer Lyon</a> which was modified from this Jekyl theme <a href="http://lanyon.getpoole.com">Lanyon</a> under this <a href="https://github.com/spencerlyon2/hugo_gh_blog/blob/master/LICENSE">licence</a>.
+    </p>
+  </div>
+</div>
+
+
+
+
+  
+  <div class="wrap">
+    <div class="masthead">
+      <div class="container">
+        <h3 class="masthead-title">
+          <a href="/posts" title="Blog">Blog Posts</a>
+        </h3>
+      </div>
+    </div>
+
+  
+    <div class="container content">
+      <h1 class="post-title">Recent Posts</h1>
+        <section id="main">
+          <div>
+            <h5><a href="/categories">Full Category Index</a></h5>
+            <h2>Posts in &ldquo;Jquery&rdquo;</h2>
+            
+            
+
+<article class="post">
+    <header>
+      <h2><a href='http://yujinqiu.github.io/posts/JqueryDraft/'> JqueryDraft</a> </h2>
+      <div class="meta">Sun, Jan 11, 2015</div>
+    </header>
+
+    Jsonp Unexpected token colon JSON after jQuery.ajax#get 背景 FE 同学由于联调环境原因, 通常希望在本地调用服务端的接口, 为了解决跨域问题, 通常会使用jsonp, 然后今天突然反馈说和其他 RD 联调的时候发现console log 报错: Unexpected token : 追查 开始怀疑是返回的 json 格式有问题, 利用 json 工具校验之后, 排除了这种可能性. 后面突然想到问题可能出现在 server 端, 联系相关的 RD, 看了代码之后, 发现没有提供对应的 jsonp 接口. don&rsquo;t argue, just show me the code 原因 To support JSONP request, the server will have to include the P, or Padding, in the response. Server return {&quot;Name&quot;:&quot;Tome&quot;, &quot;Description&quot;: &quot;Hello it's me!&quot;} but it should be jQuery111108398571682628244_1403193212453({&quot;Name&quot;:&quot;Tom&quot;,&quot;Description&quot;:&quot;Hello it's me!&quot;}) The syntax err, &quot;Unexpected token :&quot;, is because JSONP is parsed as JavaScript, where {...} also represents blocks.
+    <footer style="text-align:right; ">
+        <a href='http://yujinqiu.github.io/posts/JqueryDraft/'><nobr>Read more →</nobr></a>
+    </footer>
+    <hr/>
+</article>
+
+            
+          </div>
+        </section>
+
+    </div>
+  </div>
+
+  <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+
+  
+  
+
+<div class="container content">
+<footer>
+</footer>
+</div>
+
+</body>
+</html>
+
+
+
+

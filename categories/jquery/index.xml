@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+      <title>Jquery on Engineer&#39;s Draft </title>
+      <generator uri="https://hugo.spf13.com">Hugo</generator>
+    <link>http://yujinqiu.github.io/categories/jquery/index.xml/</link>
+    
+    
+    
+    <updated>Sun, 11 Jan 2015 11:31:48 CST</updated>
+    
+    <item>
+      <title>JqueryDraft</title>
+      <link>http://yujinqiu.github.io/posts/JqueryDraft/</link>
+      <pubDate>Sun, 11 Jan 2015 11:31:48 CST</pubDate>
+      
+      <guid>http://yujinqiu.github.io/posts/JqueryDraft/</guid>
+      <description>
+
+&lt;h2 id=&#34;toc_0&#34;&gt;Jsonp&lt;/h2&gt;
+
+&lt;p&gt;Unexpected token colon JSON after jQuery.ajax#get&lt;/p&gt;
+
+&lt;h3 id=&#34;toc_1&#34;&gt;背景&lt;/h3&gt;
+
+&lt;p&gt;FE 同学由于联调环境原因, 通常希望在本地调用服务端的接口, 为了解决跨域问题, 通常会使用&lt;code&gt;jsonp&lt;/code&gt;, 然后今天突然反馈说和其他 RD 联调的时候发现console log 报错:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Unexpected token :
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;toc_2&#34;&gt;追查&lt;/h4&gt;
+
+&lt;p&gt;开始怀疑是返回的 json 格式有问题, 利用 json 工具校验之后, 排除了这种可能性. 后面突然想到问题可能出现在 server 端,  联系相关的 RD, 看了代码之后, 发现没有提供对应的 jsonp 接口.  don&amp;rsquo;t argue, just show me the code&lt;/p&gt;
+
+&lt;h4 id=&#34;toc_3&#34;&gt;原因&lt;/h4&gt;
+
+&lt;p&gt;To support &lt;a href=&#34;http://json-p.org/&#34;&gt;JSONP request&lt;/a&gt;, the server will have to include the &lt;code&gt;P&lt;/code&gt;, or &lt;code&gt;Padding&lt;/code&gt;, in the response.&lt;br /&gt;
+Server return&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;{&amp;quot;Name&amp;quot;:&amp;quot;Tome&amp;quot;, &amp;quot;Description&amp;quot;: &amp;quot;Hello it&#39;s me!&amp;quot;}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;but it should be&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;jQuery111108398571682628244_1403193212453({&amp;quot;Name&amp;quot;:&amp;quot;Tom&amp;quot;,&amp;quot;Description&amp;quot;:&amp;quot;Hello it&#39;s me!&amp;quot;})
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The syntax err, &lt;code&gt;&amp;quot;Unexpected token :&amp;quot;&lt;/code&gt;, is because &lt;strong&gt;JSONP is parsed as JavaScript&lt;/strong&gt;, where  &lt;code&gt;{...}&lt;/code&gt; also represents &lt;a href=&#34;https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/block&#34;&gt;blocks&lt;/a&gt;.&lt;br /&gt;
+blocks syntax should be:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;{
+    statement_1;
+    statement_2;
+    ...
+    statement_n;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;so we get &lt;code&gt;Unexpected token :&lt;/code&gt; error&lt;/p&gt;
+
+&lt;h4 id=&#34;toc_4&#34;&gt;解决方案&lt;/h4&gt;
+
+&lt;p&gt;在 server 端增加 JSONP 返回接口.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;if (callback) {
+    res.setHeader(&#39;Content-Type&#39;, &#39;text/javascript&#39;); #注意这里是 javascript
+    res.end(callback + &#39;(&#39; + data + &#39;)&#39;);
+} else {
+    res.setHeader(&#39;Content-Type&#39;, &#39;application/json&#39;);
+    res.end(data);
+}
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

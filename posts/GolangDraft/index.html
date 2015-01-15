@@ -84,6 +84,280 @@
 
 <p><strong>注意</strong> 如果期望手工 build, 进入目录:  <code>go/src/golang.org/x/tools/cmd/present</code>  不要搞错.</p>
 
+<h2 id="toc_2">输出前缀为0的数字</h2>
+
+<h3 id="toc_3">背景</h3>
+
+<p>在运维过程中为了管理大量的机器, 通常会对机器进行编号, 比如 <code>web001.$idc</code> <code>web0002.$idc</code>,
+在 golang 中的解决方案:</p>
+
+<pre><code>fmt.Printf(&quot;%03d&quot;, seq)
+</code></pre>
+
+<p>说明:<br />
+%3d 表示输出数字的宽度至少为 3<br />
+0   填充前导的0而非空格；对于数字，这会将填充移到正负号之后</p>
+
+<h2 id="toc_4">Golang 字符串 split</h2>
+
+<h3 id="toc_5">背景</h3>
+
+<p>通常我们需要对一个字符串进行 split, 通常反应是利用<code>strings.Split()</code> 来进行切分</p>
+
+<pre><code>var  s = &quot;a b  c&quot;
+fmt.Println(&quot;%#v&quot;, strings.Split(s,&quot; &quot;))
+
+output: 
+[]string{&quot;a&quot;, &quot;b&quot;, &quot;&quot;, &quot;c&quot;}
+</code></pre>
+
+<p>可以看出来<code>strings.Split()</code> 只是简单的利用 SEP 来进行切分.</p>
+
+<h3 id="toc_6">解决方案</h3>
+
+<p>目前想到的解决方案是利用<code>regexp</code> 来进行切分</p>
+
+<pre><code>func main() {
+    var s = &quot;a b  c&quot;
+    fmt.Printf(&quot;%#v\n&quot;, regexp.MustCompile(&quot; +&quot;).Split(s, -1))
+}
+</code></pre>
+
+<h2 id="toc_7">Golang 时间处理</h2>
+
+<p>时间主要分为 date + time(gaoling 中叫 clock)</p>
+
+<h3 id="toc_8">获取当前时间信息</h3>
+
+<pre><code>now  := time.Now()
+</code></pre>
+
+<h3 id="toc_9">获取 epoch time (timestamp)</h3>
+
+<pre><code>now.Unix()
+</code></pre>
+
+<h3 id="toc_10">获取月份</h3>
+
+<pre><code>now.Month()
+curMonth := now.Month()
+if curMonth == time.June {
+    ...
+ }
+</code></pre>
+
+<h3 id="toc_11">获取日期部分</h3>
+
+<pre><code>year, month, day := now.Date()  
+</code></pre>
+
+<h3 id="toc_12">获取时间部分</h3>
+
+<pre><code>hour, min, sec  := now.Clock()
+</code></pre>
+
+<h3 id="toc_13">获取当前时区</h3>
+
+<pre><code>fun (Time)Zone() (name string, offset int)
+offset: 表示和 UTC 的时差(单位 s), 比如东八区(28800 8h)
+
+now := time.Now()
+zone, offset := now.Zone()
+
+fmt.Println(&quot;time zone:%s&quot;, zone)
+time zone:CST
+</code></pre>
+
+<h3 id="toc_14">转换为 UTC 时间</h3>
+
+<pre><code>func (t Time) UTC() Time
+UTC returns t with the location set to UTC
+</code></pre>
+
+<h3 id="toc_15">相对时间</h3>
+
+<p>时间相关还有一个问题是是<strong>时间间隔</strong>, 比如我们需要 profile 一个函数的耗时.</p>
+
+<pre><code>stime := time.Now()
+expensiveCall()
+time := time.Now()
+
+var duration Duration = etime.Sub(stime)
+</code></pre>
+
+<p><strong>其实本质上Duration 就是一个表示两个时刻之间的纳秒数( int64)</strong><br />
+其中 duration.Seconds(), duration.Minutes() 表示duration 转换为对应的秒数, 分钟, 注意 这里并不是只是获取 duration 的秒数或者分钟部分, duration 只是表示间隔, 并没有 clock 中 minutes 和 second.</p>
+
+<pre><code>stime := time.Now()
+time.Sleep(3 * time.Second)
+etime := time.Now()
+
+duration :=  etime.Sub(stime)
+fmt.Printf(&quot;elapsed: %s minutes&quot;, duration.Minutes())
+</code></pre>
+
+<h4 id="toc_16">科普 CST 含义</h4>
+
+<p>CST: 中部标准时间 (Central Standard Time)
+同时表示下面4个时区<br />
+CST Central Standard Time(USA) UT-6:00
+CST Central Standard Time(Australia) UT 9:30
+<strong>CST China Standard Time UT 8:00</strong>
+CST Cuba Standard Time UT-4:0<br />
+我们常遇到的应该就是 China Standard Time.</p>
+
+<h4 id="toc_17">GMT 和 UTC 的关系</h4>
+
+<ol>
+<li>UTC (Universal Time Coordinated), 以子午初线(经度0)上的评价太阳时为依据, 也就是英国伦敦的平均太阳时<br /></li>
+<li>GMT (Greenwitch Mean Time) 格林威治平均时间, 由于地球绕太阳的运行的轨道是椭圆, 导致 UTC 表示的时间, 不是很准确, 因此提出了 GMT 时间, 每年或者2年对 UTC 增加一个闰秒, 来完成修正.  一般上我们可以认为 GMT 和 UTC 是一样的.</li>
+</ol>
+
+<h3 id="toc_18">Golang 设置时区</h3>
+
+<h4 id="toc_19">背景</h4>
+
+<p>最近在给运营同学做一个定时和实时配送策略文件的时候, 遇到一个问题: 对于运营同学自然不可能要求他们会 crontab, 因此和运营同学约定设置配送格式为</p>
+
+<pre><code>File  Time
+a.txt  08:30:00  #早上8点定时配送
+</code></pre>
+
+<p>后台程序的设计思路其实很简单, 就是通过<strong>对比当前时间和配置时间</strong> 如果当前时间大于配置时间的话, 就采用最近的时间进行配置.</p>
+
+<p>发现问题是:</p>
+
+<pre><code>func main() {
+    layout := &quot;2006-01-02 15:04:05&quot;
+    settingTime := &quot;2015-01-11 15:04:05&quot;
+    t, _ := time.Parse(layout, settingTime)
+    fmt.Println(t)
+}
+</code></pre>
+
+<p>返回时间如下, 也就是说默认返回的是 UTC 时间</p>
+
+<pre><code>2015-01-11 15:04:05 +0000 UTC
+</code></pre>
+
+<p>而使用 <code>time.Now()</code> 得到的是 <code>2015-01-11 22:37:03.437033928 +0800 CST</code> CST 时间.<br />
+UTC 和 CST 的时间相差8小时, 因此为了方便运营同学配置, 需要将加载的配置时间设置为 CST.</p>
+
+<h4 id="toc_20">解决方案</h4>
+
+<pre><code>func StrToTime(timeStr string) (time.Time, error) {
+    loc, _ := time.LoadLocation(&quot;Asia/Chongqing&quot;)
+    layout := &quot;2006-01-02 15:04:05&quot;
+    fmt.Println(&quot;time star parse is : &quot;, timeStr)
+    return time.ParseInLocation(layout, timeStr, loc)
+}
+</code></pre>
+
+<p>方案2:</p>
+
+<pre><code>func StrToTime(timeStr string)(time.Time, error) {
+    loc := time.FixedZone(&quot;CST&quot;, 3600 * 8) 
+    layout := &quot;2006-01-02 15:04:05&quot;
+    return time.ParseInLocation(layout, timeStr, loc)
+}
+</code></pre>
+
+<h3 id="toc_21">Golang 获取文件 mtime, ctime, atime</h3>
+
+<pre><code>func statTimes(name string)(atime, ctime, time time.Time, err error) {
+    fi, err := os.Stat(name)
+    if err != nil {
+        return 
+    }
+    mtime = fi.ModTime()
+    stat := fi.Sys().(*syscall.Stat_t)
+    atime = time.Unix(int64(stat.Atim.Sec), int64(stat.Atim.Nsec))
+    ctime = time.Unix(int64(stat.Ctim.Sec), int64(stat.Ctim.Nsec))
+}
+</code></pre>
+
+<h3 id="toc_22">Golang 多文件上传</h3>
+
+<p>最近计划做一个 Babel项目, 该项目解决的问题是: 办公环境和 IDC 之间由于安全问题, 封锁了网络链路, 只允许部分端口直连, 通过 rz/sz 传输代码也极其不方便, 因此系统提供一个上传和下载功能的简单工具.<br />
+在上传的时候希望能够支持多个文件上传, 调研了一下发现 html 里边对于多个文件上传其实有两种形式的.</p>
+
+<p>1: 单个上传通道, 支持多个文件上传.<br />
+HTML 代码:</p>
+
+<pre><code>&lt;form id=&quot;uploadForm&quot;  enctype=&quot;multipart/form-data&quot; action=&quot;/upload&quot; method=&quot;POST&quot;&gt;
+#注意 enctype 必须为 multipart/form-data
+    &lt;p&gt;Golang Upload&lt;/p&gt; &lt;br/&gt;
+    &lt;input type=&quot;file&quot; id=&quot;file1&quot; name=&quot;uploadFile&quot; multiple /&gt; #注意这里的 multiple 表明支持多个文件上传.     
+    &lt;br/&gt;
+    &lt;input type=&quot;submit&quot; value=&quot;Upload&quot;&gt;
+&lt;/form&gt;
+</code></pre>
+
+<p>Server 代码:</p>
+
+<pre><code>func UploadServer(w http.ResponseWriter, r *http.Request) {
+    r.ParseMultiPartForm(32 &lt;&lt; 20) // 32M, 在使用 MultiPartForm 之前必须要先调用ParseMultiPartForm  
+    if r.MultiPartForm != nil &amp;&amp; r.MultiPartForm.File != nil {
+        fhs := r.MultiPartForm.File[&quot;uploadFile&quot;]
+
+        for index, header := range fhs {
+            filename := header.Filename
+            file, _ := header.Open()
+            defer file.Close()
+
+            //save file to disk
+            f, err := os.Create(filename)
+            defer f.Close()
+
+            io.Copy(f, file)
+
+            fstat, _ := f.Stat()
+            fmt.Fprintf(w, &quot;No: %d, Size:%d KB Name:%s&quot;, index, fstat.Size()/1024, filename)
+        }
+    }
+}
+</code></pre>
+
+<ol>
+<li><p>多个上传通道, 本质上其实和方案一样, 差异在 HTML.
+HTML 代码:</p>
+
+<pre><code>    &lt;form action=&quot;/v1/dispatch&quot; method=&quot;post&quot; enctype=&quot;multipart/form-data&quot;&gt;
+    &lt;input type=&quot;file&quot; name = &quot;uploadFiles[]&quot;&gt;&lt;br/&gt;
+    &lt;input type=&quot;file&quot; name = &quot;uploadFiles[]&quot;&gt;&lt;br/&gt;
+    &lt;input type=&quot;file&quot; name = &quot;uploadFiles[]&quot;&gt;&lt;br/&gt;
+    &lt;input type=&quot;submit&quot; class=&quot;btn&quot; value=&quot;上传文件&quot; /&gt;
+&lt;/form&gt;
+</code></pre>
+
+<p>Server 端代码:</p>
+
+<pre><code>this.Ctx.Request.ParseMultipartForm( 10 * (8 &lt;&lt; 20))
+fhs := this.Ctx.Request.MultipartForm.File[&quot;uploadFiles[]&quot;]
+var forgetMeta bool = true
+var realtime bool = false
+
+
+for index, f := range fhs {
+    file, err := f.Open()
+    defer file.Close()
+
+
+    if err != nil {
+        beego.Warn(&quot;open file failed.&quot;)
+    }else{
+    beego.Trace(&quot;ok, I get &quot;,index,&quot;th file:&quot;, f.Filename)
+    }
+</code></pre>
+
+<p>其它知识点:</p>
+
+<pre><code> options := r.MultipartForm.Value[&quot;options[]&quot;] #获取HTML数组内容.
+</code></pre>
+
+<p>如果form里面变量都是唯一的，直接用parseFormValue，和parseFile就可以，因为返回的都是单个变量而不是一个数组了，省的另外操作数组。</p></li>
+</ol>
+
         </section>
   
       

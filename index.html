@@ -68,6 +68,22 @@
 
 <article class="post">
     <header>
+      <h2><a href='http://yujinqiu.github.io/posts/JqueryDraft/'> JqueryDraft</a> </h2>
+      <div class="meta">Sun, Jan 11, 2015</div>
+    </header>
+
+    Jsonp Unexpected token colon JSON after jQuery.ajax#get 背景 FE 同学由于联调环境原因, 通常希望在本地调用服务端的接口, 为了解决跨域问题, 通常会使用jsonp, 然后今天突然反馈说和其他 RD 联调的时候发现console log 报错: Unexpected token : 追查 开始怀疑是返回的 json 格式有问题, 利用 json 工具校验之后, 排除了这种可能性. 后面突然想到问题可能出现在 server 端, 联系相关的 RD, 看了代码之后, 发现没有提供对应的 jsonp 接口. don&rsquo;t argue, just show me the code 原因 To support JSONP request, the server will have to include the P, or Padding, in the response. Server return {&quot;Name&quot;:&quot;Tome&quot;, &quot;Description&quot;: &quot;Hello it's me!&quot;} but it should be jQuery111108398571682628244_1403193212453({&quot;Name&quot;:&quot;Tom&quot;,&quot;Description&quot;:&quot;Hello it's me!&quot;}) The syntax err, &quot;Unexpected token :&quot;, is because JSONP is parsed as JavaScript, where {...} also represents blocks.
+    <footer style="text-align:right; ">
+        <a href='http://yujinqiu.github.io/posts/JqueryDraft/'><nobr>Read more →</nobr></a>
+    </footer>
+    <hr/>
+</article>
+
+            
+            
+
+<article class="post">
+    <header>
       <h2><a href='http://yujinqiu.github.io/posts/AndroidDraft/'> AndroidDraft</a> </h2>
       <div class="meta">Sat, Jan 3, 2015</div>
     </header>
@@ -228,7 +244,7 @@ ssh -D 的本质上是一个 sock5 的代理, 不是 http/https 代理, 所以�
       <div class="meta">Fri, Dec 12, 2014</div>
     </header>
 
-    Golang 相关 tools 安装 背景 在学习 golang 过程中, 看到 Rob Pike 大神的 slide , 感觉炫酷. 安装过程如下: go get golang.org/x/tools/cmd/present 注意 如果期望手工 build, 进入目录: go/src/golang.org/x/tools/cmd/present 不要搞错.
+    Golang 相关 tools 安装 背景 在学习 golang 过程中, 看到 Rob Pike 大神的 slide , 感觉炫酷. 安装过程如下: go get golang.org/x/tools/cmd/present 注意 如果期望手工 build, 进入目录: go/src/golang.org/x/tools/cmd/present 不要搞错. 输出前缀为0的数字 背景 在运维过程中为了管理大量的机器, 通常会对机器进行编号, 比如 web001.$idc web0002.$idc, 在 golang 中的解决方案: fmt.Printf(&quot;%03d&quot;, seq) 说明: %3d 表示输出数字的宽度至少为 3 0 填充前导的0而非空格；对于数字，这会将填充移到正负号之后 Golang 字符串 split 背景 通常我们需要对一个字符串进行 split, 通常反应是利用strings.Split() 来进行切分 var s = &quot;a b c&quot; fmt.Println(&quot;%#v&quot;, strings.Split(s,&quot; &quot;)) output: []string{&quot;a&quot;, &quot;b&quot;, &quot;&quot;, &quot;c&quot;} 可以看出来strings.Split() 只是简单的利用 SEP 来进行切分. 解决方案 目前想到的解决方案是利用regexp 来进行切分 func main() { var s = &quot;a b c&quot; fmt.Printf(&quot;%#v\n&quot;, regexp.MustCompile(&quot; +&quot;).Split(s, -1)) } Golang 时间处理 时间主要分为 date + time(gaoling 中叫 clock) 获取当前时间信息 now := time.Now() 获取 epoch time (timestamp) now.Unix() 获取月份 now.Month() curMonth := now.Month() if curMonth == time.June { ...
     <footer style="text-align:right; ">
         <a href='http://yujinqiu.github.io/posts/GolangDraft/'><nobr>Read more →</nobr></a>
     </footer>
@@ -354,76 +370,24 @@ ssh -D 的本质上是一个 sock5 的代理, 不是 http/https 代理, 所以�
 
 <article class="post">
     <header>
-      <h2><a href='http://yujinqiu.github.io/posts/ParallelDraft/'> CliDraft</a> </h2>
+      <h2><a href='http://yujinqiu.github.io/posts/Mac/'> Mac os X Draft</a> </h2>
       <div class="meta">Tue, Nov 25, 2014</div>
     </header>
 
-    <h1>Parallel(并行你的工作2)</h1>
+    <p>#Mac os X
+##Yosemite 升级之后应该进行什么操作?<br />
+1. 从 mavericks 升级到 mac os x 之后, 会遇到一些比较诡异的问题(比如找不到 clang), 下面的命令会帮助你提前避免一些问题.</p>
 
-<p>今天看到看到一篇介绍Parallel 的文章<a href="http://www.rankfocus.com/use-cpu-cores-linux-commands/">Use multiple CPU Cores with your Linux commands — awk, sed, bzip2, grep, wc, etc.</a>, 感觉和实际工作的没有太大的帮助, 因为平时其实很少去压缩和解压缩超大的文件. 因此下面主要结合个人的工作经验,总结几条Parallel的工作.
-下面看一下Parallel的图片,感觉有点眼花,很有心理学的图片效果, 相信我Parallel 是一个值得你学习的命令, 所谓事半功倍说的就是它.</p>
-
-<p><img src="http://www.gnu.org/software/parallel/logo-gray+black300.png" alt="" />
-</p>
-
-<h2>典型场景1</h2>
-
-<p>在日常运维工作中,为了管理大量的机器(1k,1w台机器)我们通常搭建一台中心控制机器, 该机器和线上所有的机器有<a href="http://todo">信任关系</a>, 因此常见的工作就是在中心控制机器上顺序登录各台机器执行命令. 举一个简单的例子, 获取机器的启动时间 <code>uptime</code> . 考虑到机器的规模,假设是1万台, 我们基本上跑一下要消耗3-5min.</p>
-
-<p>为了解决上面的问题,我曾经学习了一下 <code>xargs</code> 命令, 已经能够基本上满足我的要求. 假设机器的列表在 machines 文件内, 那么通过以下命令</p>
-
-<p><code>cat machines | xargs -i ssh {} &quot; uptime &quot;</code></p>
-
-<p>上面的命令是逐台机器执行, 好处就是可以省略在bash 里边输入各种 for 循环. 上面的效果和下面的命令一致
-&gt;
-for host in $( &lt; machines ) ; do ssh ${host} &ldquo; uptime &rdquo; ;done</p>
-
-<p>如果需要并行执行应该怎么搞? 答案很简单翻一下 xargs 的man 手册你会发现有一个<code>-P</code> 选项, 表示并发度
-<code>-P 0</code> 表示全部并发.  -P 10 表示10台并发 (<strong>在运维工程中通常需要考虑控制并发度,特别是在日志下载的时候,因为进程会出现宽度被打满的case,要特别注意</strong>)
-因此</p>
-
-<p><code>cat machines | xargs -i -P 0 ssh {} &quot; uptime &quot;</code></p>
-
-<p>就能实现全部并发. 上面的命令你执行之后会发现由于是并行执行, 因此输出基本上是乱序的. 如果某一台机器执行错误,那么基本上很难定位到是哪台.  所以个人认为 xargs 在进行简单的并行,比如批量重启服务,分发大量小文件还是蛮不错的. 我最常用的命令组合是,来实现快速的文件分发</p>
-
-    <footer style="text-align:right; ">
-        <a href='http://yujinqiu.github.io/posts/ParallelDraft/'><nobr>Read more →</nobr></a>
-    </footer>
-    <hr/>
-</article>
-
-            
-            
-
-<article class="post">
-    <header>
-      <h2><a href='http://yujinqiu.github.io/posts/GitDraft/'> Git Draft</a> </h2>
-      <div class="meta">Tue, Nov 25, 2014</div>
-    </header>
-
-    <h1>Git</h1>
-
-<h2>原子提交</h2>
-
-<p>在我们修改文件的时候, 通常是希望一次提交只包含该次功能修改相关的操作.<br />
-但是如果一个文件包含多个操作该怎么办 ?<br />
-或者你的一个程序文件里边,为了调试写了很多的log日志输出, 你不希望这些语句ci 到server上, 该怎么办 ?</p>
-
-<p><code>git add -p</code> 能够解决上面的场景(虽然已经add 过,还是需要add 到 stage 进去).<br />
-执行之后会提示:</p>
-
-<pre><code>Stage this hunk [y,n,q,a,d,/,e,?]?
+<pre><code class="language-bash">sudo xcode-select --install  
+sudo xcode-select --switch /Applications/Xcode.app   
+sudo xcodebuild -license  
+sudo gem update --system  
+sudo gem install xcodeproj   
+sudo brew update   
 </code></pre>
 
-<p>hit <code>s</code> to split whatever change into smaller chunks. This only works if there is at least one unchanged line in the &ldquo;middle&rdquo; of the hunk, which is where hunk will be split<br />
-then hit <code>y</code> to stage that chunk<br />
-or <code>n</code> to not stage that hunk<br />
-or <code>e</code> to manually edit the chunk (useful when git can&rsquo;t split it automatically)<br />
-and <code>d</code> to exit or go to the next file.<br />
-Use <code>?</code> to get the whole list of available options.</p>
-
     <footer style="text-align:right; ">
-        <a href='http://yujinqiu.github.io/posts/GitDraft/'><nobr>Read more →</nobr></a>
+        <a href='http://yujinqiu.github.io/posts/Mac/'><nobr>Read more →</nobr></a>
     </footer>
     <hr/>
 </article>

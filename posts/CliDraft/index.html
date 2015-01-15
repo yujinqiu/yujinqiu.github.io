@@ -250,6 +250,26 @@ quit
 <pre><code>echo &quot;cmd &quot;  | nc  host  port
 </code></pre>
 
+<h3 id="toc_26">date</h3>
+
+<h4 id="toc_27">背景</h4>
+
+<p>我们经常需要在 timestamp 和 datetime 之间进行转换<br />
+获取当前 timestamp</p>
+
+<pre><code>date +%s
+root@host:~# date +%s
+1420952676
+</code></pre>
+
+<p>timestamp =&gt; datetime</p>
+
+<pre><code>date -d @ts
+date -d @1420952676
+root@host:~# date -d @1420952676
+Sun Jan 11 13:04:36 CST 2015
+</code></pre>
+
         </section>
   
       

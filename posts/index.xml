@@ -7,7 +7,71 @@
     
     
     
-    <updated>Sat, 03 Jan 2015 13:20:13 CST</updated>
+    <updated>Sun, 11 Jan 2015 11:31:48 CST</updated>
+    
+    <item>
+      <title>JqueryDraft</title>
+      <link>http://yujinqiu.github.io/posts/JqueryDraft/</link>
+      <pubDate>Sun, 11 Jan 2015 11:31:48 CST</pubDate>
+      
+      <guid>http://yujinqiu.github.io/posts/JqueryDraft/</guid>
+      <description>
+
+&lt;h2 id=&#34;toc_0&#34;&gt;Jsonp&lt;/h2&gt;
+
+&lt;p&gt;Unexpected token colon JSON after jQuery.ajax#get&lt;/p&gt;
+
+&lt;h3 id=&#34;toc_1&#34;&gt;背景&lt;/h3&gt;
+
+&lt;p&gt;FE 同学由于联调环境原因, 通常希望在本地调用服务端的接口, 为了解决跨域问题, 通常会使用&lt;code&gt;jsonp&lt;/code&gt;, 然后今天突然反馈说和其他 RD 联调的时候发现console log 报错:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Unexpected token :
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;toc_2&#34;&gt;追查&lt;/h4&gt;
+
+&lt;p&gt;开始怀疑是返回的 json 格式有问题, 利用 json 工具校验之后, 排除了这种可能性. 后面突然想到问题可能出现在 server 端,  联系相关的 RD, 看了代码之后, 发现没有提供对应的 jsonp 接口.  don&amp;rsquo;t argue, just show me the code&lt;/p&gt;
+
+&lt;h4 id=&#34;toc_3&#34;&gt;原因&lt;/h4&gt;
+
+&lt;p&gt;To support &lt;a href=&#34;http://json-p.org/&#34;&gt;JSONP request&lt;/a&gt;, the server will have to include the &lt;code&gt;P&lt;/code&gt;, or &lt;code&gt;Padding&lt;/code&gt;, in the response.&lt;br /&gt;
+Server return&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;{&amp;quot;Name&amp;quot;:&amp;quot;Tome&amp;quot;, &amp;quot;Description&amp;quot;: &amp;quot;Hello it&#39;s me!&amp;quot;}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;but it should be&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;jQuery111108398571682628244_1403193212453({&amp;quot;Name&amp;quot;:&amp;quot;Tom&amp;quot;,&amp;quot;Description&amp;quot;:&amp;quot;Hello it&#39;s me!&amp;quot;})
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The syntax err, &lt;code&gt;&amp;quot;Unexpected token :&amp;quot;&lt;/code&gt;, is because &lt;strong&gt;JSONP is parsed as JavaScript&lt;/strong&gt;, where  &lt;code&gt;{...}&lt;/code&gt; also represents &lt;a href=&#34;https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/block&#34;&gt;blocks&lt;/a&gt;.&lt;br /&gt;
+blocks syntax should be:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;{
+    statement_1;
+    statement_2;
+    ...
+    statement_n;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;so we get &lt;code&gt;Unexpected token :&lt;/code&gt; error&lt;/p&gt;
+
+&lt;h4 id=&#34;toc_4&#34;&gt;解决方案&lt;/h4&gt;
+
+&lt;p&gt;在 server 端增加 JSONP 返回接口.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;if (callback) {
+    res.setHeader(&#39;Content-Type&#39;, &#39;text/javascript&#39;); #注意这里是 javascript
+    res.end(callback + &#39;(&#39; + data + &#39;)&#39;);
+} else {
+    res.setHeader(&#39;Content-Type&#39;, &#39;application/json&#39;);
+    res.end(data);
+}
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
     
     <item>
       <title>AndroidDraft</title>
@@ -320,6 +384,280 @@ ssh -D 的本质上是一个 sock5 的代理, 不是 http/https 代理, 所以�
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;&lt;strong&gt;注意&lt;/strong&gt; 如果期望手工 build, 进入目录:  &lt;code&gt;go/src/golang.org/x/tools/cmd/present&lt;/code&gt;  不要搞错.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_2&#34;&gt;输出前缀为0的数字&lt;/h2&gt;
+
+&lt;h3 id=&#34;toc_3&#34;&gt;背景&lt;/h3&gt;
+
+&lt;p&gt;在运维过程中为了管理大量的机器, 通常会对机器进行编号, 比如 &lt;code&gt;web001.$idc&lt;/code&gt; &lt;code&gt;web0002.$idc&lt;/code&gt;,
+在 golang 中的解决方案:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;fmt.Printf(&amp;quot;%03d&amp;quot;, seq)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;说明:&lt;br /&gt;
+%3d 表示输出数字的宽度至少为 3&lt;br /&gt;
+0   填充前导的0而非空格；对于数字，这会将填充移到正负号之后&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_4&#34;&gt;Golang 字符串 split&lt;/h2&gt;
+
+&lt;h3 id=&#34;toc_5&#34;&gt;背景&lt;/h3&gt;
+
+&lt;p&gt;通常我们需要对一个字符串进行 split, 通常反应是利用&lt;code&gt;strings.Split()&lt;/code&gt; 来进行切分&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;var  s = &amp;quot;a b  c&amp;quot;
+fmt.Println(&amp;quot;%#v&amp;quot;, strings.Split(s,&amp;quot; &amp;quot;))
+
+output: 
+[]string{&amp;quot;a&amp;quot;, &amp;quot;b&amp;quot;, &amp;quot;&amp;quot;, &amp;quot;c&amp;quot;}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;可以看出来&lt;code&gt;strings.Split()&lt;/code&gt; 只是简单的利用 SEP 来进行切分.&lt;/p&gt;
+
+&lt;h3 id=&#34;toc_6&#34;&gt;解决方案&lt;/h3&gt;
+
+&lt;p&gt;目前想到的解决方案是利用&lt;code&gt;regexp&lt;/code&gt; 来进行切分&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;func main() {
+    var s = &amp;quot;a b  c&amp;quot;
+    fmt.Printf(&amp;quot;%#v\n&amp;quot;, regexp.MustCompile(&amp;quot; +&amp;quot;).Split(s, -1))
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;toc_7&#34;&gt;Golang 时间处理&lt;/h2&gt;
+
+&lt;p&gt;时间主要分为 date + time(gaoling 中叫 clock)&lt;/p&gt;
+
+&lt;h3 id=&#34;toc_8&#34;&gt;获取当前时间信息&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;now  := time.Now()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;toc_9&#34;&gt;获取 epoch time (timestamp)&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;now.Unix()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;toc_10&#34;&gt;获取月份&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;now.Month()
+curMonth := now.Month()
+if curMonth == time.June {
+    ...
+ }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;toc_11&#34;&gt;获取日期部分&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;year, month, day := now.Date()  
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;toc_12&#34;&gt;获取时间部分&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;hour, min, sec  := now.Clock()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;toc_13&#34;&gt;获取当前时区&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;fun (Time)Zone() (name string, offset int)
+offset: 表示和 UTC 的时差(单位 s), 比如东八区(28800 8h)
+
+now := time.Now()
+zone, offset := now.Zone()
+
+fmt.Println(&amp;quot;time zone:%s&amp;quot;, zone)
+time zone:CST
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;toc_14&#34;&gt;转换为 UTC 时间&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;func (t Time) UTC() Time
+UTC returns t with the location set to UTC
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;toc_15&#34;&gt;相对时间&lt;/h3&gt;
+
+&lt;p&gt;时间相关还有一个问题是是&lt;strong&gt;时间间隔&lt;/strong&gt;, 比如我们需要 profile 一个函数的耗时.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;stime := time.Now()
+expensiveCall()
+time := time.Now()
+
+var duration Duration = etime.Sub(stime)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;其实本质上Duration 就是一个表示两个时刻之间的纳秒数( int64)&lt;/strong&gt;&lt;br /&gt;
+其中 duration.Seconds(), duration.Minutes() 表示duration 转换为对应的秒数, 分钟, 注意 这里并不是只是获取 duration 的秒数或者分钟部分, duration 只是表示间隔, 并没有 clock 中 minutes 和 second.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;stime := time.Now()
+time.Sleep(3 * time.Second)
+etime := time.Now()
+
+duration :=  etime.Sub(stime)
+fmt.Printf(&amp;quot;elapsed: %s minutes&amp;quot;, duration.Minutes())
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;toc_16&#34;&gt;科普 CST 含义&lt;/h4&gt;
+
+&lt;p&gt;CST: 中部标准时间 (Central Standard Time)
+同时表示下面4个时区&lt;br /&gt;
+CST Central Standard Time(USA) UT-6:00
+CST Central Standard Time(Australia) UT 9:30
+&lt;strong&gt;CST China Standard Time UT 8:00&lt;/strong&gt;
+CST Cuba Standard Time UT-4:0&lt;br /&gt;
+我们常遇到的应该就是 China Standard Time.&lt;/p&gt;
+
+&lt;h4 id=&#34;toc_17&#34;&gt;GMT 和 UTC 的关系&lt;/h4&gt;
+
+&lt;ol&gt;
+&lt;li&gt;UTC (Universal Time Coordinated), 以子午初线(经度0)上的评价太阳时为依据, 也就是英国伦敦的平均太阳时&lt;br /&gt;&lt;/li&gt;
+&lt;li&gt;GMT (Greenwitch Mean Time) 格林威治平均时间, 由于地球绕太阳的运行的轨道是椭圆, 导致 UTC 表示的时间, 不是很准确, 因此提出了 GMT 时间, 每年或者2年对 UTC 增加一个闰秒, 来完成修正.  一般上我们可以认为 GMT 和 UTC 是一样的.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&#34;toc_18&#34;&gt;Golang 设置时区&lt;/h3&gt;
+
+&lt;h4 id=&#34;toc_19&#34;&gt;背景&lt;/h4&gt;
+
+&lt;p&gt;最近在给运营同学做一个定时和实时配送策略文件的时候, 遇到一个问题: 对于运营同学自然不可能要求他们会 crontab, 因此和运营同学约定设置配送格式为&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;File  Time
+a.txt  08:30:00  #早上8点定时配送
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;后台程序的设计思路其实很简单, 就是通过&lt;strong&gt;对比当前时间和配置时间&lt;/strong&gt; 如果当前时间大于配置时间的话, 就采用最近的时间进行配置.&lt;/p&gt;
+
+&lt;p&gt;发现问题是:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;func main() {
+    layout := &amp;quot;2006-01-02 15:04:05&amp;quot;
+    settingTime := &amp;quot;2015-01-11 15:04:05&amp;quot;
+    t, _ := time.Parse(layout, settingTime)
+    fmt.Println(t)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;返回时间如下, 也就是说默认返回的是 UTC 时间&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;2015-01-11 15:04:05 +0000 UTC
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;而使用 &lt;code&gt;time.Now()&lt;/code&gt; 得到的是 &lt;code&gt;2015-01-11 22:37:03.437033928 +0800 CST&lt;/code&gt; CST 时间.&lt;br /&gt;
+UTC 和 CST 的时间相差8小时, 因此为了方便运营同学配置, 需要将加载的配置时间设置为 CST.&lt;/p&gt;
+
+&lt;h4 id=&#34;toc_20&#34;&gt;解决方案&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code&gt;func StrToTime(timeStr string) (time.Time, error) {
+    loc, _ := time.LoadLocation(&amp;quot;Asia/Chongqing&amp;quot;)
+    layout := &amp;quot;2006-01-02 15:04:05&amp;quot;
+    fmt.Println(&amp;quot;time star parse is : &amp;quot;, timeStr)
+    return time.ParseInLocation(layout, timeStr, loc)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;方案2:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;func StrToTime(timeStr string)(time.Time, error) {
+    loc := time.FixedZone(&amp;quot;CST&amp;quot;, 3600 * 8) 
+    layout := &amp;quot;2006-01-02 15:04:05&amp;quot;
+    return time.ParseInLocation(layout, timeStr, loc)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;toc_21&#34;&gt;Golang 获取文件 mtime, ctime, atime&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;func statTimes(name string)(atime, ctime, time time.Time, err error) {
+    fi, err := os.Stat(name)
+    if err != nil {
+        return 
+    }
+    mtime = fi.ModTime()
+    stat := fi.Sys().(*syscall.Stat_t)
+    atime = time.Unix(int64(stat.Atim.Sec), int64(stat.Atim.Nsec))
+    ctime = time.Unix(int64(stat.Ctim.Sec), int64(stat.Ctim.Nsec))
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;toc_22&#34;&gt;Golang 多文件上传&lt;/h3&gt;
+
+&lt;p&gt;最近计划做一个 Babel项目, 该项目解决的问题是: 办公环境和 IDC 之间由于安全问题, 封锁了网络链路, 只允许部分端口直连, 通过 rz/sz 传输代码也极其不方便, 因此系统提供一个上传和下载功能的简单工具.&lt;br /&gt;
+在上传的时候希望能够支持多个文件上传, 调研了一下发现 html 里边对于多个文件上传其实有两种形式的.&lt;/p&gt;
+
+&lt;p&gt;1: 单个上传通道, 支持多个文件上传.&lt;br /&gt;
+HTML 代码:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;form id=&amp;quot;uploadForm&amp;quot;  enctype=&amp;quot;multipart/form-data&amp;quot; action=&amp;quot;/upload&amp;quot; method=&amp;quot;POST&amp;quot;&amp;gt;
+#注意 enctype 必须为 multipart/form-data
+    &amp;lt;p&amp;gt;Golang Upload&amp;lt;/p&amp;gt; &amp;lt;br/&amp;gt;
+    &amp;lt;input type=&amp;quot;file&amp;quot; id=&amp;quot;file1&amp;quot; name=&amp;quot;uploadFile&amp;quot; multiple /&amp;gt; #注意这里的 multiple 表明支持多个文件上传.     
+    &amp;lt;br/&amp;gt;
+    &amp;lt;input type=&amp;quot;submit&amp;quot; value=&amp;quot;Upload&amp;quot;&amp;gt;
+&amp;lt;/form&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Server 代码:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;func UploadServer(w http.ResponseWriter, r *http.Request) {
+    r.ParseMultiPartForm(32 &amp;lt;&amp;lt; 20) // 32M, 在使用 MultiPartForm 之前必须要先调用ParseMultiPartForm  
+    if r.MultiPartForm != nil &amp;amp;&amp;amp; r.MultiPartForm.File != nil {
+        fhs := r.MultiPartForm.File[&amp;quot;uploadFile&amp;quot;]
+
+        for index, header := range fhs {
+            filename := header.Filename
+            file, _ := header.Open()
+            defer file.Close()
+
+            //save file to disk
+            f, err := os.Create(filename)
+            defer f.Close()
+
+            io.Copy(f, file)
+
+            fstat, _ := f.Stat()
+            fmt.Fprintf(w, &amp;quot;No: %d, Size:%d KB Name:%s&amp;quot;, index, fstat.Size()/1024, filename)
+        }
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;多个上传通道, 本质上其实和方案一样, 差异在 HTML.
+HTML 代码:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    &amp;lt;form action=&amp;quot;/v1/dispatch&amp;quot; method=&amp;quot;post&amp;quot; enctype=&amp;quot;multipart/form-data&amp;quot;&amp;gt;
+    &amp;lt;input type=&amp;quot;file&amp;quot; name = &amp;quot;uploadFiles[]&amp;quot;&amp;gt;&amp;lt;br/&amp;gt;
+    &amp;lt;input type=&amp;quot;file&amp;quot; name = &amp;quot;uploadFiles[]&amp;quot;&amp;gt;&amp;lt;br/&amp;gt;
+    &amp;lt;input type=&amp;quot;file&amp;quot; name = &amp;quot;uploadFiles[]&amp;quot;&amp;gt;&amp;lt;br/&amp;gt;
+    &amp;lt;input type=&amp;quot;submit&amp;quot; class=&amp;quot;btn&amp;quot; value=&amp;quot;上传文件&amp;quot; /&amp;gt;
+&amp;lt;/form&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Server 端代码:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;this.Ctx.Request.ParseMultipartForm( 10 * (8 &amp;lt;&amp;lt; 20))
+fhs := this.Ctx.Request.MultipartForm.File[&amp;quot;uploadFiles[]&amp;quot;]
+var forgetMeta bool = true
+var realtime bool = false
+
+
+for index, f := range fhs {
+    file, err := f.Open()
+    defer file.Close()
+
+
+    if err != nil {
+        beego.Warn(&amp;quot;open file failed.&amp;quot;)
+    }else{
+    beego.Trace(&amp;quot;ok, I get &amp;quot;,index,&amp;quot;th file:&amp;quot;, f.Filename)
+    }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;其它知识点:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt; options := r.MultipartForm.Value[&amp;quot;options[]&amp;quot;] #获取HTML数组内容.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;如果form里面变量都是唯一的，直接用parseFormValue，和parseFile就可以，因为返回的都是单个变量而不是一个数组了，省的另外操作数组。&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
 </description>
     </item>
     
@@ -590,35 +928,6 @@ mysql&amp;gt; select distinct name , age from driver;
     </item>
     
     <item>
-      <title>AppleDraft</title>
-      <link>http://yujinqiu.github.io/posts/Apple/</link>
-      <pubDate>Tue, 25 Nov 2014 21:36:12 CST</pubDate>
-      
-      <guid>http://yujinqiu.github.io/posts/Apple/</guid>
-      <description>
-
-&lt;h1 id=&#34;toc_0&#34;&gt;Apple&lt;/h1&gt;
-
-&lt;h2 id=&#34;toc_1&#34;&gt;iphone 屏幕小白点怎么开启?&lt;/h2&gt;
-
-&lt;p&gt;看到别人的屏幕有一个小白点, 点击之后出现siri, device, favorites 和 home 怎么打开?&lt;br /&gt;
-那个东西叫Assistive Touch , 在 /setting/general/Accessibility/AssistiveTouch 里边可以打开.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_2&#34;&gt;iphone越狱&lt;/h2&gt;
-
-&lt;p&gt;其实不想一开始就写这篇文章,实在受不了美国v版的中文输入法, 就动起了越狱的心思.网上看了有什么pp助手,91助手之类的工具, 本着对国内流氓公司的不信任的关系,另外恰巧在安装&lt;a href=&#34;http://justgetflux.com/&#34;&gt;f.lux&lt;/a&gt; 遇到&lt;a href=&#34;http://evasi0n.com/&#34;&gt;破解的说明&lt;/a&gt;, 具体操作说明很清楚不到10min就越狱完成. 需要注意点:&lt;/p&gt;
-
-&lt;ol&gt;
-&lt;li&gt;越狱前强烈建议利用itunes来进行完整备份&lt;/li&gt;
-&lt;li&gt;关闭passcode功能&lt;/li&gt;
-&lt;li&gt;退出所有的应用&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;I&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
       <title>CliDraft</title>
       <link>http://yujinqiu.github.io/posts/ParallelDraft/</link>
       <pubDate>Tue, 25 Nov 2014 21:36:12 CST</pubDate>
@@ -883,6 +1192,102 @@ ls | grep -E &#39;\.log$&#39; | parallel -m mv {} destdir
     </item>
     
     <item>
+      <title>Mac os X Draft</title>
+      <link>http://yujinqiu.github.io/posts/Mac/</link>
+      <pubDate>Tue, 25 Nov 2014 21:36:12 CST</pubDate>
+      
+      <guid>http://yujinqiu.github.io/posts/Mac/</guid>
+      <description>
+
+&lt;p&gt;#Mac os X
+##Yosemite 升级之后应该进行什么操作?&lt;br /&gt;
+1. 从 mavericks 升级到 mac os x 之后, 会遇到一些比较诡异的问题(比如找不到 clang), 下面的命令会帮助你提前避免一些问题.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;sudo xcode-select --install  
+sudo xcode-select --switch /Applications/Xcode.app   
+sudo xcodebuild -license  
+sudo gem update --system  
+sudo gem install xcodeproj   
+sudo brew update   
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ol&gt;
+&lt;li&gt;同时 Yosemite 会收集用户的隐私数据, 建议通过&lt;a href=&#34;https://fix-macosx.com/&#34;&gt;fix-macosx&lt;/a&gt;进行修复&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&#34;toc_0&#34;&gt;Mac os X 窗体最小化之后恢复&lt;/h3&gt;
+
+&lt;p&gt;Mac os X 在最小化窗体之后, &lt;code&gt;command + tab&lt;/code&gt; 是不能够直接恢复, 具体操作如下&lt;br /&gt;
+command + tab 定位到对应的 Application 然后 &lt;code&gt;alt&lt;/code&gt; 然后同时放开 &lt;code&gt;alt command&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;toc_1&#34;&gt;清除 DNS cache&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;sudo dscacheutil -flushcache
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;toc_2&#34;&gt;mac os x 权限位问题&lt;/h3&gt;
+
+&lt;p&gt;在 mac os terminal 中我们经常可以看到 带有 &lt;code&gt;+&lt;/code&gt;  和  &lt;code&gt;@&lt;/code&gt;  的权限问题&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;-rw-r--r--@  1 knight  staff      775 Feb 26  2014 Apple.md
+-rw-r--r--   1 knight  staff     3608 Oct 25 14:23 CliDraft.md
+-rw-r--r--@  1 knight  staff     1208 Nov 16  2013 EspeakDraft.md
+-rw-r--r--@  1 knight  staff     3470 Dec 31  2013 FPDraft.md
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;toc_3&#34;&gt;@ 字符&lt;/h4&gt;
+
+&lt;p&gt;&lt;code&gt;@&lt;/code&gt; 表示这个文件拥有扩展的属性( additional attribute) , 可以通过&lt;code&gt;xattr&lt;/code&gt; 来查看详细信息:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;xattr -l  &amp;lt;filename&amp;gt; 
+
+➜  engineerdraft git:(master) ✗ xattr -l Apple.md
+com.apple.TextEncoding: utf-8;134217984
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;扩展的属性用途是: 定义一些打开文件的程序比如 Mou 打开 markdown 文件.&lt;/p&gt;
+
+&lt;h4 id=&#34;toc_4&#34;&gt;+ 字符&lt;/h4&gt;
+
+&lt;p&gt;+ 表示这个文件用户 ACL(Access Control List) 相对于文件的权限能够耕细粒度的控制.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;ls -le 可以查看文件的 acl 权限
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;##如何快速访问Menu或者mac访问Menu的快捷键
+在window的用户会有这样的习惯, 通过alt来快速访问菜单栏. 在mac 下怎么通过键盘来快速访问?
+终于在&lt;a href=&#34;http://lifehacker.com/321595/access-the-dock-and-menu-bar-from-your-keyboard&#34;&gt;access-the-dock-and-menu-bar-from-your-keyboard&lt;/a&gt; 找到方法.    
+其实很简单就是通过 &lt;code&gt;ctrl+F2&lt;/code&gt;(menubar) &lt;code&gt;ctrl+F3&lt;/code&gt;(dock), 然后直接输入对应的菜单名称. 比如:&lt;code&gt;View&lt;/code&gt;, 输入回车即可选择, 然后继续输入对应的名称,或者通过方向键即可选择.
+打开Menu的Help的快捷键是&lt;code&gt;command + shift + /&lt;/code&gt;, 可以这样记住: shift+/ = ?  快捷键就是command + ? == help&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_5&#34;&gt;mac 计算md5 值&lt;/h2&gt;
+
+&lt;p&gt;在linux 下有md5sum 这个命令, 在mac 下发现居然没有. 仔细查找之后发现原来叫md5. 运行之后发现和md5sum输出的结果不一样, 其实可以利用&lt;code&gt;md5 -r&lt;/code&gt;就可以得到一样的结果.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_6&#34;&gt;mac 版本管理&lt;/h2&gt;
+
+&lt;p&gt;mac 的 keynote, pages, numbers 和原始文本编辑器是具有版本管理的. 入口在&lt;code&gt;File-&amp;gt; revert to -&amp;gt; brow all version&lt;/code&gt;, 可以进入查看和 time machine 一样的界面.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_7&#34;&gt;快速打开stikcy note 快捷键&lt;/h2&gt;
+
+&lt;p&gt;shift+ command + y ,  退出:  command + q&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_8&#34;&gt;屏幕放大&lt;/h2&gt;
+
+&lt;p&gt;ctrl + 鼠标放大,缩小&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_9&#34;&gt;快速预览文件( quick look)&lt;/h2&gt;
+
+&lt;h3 id=&#34;toc_10&#34;&gt;背景&lt;/h3&gt;
+
+&lt;p&gt;经常我们在命令行里边,看到某个文件之后, 希望能够 quick look, 一般的做法是, open File 打开, 然后关闭, 其实我们只是希望能够简单看一下, 可以利用以下命令来实现 :&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;qlmanage -p  File
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
       <title>Git Draft</title>
       <link>http://yujinqiu.github.io/posts/GitDraft/</link>
       <pubDate>Tue, 25 Nov 2014 21:36:12 CST</pubDate>
@@ -1022,102 +1427,46 @@ Merge branch &#39;dev&#39; of ssh://git.xiaojukeji.com:22/op/servicetree into de
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;从 Merge 中可以选择 &lt;code&gt;-m&lt;/code&gt; 对应的选项.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_13&#34;&gt;Git 删除远程 repo 文件, 保留本地文件&lt;/h2&gt;
+
+&lt;h3 id=&#34;toc_14&#34;&gt;背景&lt;/h3&gt;
+
+&lt;p&gt;在项目开发过程中, 有一个策略文件, 由于经常需要变更不太适合进入 repo, 最开始的时候没有考虑清楚提交进去,  现在需要从远程 repo 删除, 但是需要保留本地文件, 因为项目运行需要依赖这个文件.&lt;/p&gt;
+
+&lt;h3 id=&#34;toc_15&#34;&gt;解决方案&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;git rm --cached  FILE
+&lt;/code&gt;&lt;/pre&gt;
 </description>
     </item>
     
     <item>
-      <title>Mac os X Draft</title>
-      <link>http://yujinqiu.github.io/posts/Mac/</link>
+      <title>AppleDraft</title>
+      <link>http://yujinqiu.github.io/posts/Apple/</link>
       <pubDate>Tue, 25 Nov 2014 21:36:12 CST</pubDate>
       
-      <guid>http://yujinqiu.github.io/posts/Mac/</guid>
+      <guid>http://yujinqiu.github.io/posts/Apple/</guid>
       <description>
 
-&lt;p&gt;#Mac os X
-##Yosemite 升级之后应该进行什么操作?&lt;br /&gt;
-1. 从 mavericks 升级到 mac os x 之后, 会遇到一些比较诡异的问题(比如找不到 clang), 下面的命令会帮助你提前避免一些问题.&lt;/p&gt;
+&lt;h1 id=&#34;toc_0&#34;&gt;Apple&lt;/h1&gt;
 
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;sudo xcode-select --install  
-sudo xcode-select --switch /Applications/Xcode.app   
-sudo xcodebuild -license  
-sudo gem update --system  
-sudo gem install xcodeproj   
-sudo brew update   
-&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&#34;toc_1&#34;&gt;iphone 屏幕小白点怎么开启?&lt;/h2&gt;
+
+&lt;p&gt;看到别人的屏幕有一个小白点, 点击之后出现siri, device, favorites 和 home 怎么打开?&lt;br /&gt;
+那个东西叫Assistive Touch , 在 /setting/general/Accessibility/AssistiveTouch 里边可以打开.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_2&#34;&gt;iphone越狱&lt;/h2&gt;
+
+&lt;p&gt;其实不想一开始就写这篇文章,实在受不了美国v版的中文输入法, 就动起了越狱的心思.网上看了有什么pp助手,91助手之类的工具, 本着对国内流氓公司的不信任的关系,另外恰巧在安装&lt;a href=&#34;http://justgetflux.com/&#34;&gt;f.lux&lt;/a&gt; 遇到&lt;a href=&#34;http://evasi0n.com/&#34;&gt;破解的说明&lt;/a&gt;, 具体操作说明很清楚不到10min就越狱完成. 需要注意点:&lt;/p&gt;
 
 &lt;ol&gt;
-&lt;li&gt;同时 Yosemite 会收集用户的隐私数据, 建议通过&lt;a href=&#34;https://fix-macosx.com/&#34;&gt;fix-macosx&lt;/a&gt;进行修复&lt;/li&gt;
+&lt;li&gt;越狱前强烈建议利用itunes来进行完整备份&lt;/li&gt;
+&lt;li&gt;关闭passcode功能&lt;/li&gt;
+&lt;li&gt;退出所有的应用&lt;/li&gt;
 &lt;/ol&gt;
 
-&lt;h3 id=&#34;toc_0&#34;&gt;Mac os X 窗体最小化之后恢复&lt;/h3&gt;
-
-&lt;p&gt;Mac os X 在最小化窗体之后, &lt;code&gt;command + tab&lt;/code&gt; 是不能够直接恢复, 具体操作如下&lt;br /&gt;
-command + tab 定位到对应的 Application 然后 &lt;code&gt;alt&lt;/code&gt; 然后同时放开 &lt;code&gt;alt command&lt;/code&gt;&lt;/p&gt;
-
-&lt;h3 id=&#34;toc_1&#34;&gt;清除 DNS cache&lt;/h3&gt;
-
-&lt;pre&gt;&lt;code&gt;sudo dscacheutil -flushcache
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;toc_2&#34;&gt;mac os x 权限位问题&lt;/h3&gt;
-
-&lt;p&gt;在 mac os terminal 中我们经常可以看到 带有 &lt;code&gt;+&lt;/code&gt;  和  &lt;code&gt;@&lt;/code&gt;  的权限问题&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;-rw-r--r--@  1 knight  staff      775 Feb 26  2014 Apple.md
--rw-r--r--   1 knight  staff     3608 Oct 25 14:23 CliDraft.md
--rw-r--r--@  1 knight  staff     1208 Nov 16  2013 EspeakDraft.md
--rw-r--r--@  1 knight  staff     3470 Dec 31  2013 FPDraft.md
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h4 id=&#34;toc_3&#34;&gt;@ 字符&lt;/h4&gt;
-
-&lt;p&gt;&lt;code&gt;@&lt;/code&gt; 表示这个文件拥有扩展的属性( additional attribute) , 可以通过&lt;code&gt;xattr&lt;/code&gt; 来查看详细信息:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;xattr -l  &amp;lt;filename&amp;gt; 
-
-➜  engineerdraft git:(master) ✗ xattr -l Apple.md
-com.apple.TextEncoding: utf-8;134217984
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;扩展的属性用途是: 定义一些打开文件的程序比如 Mou 打开 markdown 文件.&lt;/p&gt;
-
-&lt;h4 id=&#34;toc_4&#34;&gt;+ 字符&lt;/h4&gt;
-
-&lt;p&gt;+ 表示这个文件用户 ACL(Access Control List) 相对于文件的权限能够耕细粒度的控制.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;ls -le 可以查看文件的 acl 权限
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;##如何快速访问Menu或者mac访问Menu的快捷键
-在window的用户会有这样的习惯, 通过alt来快速访问菜单栏. 在mac 下怎么通过键盘来快速访问?
-终于在&lt;a href=&#34;http://lifehacker.com/321595/access-the-dock-and-menu-bar-from-your-keyboard&#34;&gt;access-the-dock-and-menu-bar-from-your-keyboard&lt;/a&gt; 找到方法.    
-其实很简单就是通过 &lt;code&gt;ctrl+F2&lt;/code&gt;(menubar) &lt;code&gt;ctrl+F3&lt;/code&gt;(dock), 然后直接输入对应的菜单名称. 比如:&lt;code&gt;View&lt;/code&gt;, 输入回车即可选择, 然后继续输入对应的名称,或者通过方向键即可选择.
-打开Menu的Help的快捷键是&lt;code&gt;command + shift + /&lt;/code&gt;, 可以这样记住: shift+/ = ?  快捷键就是command + ? == help&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_5&#34;&gt;mac 计算md5 值&lt;/h2&gt;
-
-&lt;p&gt;在linux 下有md5sum 这个命令, 在mac 下发现居然没有. 仔细查找之后发现原来叫md5. 运行之后发现和md5sum输出的结果不一样, 其实可以利用&lt;code&gt;md5 -r&lt;/code&gt;就可以得到一样的结果.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_6&#34;&gt;mac 版本管理&lt;/h2&gt;
-
-&lt;p&gt;mac 的 keynote, pages, numbers 和原始文本编辑器是具有版本管理的. 入口在&lt;code&gt;File-&amp;gt; revert to -&amp;gt; brow all version&lt;/code&gt;, 可以进入查看和 time machine 一样的界面.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_7&#34;&gt;快速打开stikcy note 快捷键&lt;/h2&gt;
-
-&lt;p&gt;shift+ command + y ,  退出:  command + q&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_8&#34;&gt;屏幕放大&lt;/h2&gt;
-
-&lt;p&gt;ctrl + 鼠标放大,缩小&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_9&#34;&gt;快速预览文件( quick look)&lt;/h2&gt;
-
-&lt;h3 id=&#34;toc_10&#34;&gt;背景&lt;/h3&gt;
-
-&lt;p&gt;经常我们在命令行里边,看到某个文件之后, 希望能够 quick look, 一般的做法是, open File 打开, 然后关闭, 其实我们只是希望能够简单看一下, 可以利用以下命令来实现 :&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;qlmanage -p  File
-&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;I&lt;/p&gt;
 </description>
     </item>
     
@@ -1281,11 +1630,21 @@ Hostname bastin.east.doc.example.com
 &lt;pre&gt;&lt;code&gt;-nNT
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h4 id=&#34;toc_16&#34;&gt;Reference&lt;/h4&gt;
+&lt;h3 id=&#34;toc_16&#34;&gt;Rsync 指定端口&lt;/h3&gt;
+
+&lt;h4 id=&#34;toc_17&#34;&gt;背景&lt;/h4&gt;
+
+&lt;p&gt;需要从服务器A(10086)向服务器 B(22端口) rsync 数据, 处于安全性上考虑, 服务器 A 的 ssh 隐藏为其他端口(10086 为例), 如果直接 rsync 会提示 rsync 直接采用10086 端口&lt;br /&gt;
+无法进行数据同步.  解决方法:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;rsync -HavP -e &#39;ssh -p 22&#39; username@hostname:src dst
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;toc_18&#34;&gt;Reference&lt;/h4&gt;
 
 &lt;p&gt;&lt;a href=&#34;http://blog.trackets.com/2014/05/17/ssh-tunnel-local-and-remote-port-forwarding-explained-with-examples.html&#34;&gt;SSH Tunnel - Local and Remote Port Forwarding Explained With Examples&lt;/a&gt;&lt;/p&gt;
 
-&lt;h3 id=&#34;toc_17&#34;&gt;SSH 指定端口&lt;/h3&gt;
+&lt;h3 id=&#34;toc_19&#34;&gt;SSH 指定端口&lt;/h3&gt;
 
 &lt;p&gt;背景是为了安全起见, 通常会将 ssh 端口修改为非22端口, 而在使用 git 的时候, 通常是 ssh 端口, 常见的解决方法是修改 .git/conf 下调整为&lt;/p&gt;
 
@@ -1338,193 +1697,6 @@ func main () {
     fileHander := http.FileServer(http.Dir(&amp;quot;/tmp&amp;quot;))
     log.Fatal(http.Handle(&amp;quot;/tmpfiles/&amp;quot;, http.StripPrefix(&amp;quot;/tmpfiles/&amp;quot;, fileHandler))))
 }
-&lt;/code&gt;&lt;/pre&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>CliDraft</title>
-      <link>http://yujinqiu.github.io/posts/CliDraft/</link>
-      <pubDate>Wed, 19 Nov 2014 21:36:12 CST</pubDate>
-      
-      <guid>http://yujinqiu.github.io/posts/CliDraft/</guid>
-      <description>
-
-&lt;h2 id=&#34;toc_0&#34;&gt;命令行控&lt;/h2&gt;
-
-&lt;h3 id=&#34;toc_1&#34;&gt;ubuntu (命令行)&lt;/h3&gt;
-
-&lt;h4 id=&#34;toc_2&#34;&gt;moc(music on console)&lt;/h4&gt;
-
-&lt;p&gt;安装命令 &lt;code&gt;sudo apt-get -y install  moc&lt;/code&gt;&lt;/p&gt;
-
-&lt;h4 id=&#34;toc_3&#34;&gt;特点&lt;/h4&gt;
-
-&lt;p&gt;mod 很类似 tmux 能够attach(输入命令&lt;code&gt;mocp&lt;/code&gt;) 和 detach(&lt;code&gt;q&lt;/code&gt;)&lt;/p&gt;
-
-&lt;p&gt;特点:&lt;br /&gt;
-1. &amp;gt;  音量increase  &amp;lt; 音量 decrease&lt;br /&gt;
-2. &lt;code&gt;h&lt;/code&gt; for help&lt;br /&gt;
-3. &lt;code&gt;Q&lt;/code&gt; for quit&lt;/p&gt;
-
-&lt;h3 id=&#34;toc_4&#34;&gt;MAC&lt;/h3&gt;
-
-&lt;h4 id=&#34;toc_5&#34;&gt;afplay(Audio File Play)&lt;/h4&gt;
-
-&lt;p&gt;很简单的命令, 帮助文档就一个选项&lt;code&gt;-h&lt;/code&gt;&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;{-t | --time} TIME  
-    play for TIME seconds
-{-r | --rate} RATE
-    play at playback rate
-{-q | --rQuality} QUALITY
-    set the quality used for rate-scaled playback (default is 0 - low quality, 1 - high quality)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;toc_6&#34;&gt;简单流式计算&lt;/h3&gt;
-
-&lt;h4 id=&#34;toc_7&#34;&gt;背景&lt;/h4&gt;
-
-&lt;p&gt;经常我们在追查线上问题的时候, 希望能够对线上的日志进行实时的统计输出?&lt;br /&gt;
-假设线上的日志文件名为a.log 格式为&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;NOTICE: 09-27 09:51:00: abc  
-NOTICE: 09-27 09:51:00: cde  
-NOTICE: 09-27 09:51:01: fgh  
-NOTICE: 09-27 09:51:01: ijk  
-NOTICE: 09-27 09:51:03: lmn  
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;我们希望实时统计输出每秒的日志数目.&lt;/p&gt;
-
-&lt;h4 id=&#34;toc_8&#34;&gt;解决命令&lt;/h4&gt;
-
-&lt;pre&gt;&lt;code&gt;tail -f a.log | cut -c 0-22 | uniq -c 
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;输出结果类似如下:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;271 NOTICE: 09-27 09:59:54
-309 NOTICE: 09-27 09:59:55
-306 NOTICE: 09-27 09:59:56:
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;toc_9&#34;&gt;文件分割&lt;/h3&gt;
-
-&lt;h4 id=&#34;toc_10&#34;&gt;背景&lt;/h4&gt;
-
-&lt;p&gt;通常我们为了加快处理速度, 会对数据文件进行拆分, 然后同时运行多份相同的程序 load 不同的数据文件进行简单的并行处理. &lt;strong&gt;比较有用的拆分是根据文件的行数进行&lt;/strong&gt;&lt;/p&gt;
-
-&lt;h4 id=&#34;toc_11&#34;&gt;解决命令&lt;/h4&gt;
-
-&lt;pre&gt;&lt;code&gt;split [OPTION]... [INPUT [PREFIX]]
-
-split -l 100 -d -a 2 DATA  PREFIX_
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h4 id=&#34;toc_12&#34;&gt;常用选项&lt;/h4&gt;
-
-&lt;pre&gt;&lt;code&gt;-l 按照行数拆分
--d 拆分文件后缀以数字进行, 默认是字母
--a NUM  拆分文件后缀名的长度, 默认2
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;toc_13&#34;&gt;screen 非交互运行&lt;/h3&gt;
-
-&lt;h4 id=&#34;toc_14&#34;&gt;背景&lt;/h4&gt;
-
-&lt;p&gt;有时候我们为了批量后台执行一些程序, 同时避免退出之后, 不会被杀伤, 会采用 screen, nohup等手段. 其中 screen 默认情况下是 ** attach ** 模式, 需要 &lt;code&gt;ctrl + a , d&lt;/code&gt; 之后才可以 ** detach ** 出来, 其实是可以直接以 detach 模式后台运行的.&lt;/p&gt;
-
-&lt;h3 id=&#34;toc_15&#34;&gt;解决命令&lt;/h3&gt;
-
-&lt;pre&gt;&lt;code&gt;    screen -d -m -S NAME  sleep 10 
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;toc_16&#34;&gt;缺点&lt;/h3&gt;
-
-&lt;p&gt;程序执行退出之后, session 会自动消失, 建议输出写入到日志中.&lt;/p&gt;
-
-&lt;h3 id=&#34;toc_17&#34;&gt;autojump&lt;/h3&gt;
-
-&lt;blockquote&gt;
-&lt;p&gt;有了 autojump 妈妈再也不用当心我手指痛了.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;看了网上很多关于 autojump 的文章发现大部分都太过时了, 决定自己写一篇.&lt;/p&gt;
-
-&lt;h4 id=&#34;toc_18&#34;&gt;背景&lt;/h4&gt;
-
-&lt;p&gt;作为运维人员是不是经常各种 cd, 时间久了感觉手指心都觉得有点痛, 这时候你想要 autojump 来帮你解决这个问题.
-&amp;gt; autojump - a faster way to navigate your filesystem&lt;/p&gt;
-
-&lt;h4 id=&#34;toc_19&#34;&gt;应用场景&lt;/h4&gt;
-
-&lt;ol&gt;
-&lt;li&gt;&lt;p&gt;快速进入一个目录,autojump 会记录和计算各个目录权重, 通过 &lt;code&gt;j --stat&lt;/code&gt; 来查看&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;j foo
-&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;快速进入当前目录下的一个子目录&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;jc images
-&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;直接用文件管理器( mac os x Finder)打开对应目录&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;jo images
-&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;支持用文件管理( mac os x Finder)进入当前目录的子目录&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;jco images
-&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h4 id=&#34;toc_20&#34;&gt;常用选项&lt;/h4&gt;
-
-&lt;ol&gt;
-&lt;li&gt;-s, &amp;ndash;stat 查看前100条目录的权重&lt;/li&gt;
-&lt;li&gt;-i, &amp;ndash;increase VALUE 增加当前目录的权重, 可以制定自己增加权重VALUE多少.&lt;/li&gt;
-&lt;li&gt;-d, &amp;ndash;decreate VALUE 减少当前目录的权重, 可以制定自己减少权重VALUE 多少.&lt;/li&gt;
-&lt;li&gt;&amp;ndash;purge 删除一些目录已经被删除但是仍然保留在数据库中.&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h4 id=&#34;toc_21&#34;&gt;高级功能&lt;/h4&gt;
-
-&lt;ol&gt;
-&lt;li&gt;&lt;p&gt;ZSH 支持 Tab 补全&lt;br /&gt;
-autojump ZSH 需要&lt;strong&gt;compinit&lt;/strong&gt;模块来支持, 配置方法:把下面内容加入 ~/.zshrc&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    autoload -U compinit &amp;amp;&amp;amp; compinit
-&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h3 id=&#34;toc_22&#34;&gt;PIPE 命令查看出错状态&lt;/h3&gt;
-
-&lt;p&gt;经常我们会执行一串命令, 管道连接, 可能有某个命令出错, 需要知道哪个环节出错.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;cat remote.py  | grep close | awk &#39;{print $1}&#39;
-
-echo ${PIPESTATS[*]}
-0 0 0
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;toc_23&#34;&gt;telnet 正常退出姿势&lt;/h3&gt;
-
-&lt;p&gt;说实话, 不太喜欢 &lt;code&gt;telnet&lt;/code&gt;, 个人还是比较希望强大的 &lt;code&gt;nc&lt;/code&gt; , 发现自己居然不会退出. 万能的 google&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;ctrl + ]
-quit
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;toc_24&#34;&gt;nc&lt;/h3&gt;
-
-&lt;h4 id=&#34;toc_25&#34;&gt;背景&lt;/h4&gt;
-
-&lt;p&gt;nc 和 telnet 默认是交互式, 可是我们经常需要非交互, 其实解决方案很简单&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;echo &amp;quot;cmd &amp;quot;  | nc  host  port
 &lt;/code&gt;&lt;/pre&gt;
 </description>
     </item>

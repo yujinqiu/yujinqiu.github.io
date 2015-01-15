@@ -1,0 +1,168 @@
+
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <base href="http://yujinqiu.github.io">
+    <title> JqueryDraft </title>
+    <link rel="canonical" href="http://yujinqiu.github.io/posts/JqueryDraft/">
+    
+
+<link rel="stylesheet" href="/css/poole.css">
+
+<link rel="stylesheet" href="/css/lanyon.css">
+
+</head>
+
+
+<body class="theme-base-0b">
+  
+
+
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+
+
+<div class="sidebar" id="sidebar">
+
+  <nav class="sidebar-nav">
+    <p><img src="img/logo.png" width="80"></p>
+    <a class="sidebar-nav-item" href="/">Home</a>
+
+    <a class="sidebar-nav-item" href="/posts">Blog</a>
+
+    <a class="sidebar-nav-item" href="https://github.com/yujinqiu">Github</a>
+  </nav>
+
+  <div class="sidebar-item">
+    <p>
+      Powered by <a href="http://hugo.spf13.com">Hugo</a>. Design reused from <a href="https://github.com/spencerlyon2">Spencer Lyon</a> which was modified from this Jekyl theme <a href="http://lanyon.getpoole.com">Lanyon</a> under this <a href="https://github.com/spencerlyon2/hugo_gh_blog/blob/master/LICENSE">licence</a>.
+    </p>
+  </div>
+</div>
+
+
+
+
+  
+  <div class="wrap">
+    <div class="masthead">
+      <div class="container">
+        <h3 class="masthead-title">
+          <a href="/posts" title="Blog">Blog Posts</a>
+        </h3>
+        <hr>
+      </div>
+    </div>
+
+    
+    <div class="container content">
+      <div class="post-tile-meta">
+        <h1 class="post-title">JqueryDraft</h1>
+        Sun Jan 11, 2015 
+<div class="container category">
+  <ul class="catlist">
+    <li><em>Categories: </em></li>
+    
+      <li><a href="/categories/jquery">jquery</a> </li>
+    
+  </ul>
+</div>
+</p>
+      </div>
+        <section id="main">
+          
+
+<h2 id="toc_0">Jsonp</h2>
+
+<p>Unexpected token colon JSON after jQuery.ajax#get</p>
+
+<h3 id="toc_1">背景</h3>
+
+<p>FE 同学由于联调环境原因, 通常希望在本地调用服务端的接口, 为了解决跨域问题, 通常会使用<code>jsonp</code>, 然后今天突然反馈说和其他 RD 联调的时候发现console log 报错:</p>
+
+<pre><code>Unexpected token :
+</code></pre>
+
+<h4 id="toc_2">追查</h4>
+
+<p>开始怀疑是返回的 json 格式有问题, 利用 json 工具校验之后, 排除了这种可能性. 后面突然想到问题可能出现在 server 端,  联系相关的 RD, 看了代码之后, 发现没有提供对应的 jsonp 接口.  don&rsquo;t argue, just show me the code</p>
+
+<h4 id="toc_3">原因</h4>
+
+<p>To support <a href="http://json-p.org/">JSONP request</a>, the server will have to include the <code>P</code>, or <code>Padding</code>, in the response.<br />
+Server return</p>
+
+<pre><code>{&quot;Name&quot;:&quot;Tome&quot;, &quot;Description&quot;: &quot;Hello it's me!&quot;}
+</code></pre>
+
+<p>but it should be</p>
+
+<pre><code>jQuery111108398571682628244_1403193212453({&quot;Name&quot;:&quot;Tom&quot;,&quot;Description&quot;:&quot;Hello it's me!&quot;})
+</code></pre>
+
+<p>The syntax err, <code>&quot;Unexpected token :&quot;</code>, is because <strong>JSONP is parsed as JavaScript</strong>, where  <code>{...}</code> also represents <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/block">blocks</a>.<br />
+blocks syntax should be:</p>
+
+<pre><code>{
+    statement_1;
+    statement_2;
+    ...
+    statement_n;
+}
+</code></pre>
+
+<p>so we get <code>Unexpected token :</code> error</p>
+
+<h4 id="toc_4">解决方案</h4>
+
+<p>在 server 端增加 JSONP 返回接口.</p>
+
+<pre><code>if (callback) {
+    res.setHeader('Content-Type', 'text/javascript'); #注意这里是 javascript
+    res.end(callback + '(' + data + ')');
+} else {
+    res.setHeader('Content-Type', 'application/json');
+    res.end(data);
+}
+</code></pre>
+
+        </section>
+  
+      
+
+<div class="container">
+  <hr />
+  
+
+  
+    <span class="right">
+    <em>Next: </em><a class="next" href="http://yujinqiu.github.io/posts/AndroidDraft/"> &nbsp; AndroidDraft</a> &raquo;
+    </span>
+  
+</div>
+
+    </div>
+  </div>
+
+  <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+
+  <br />
+
+
+  
+  
+
+<div class="container content">
+<footer>
+</footer>
+</div>
+
+</body>
+</html>
+
+
+
+
