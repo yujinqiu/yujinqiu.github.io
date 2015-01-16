@@ -358,6 +358,86 @@ for index, f := range fhs {
 <p>如果form里面变量都是唯一的，直接用parseFormValue，和parseFile就可以，因为返回的都是单个变量而不是一个数组了，省的另外操作数组。</p></li>
 </ol>
 
+<p>## Golang post https 服务
+ ### 背景
+ 公司有一个服务是利用 https 提供服务的, 在改域名下提供一个 http 接口.  利用 curl POST</p>
+
+<pre><code> curl  -d 'name=foo' https://foo.bar.com 
+ 提示错误: Get https://golang.org/: certificate is valid for *.appspot.com, *.*.appspot.com, appspot.com, not golang.org
+
+ curl -d 'name=foo' -k  https://foo.bar.com 才可以  
+
+ -k, --insecure
+          (SSL)  This option explicitly allows curl to perform &quot;insecure&quot; SSL connections and transfers. All SSL connections are attempted to be made secure
+          by using the CA certificate bundle installed by default. This makes all connections considered &quot;insecure&quot; fail unless -k, --insecure is used.
+
+          See this online resource for further details: http://curl.haxx.se/docs/sslcerts.html  
+</code></pre>
+
+<h3 id="toc_23">golang 代码</h3>
+
+<pre><code>package main
+
+import (
+    &quot;fmt&quot;
+    &quot;net/http&quot;
+    &quot;crypto/tls&quot;
+)
+
+func main() {
+    transport := &amp;http.Transport{
+        TLSClientConfig : &amp;tls.Config{InsecureSkipVerify: true},
+    }
+
+    client := &amp;http.Client{Transport: transport}
+
+    _, err := client.Get(&quot;https://golang.org/&quot;)
+}
+</code></pre>
+
+<p><a href="http://stackoverflow.com/questions/12122159/golang-how-to-do-a-https-request-with-bad-certificate">refer</a></p>
+
+<h2 id="toc_24">Go get 工具</h2>
+
+<p>今天在使用第三方服务的时候, 在使用一个项目的时候, 需要获取对应的 package</p>
+
+<pre><code>go  get  ./...
+</code></pre>
+
+<p><code>go get</code> 命令了解, 可是有<code>threee dot</code> 没有看到对应的文档说明, 只能阅读对应的代码. 发现原来是这样的.</p>
+
+<pre><code>// downloadPaths prepares the list of paths to pass to download.
+// It expands ... patterns that can be expanded.  If there is no match
+// for a particular pattern, downloadPaths leaves it in the result list,
+// in the hope that we can figure out the repository from the
+// initial ...-free prefix.
+func downloadPaths(args []string) []string {
+args = importPathsNoDotExpansion(args)
+var out []string
+for _, a := range args {
+    if strings.Contains(a, &quot;...&quot;) {
+        var expand []string
+        // Use matchPackagesInFS to avoid printing
+        // warnings.  They will be printed by the
+        // eventual call to importPaths instead.
+        if build.IsLocalImport(a) {
+            expand = matchPackagesInFS(a)
+        } else {
+            expand = matchPackages(a)
+        }
+        if len(expand) &gt; 0 {
+            out = append(out, expand...)
+            continue
+        }
+    }
+    out = append(out, a)
+}
+return out
+}
+</code></pre>
+
+<p>go get 在获取到对应的下载的 path 的时候, 对 <code>...</code> 进行特殊处理, <code>...</code> 作用就是<strong>对该目录下的所有文件进行 go get</strong></p>
+
         </section>
   
       

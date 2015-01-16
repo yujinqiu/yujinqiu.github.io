@@ -72,7 +72,47 @@
       <div class="meta">Sun, Jan 11, 2015</div>
     </header>
 
-    Jsonp Unexpected token colon JSON after jQuery.ajax#get 背景 FE 同学由于联调环境原因, 通常希望在本地调用服务端的接口, 为了解决跨域问题, 通常会使用jsonp, 然后今天突然反馈说和其他 RD 联调的时候发现console log 报错: Unexpected token : 追查 开始怀疑是返回的 json 格式有问题, 利用 json 工具校验之后, 排除了这种可能性. 后面突然想到问题可能出现在 server 端, 联系相关的 RD, 看了代码之后, 发现没有提供对应的 jsonp 接口. don&rsquo;t argue, just show me the code 原因 To support JSONP request, the server will have to include the P, or Padding, in the response. Server return {&quot;Name&quot;:&quot;Tome&quot;, &quot;Description&quot;: &quot;Hello it's me!&quot;} but it should be jQuery111108398571682628244_1403193212453({&quot;Name&quot;:&quot;Tom&quot;,&quot;Description&quot;:&quot;Hello it's me!&quot;}) The syntax err, &quot;Unexpected token :&quot;, is because JSONP is parsed as JavaScript, where {...} also represents blocks.
+    <h2>Jsonp</h2>
+
+<p>Unexpected token colon JSON after jQuery.ajax#get</p>
+
+<h3>背景</h3>
+
+<p>FE 同学由于联调环境原因, 通常希望在本地调用服务端的接口, 为了解决跨域问题, 通常会使用<code>jsonp</code>, 然后今天突然反馈说和其他 RD 联调的时候发现console log 报错:</p>
+
+<pre><code>Unexpected token :
+</code></pre>
+
+<h4>追查</h4>
+
+<p>开始怀疑是返回的 json 格式有问题, 利用 json 工具校验之后, 排除了这种可能性. 后面突然想到问题可能出现在 server 端,  联系相关的 RD, 看了代码之后, 发现没有提供对应的 jsonp 接口.  don&rsquo;t argue, just show me the code</p>
+
+<h4>原因</h4>
+
+<p>To support <a href="http://json-p.org/">JSONP request</a>, the server will have to include the <code>P</code>, or <code>Padding</code>, in the response.<br />
+Server return</p>
+
+<pre><code>{&quot;Name&quot;:&quot;Tome&quot;, &quot;Description&quot;: &quot;Hello it's me!&quot;}
+</code></pre>
+
+<p>but it should be</p>
+
+<pre><code>jQuery111108398571682628244_1403193212453({&quot;Name&quot;:&quot;Tom&quot;,&quot;Description&quot;:&quot;Hello it's me!&quot;})
+</code></pre>
+
+<p>The syntax err, <code>&quot;Unexpected token :&quot;</code>, is because <strong>JSONP is parsed as JavaScript</strong>, where  <code>{...}</code> also represents <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/block">blocks</a>.<br />
+blocks syntax should be:</p>
+
+<pre><code>{
+    statement_1;
+    statement_2;
+    ...
+    statement_n;
+}
+</code></pre>
+
+<p>so we get <code>Unexpected token :</code> error</p>
+
     <footer style="text-align:right; ">
         <a href='http://yujinqiu.github.io/posts/JqueryDraft/'><nobr>Read more →</nobr></a>
     </footer>
@@ -244,7 +284,31 @@ ssh -D 的本质上是一个 sock5 的代理, 不是 http/https 代理, 所以�
       <div class="meta">Fri, Dec 12, 2014</div>
     </header>
 
-    Golang 相关 tools 安装 背景 在学习 golang 过程中, 看到 Rob Pike 大神的 slide , 感觉炫酷. 安装过程如下: go get golang.org/x/tools/cmd/present 注意 如果期望手工 build, 进入目录: go/src/golang.org/x/tools/cmd/present 不要搞错. 输出前缀为0的数字 背景 在运维过程中为了管理大量的机器, 通常会对机器进行编号, 比如 web001.$idc web0002.$idc, 在 golang 中的解决方案: fmt.Printf(&quot;%03d&quot;, seq) 说明: %3d 表示输出数字的宽度至少为 3 0 填充前导的0而非空格；对于数字，这会将填充移到正负号之后 Golang 字符串 split 背景 通常我们需要对一个字符串进行 split, 通常反应是利用strings.Split() 来进行切分 var s = &quot;a b c&quot; fmt.Println(&quot;%#v&quot;, strings.Split(s,&quot; &quot;)) output: []string{&quot;a&quot;, &quot;b&quot;, &quot;&quot;, &quot;c&quot;} 可以看出来strings.Split() 只是简单的利用 SEP 来进行切分. 解决方案 目前想到的解决方案是利用regexp 来进行切分 func main() { var s = &quot;a b c&quot; fmt.Printf(&quot;%#v\n&quot;, regexp.MustCompile(&quot; +&quot;).Split(s, -1)) } Golang 时间处理 时间主要分为 date + time(gaoling 中叫 clock) 获取当前时间信息 now := time.Now() 获取 epoch time (timestamp) now.Unix() 获取月份 now.Month() curMonth := now.Month() if curMonth == time.June { ...
+    <h2>Golang 相关 tools 安装</h2>
+
+<h3>背景</h3>
+
+<p>在学习 golang 过程中, 看到 Rob Pike 大神的 <a href="https://talks.golang.org/2012/waza.slide#19">slide</a> , 感觉炫酷.  安装过程如下:</p>
+
+<pre><code>go get golang.org/x/tools/cmd/present
+</code></pre>
+
+<p><strong>注意</strong> 如果期望手工 build, 进入目录:  <code>go/src/golang.org/x/tools/cmd/present</code>  不要搞错.</p>
+
+<h2>输出前缀为0的数字</h2>
+
+<h3>背景</h3>
+
+<p>在运维过程中为了管理大量的机器, 通常会对机器进行编号, 比如 <code>web001.$idc</code> <code>web0002.$idc</code>,
+在 golang 中的解决方案:</p>
+
+<pre><code>fmt.Printf(&quot;%03d&quot;, seq)
+</code></pre>
+
+<p>说明:<br />
+%3d 表示输出数字的宽度至少为 3<br />
+0   填充前导的0而非空格；对于数字，这会将填充移到正负号之后</p>
+
     <footer style="text-align:right; ">
         <a href='http://yujinqiu.github.io/posts/GolangDraft/'><nobr>Read more →</nobr></a>
     </footer>
@@ -370,24 +434,19 @@ ssh -D 的本质上是一个 sock5 的代理, 不是 http/https 代理, 所以�
 
 <article class="post">
     <header>
-      <h2><a href='http://yujinqiu.github.io/posts/Mac/'> Mac os X Draft</a> </h2>
+      <h2><a href='http://yujinqiu.github.io/posts/Apple/'> AppleDraft</a> </h2>
       <div class="meta">Tue, Nov 25, 2014</div>
     </header>
 
-    <p>#Mac os X
-##Yosemite 升级之后应该进行什么操作?<br />
-1. 从 mavericks 升级到 mac os x 之后, 会遇到一些比较诡异的问题(比如找不到 clang), 下面的命令会帮助你提前避免一些问题.</p>
+    <h1>Apple</h1>
 
-<pre><code class="language-bash">sudo xcode-select --install  
-sudo xcode-select --switch /Applications/Xcode.app   
-sudo xcodebuild -license  
-sudo gem update --system  
-sudo gem install xcodeproj   
-sudo brew update   
-</code></pre>
+<h2>iphone 屏幕小白点怎么开启?</h2>
+
+<p>看到别人的屏幕有一个小白点, 点击之后出现siri, device, favorites 和 home 怎么打开?<br />
+那个东西叫Assistive Touch , 在 /setting/general/Accessibility/AssistiveTouch 里边可以打开.</p>
 
     <footer style="text-align:right; ">
-        <a href='http://yujinqiu.github.io/posts/Mac/'><nobr>Read more →</nobr></a>
+        <a href='http://yujinqiu.github.io/posts/Apple/'><nobr>Read more →</nobr></a>
     </footer>
     <hr/>
 </article>

@@ -73,7 +73,47 @@
       <div class="meta">Sun, Jan 11, 2015</div>
     </header>
 
-    Jsonp Unexpected token colon JSON after jQuery.ajax#get 背景 FE 同学由于联调环境原因, 通常希望在本地调用服务端的接口, 为了解决跨域问题, 通常会使用jsonp, 然后今天突然反馈说和其他 RD 联调的时候发现console log 报错: Unexpected token : 追查 开始怀疑是返回的 json 格式有问题, 利用 json 工具校验之后, 排除了这种可能性. 后面突然想到问题可能出现在 server 端, 联系相关的 RD, 看了代码之后, 发现没有提供对应的 jsonp 接口. don&rsquo;t argue, just show me the code 原因 To support JSONP request, the server will have to include the P, or Padding, in the response. Server return {&quot;Name&quot;:&quot;Tome&quot;, &quot;Description&quot;: &quot;Hello it's me!&quot;} but it should be jQuery111108398571682628244_1403193212453({&quot;Name&quot;:&quot;Tom&quot;,&quot;Description&quot;:&quot;Hello it's me!&quot;}) The syntax err, &quot;Unexpected token :&quot;, is because JSONP is parsed as JavaScript, where {...} also represents blocks.
+    <h2>Jsonp</h2>
+
+<p>Unexpected token colon JSON after jQuery.ajax#get</p>
+
+<h3>背景</h3>
+
+<p>FE 同学由于联调环境原因, 通常希望在本地调用服务端的接口, 为了解决跨域问题, 通常会使用<code>jsonp</code>, 然后今天突然反馈说和其他 RD 联调的时候发现console log 报错:</p>
+
+<pre><code>Unexpected token :
+</code></pre>
+
+<h4>追查</h4>
+
+<p>开始怀疑是返回的 json 格式有问题, 利用 json 工具校验之后, 排除了这种可能性. 后面突然想到问题可能出现在 server 端,  联系相关的 RD, 看了代码之后, 发现没有提供对应的 jsonp 接口.  don&rsquo;t argue, just show me the code</p>
+
+<h4>原因</h4>
+
+<p>To support <a href="http://json-p.org/">JSONP request</a>, the server will have to include the <code>P</code>, or <code>Padding</code>, in the response.<br />
+Server return</p>
+
+<pre><code>{&quot;Name&quot;:&quot;Tome&quot;, &quot;Description&quot;: &quot;Hello it's me!&quot;}
+</code></pre>
+
+<p>but it should be</p>
+
+<pre><code>jQuery111108398571682628244_1403193212453({&quot;Name&quot;:&quot;Tom&quot;,&quot;Description&quot;:&quot;Hello it's me!&quot;})
+</code></pre>
+
+<p>The syntax err, <code>&quot;Unexpected token :&quot;</code>, is because <strong>JSONP is parsed as JavaScript</strong>, where  <code>{...}</code> also represents <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/block">blocks</a>.<br />
+blocks syntax should be:</p>
+
+<pre><code>{
+    statement_1;
+    statement_2;
+    ...
+    statement_n;
+}
+</code></pre>
+
+<p>so we get <code>Unexpected token :</code> error</p>
+
     <footer style="text-align:right; ">
         <a href='http://yujinqiu.github.io/posts/JqueryDraft/'><nobr>Read more →</nobr></a>
     </footer>
