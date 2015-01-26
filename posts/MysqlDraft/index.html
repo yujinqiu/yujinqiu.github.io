@@ -187,6 +187,22 @@ mysql&gt; select distinct name , age from driver;
                   each row on new line.
 </code></pre>
 
+<h2 id="toc_6">Mysql 异常</h2>
+
+<h3 id="toc_7">1290 the mysql server is running with the read-only option</h3>
+
+<p>1: 确认权限问题<br />
+2: show variables like &lsquo;%read_only%&lsquo;;</p>
+
+<pre><code>Variable_name  Value
+read_only       On #这里应该为 OFF
+</code></pre>
+
+<p>3: 设置 read_only = off</p>
+
+<pre><code>set GLOBAL read_only = false;  
+</code></pre>
+
         </section>
   
       
@@ -201,7 +217,7 @@ mysql&gt; select distinct name , age from driver;
 
   
     <span class="right">
-    <em>Next: </em><a class="next" href="http://yujinqiu.github.io/posts/Apple/"> &nbsp; AppleDraft</a> &raquo;
+    <em>Next: </em><a class="next" href="http://yujinqiu.github.io/posts/ParallelDraft/"> &nbsp; CliDraft</a> &raquo;
     </span>
   
 </div>
