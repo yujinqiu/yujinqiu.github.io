@@ -254,6 +254,24 @@ Hostname bastin.east.doc.example.com
     GSSAPIAuthentication no
 </code></pre>
 
+<h3 id="toc_20">ssh-copy-id 添加信任关系</h3>
+
+<p>1: 利用 ssh-keygen 生成一对密钥对<br />
+2: ssh-copy-id  <strong>-i</strong>  user@host<br />
+-i 默认是读取<code>~/.ssh/id_rsa.pub</code> 如果需要读取其它公钥文件, 只需要 -i  path2publickey</p>
+
+<h3 id="toc_21">ssh 验证 public 和 private key 是否是一对</h3>
+
+<p>有时候在追查问题的时候, 我们验证是否因为 copy/paste 错误导致的问题.<br />
+解决方案:</p>
+
+<pre><code>ssh-keygen -y -f &lt;private key&gt; 
+
+-y      This option will read a private OpenSSH format file and print an OpenSSH public key to stdout.
+</code></pre>
+
+<p>通过读取 private key 得到 public key , 然后直接对比 public 可以 即可</p>
+
         </section>
   
       
@@ -262,7 +280,7 @@ Hostname bastin.east.doc.example.com
   <hr />
   
     <span class="left">
-    &nbsp; <em>&laquo; Previous:</em> <a class="next" href="http://yujinqiu.github.io/posts/Apple/">AppleDraft</a>
+    &nbsp; <em>&laquo; Previous:</em> <a class="next" href="http://yujinqiu.github.io/posts/Mac/">Mac os X Draft</a>
     </span>
   
 

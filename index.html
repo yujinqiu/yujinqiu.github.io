@@ -68,6 +68,38 @@
 
 <article class="post">
     <header>
+      <h2><a href='http://yujinqiu.github.io/posts/BigDataDraft/'> BigDataDraft</a> </h2>
+      <div class="meta">Mon, Feb 2, 2015</div>
+    </header>
+
+    hbase 查看master hbase master 信息存储在zookeeper 中, 可以在 zookeeper 中查询. zkCli.sh -server myzoo get /hbase/master 如何启动 hmaster/regionserver hbase-daemon.sh start master #hmaster, stop 同理 hbase-daemon.sh start regionserver #regionserver, stop 同理 start master 和 ./bin/start-hbase.sh 有啥区别? hbase-daemon.sh start master 是用来启动单个 master ./bin/start-hbase.sh 会启动整个集群, 其中会读取 hbase-0.96.2-hadoop1/conf/regionservers 用来标记 regionservers 的列表, 扩容的时候不一定需要添加进去, 因为 regionserver 的机器存储在 zookeeper.
+    <footer style="text-align:right; ">
+        <a href='http://yujinqiu.github.io/posts/BigDataDraft/'><nobr>Read more →</nobr></a>
+    </footer>
+    <hr/>
+</article>
+
+            
+            
+
+<article class="post">
+    <header>
+      <h2><a href='http://yujinqiu.github.io/posts/PatternDraft/'> PatternDraft</a> </h2>
+      <div class="meta">Sun, Feb 1, 2015</div>
+    </header>
+
+    It&rsquo;s just pattern and art 工程性项目其实基本上都是固定模式的组合, 比如设计模式其实就是对编程世界的各种招式的拆解成为定式, 之所以又可以成为 art, 在于组合. 组合带来多样性和复杂性. 不同的人组合不同, favor 也不同, 然后相同 favor 的人一起组成一个 group, 然后就有派系之争. CRC32 经常我们期望将一个字符串转换为一个数值, 用来进行分流. 最开始自己实现的时候利用了简单的思想 将字符的 ascii 进行 sum, 上周在听 codis 分享的时候, 发现codis 利用了 CRC32算法.
+    <footer style="text-align:right; ">
+        <a href='http://yujinqiu.github.io/posts/PatternDraft/'><nobr>Read more →</nobr></a>
+    </footer>
+    <hr/>
+</article>
+
+            
+            
+
+<article class="post">
+    <header>
       <h2><a href='http://yujinqiu.github.io/posts/FPMDraft/'> FPMDraft</a> </h2>
       <div class="meta">Wed, Jan 21, 2015</div>
     </header>
@@ -327,120 +359,6 @@ ssh -D 的本质上是一个 sock5 的代理, 不是 http/https 代理, 所以�
 
     <footer style="text-align:right; ">
         <a href='http://yujinqiu.github.io/posts/GolangDraft/'><nobr>Read more →</nobr></a>
-    </footer>
-    <hr/>
-</article>
-
-            
-            
-
-<article class="post">
-    <header>
-      <h2><a href='http://yujinqiu.github.io/posts/NmapHack/'> Nmap Draft</a> </h2>
-      <div class="meta">Thu, Dec 4, 2014</div>
-    </header>
-
-    <p>#nmap 简单介绍</p>
-
-<p>本文的切入点:hacker使用Nmap的流程角度来介绍如何掌握Nmap这个强大的工具,帮助安全管理员发现自己网站的漏洞, 并逐步加固自己的安全.</p>
-
-<p>nmap(network mapper) 主要用途<br />
-- 网络发现<br />
-- 安全扫描
-- 端口扫描
-- 网络审查</p>
-
-<h3>nmap 命令选项</h3>
-
-<pre><code>nmap [-s (Scan Type)] [Options] {target specification}
-</code></pre>
-
-<h2>Let&rsquo;s start hack</h2>
-
-<h3>确定网络的主机</h3>
-
-<p>hacker使用Nmap来扫描整个网络。</p>
-
-<pre><code>nmap -sP 192.168.1.0/24  
-</code></pre>
-
-    <footer style="text-align:right; ">
-        <a href='http://yujinqiu.github.io/posts/NmapHack/'><nobr>Read more →</nobr></a>
-    </footer>
-    <hr/>
-</article>
-
-            
-            
-
-<article class="post">
-    <header>
-      <h2><a href='http://yujinqiu.github.io/posts/MysqlDraft/'> MysqlDraft</a> </h2>
-      <div class="meta">Thu, Dec 4, 2014</div>
-    </header>
-
-    <h2>Mysql多列去重</h2>
-
-<h3>背景</h3>
-
-<p>在项目中通常需要我们对数据进行去重, 第一反应应该是使用<code>distinct</code> 来进行去重, 假设数据如下</p>
-
-<table>
-<thead>
-<tr>
-<th>id</th>
-<th>name</th>
-<th>age</th>
-</tr>
-</thead>
-
-<tbody>
-<tr>
-<td>1</td>
-<td>monalisa</td>
-<td>100</td>
-</tr>
-
-<tr>
-<td>2</td>
-<td>foo</td>
-<td>100</td>
-</tr>
-
-<tr>
-<td>3</td>
-<td>monalisa</td>
-<td>26</td>
-</tr>
-
-<tr>
-<td>4</td>
-<td>foo</td>
-<td>100</td>
-</tr>
-
-<tr>
-<td>5</td>
-<td>bar</td>
-<td>100</td>
-</tr>
-
-<tr>
-<td>6</td>
-<td>test</td>
-<td>100</td>
-</tr>
-
-<tr>
-<td>7</td>
-<td>demo</td>
-<td>100</td>
-</tr>
-</tbody>
-</table>
-
-    <footer style="text-align:right; ">
-        <a href='http://yujinqiu.github.io/posts/MysqlDraft/'><nobr>Read more →</nobr></a>
     </footer>
     <hr/>
 </article>

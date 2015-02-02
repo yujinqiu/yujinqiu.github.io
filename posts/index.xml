@@ -7,7 +7,54 @@
     
     
     
-    <updated>Wed, 21 Jan 2015 00:08:20 CST</updated>
+    <updated>Mon, 02 Feb 2015 20:30:22 CST</updated>
+    
+    <item>
+      <title>BigDataDraft</title>
+      <link>http://yujinqiu.github.io/posts/BigDataDraft/</link>
+      <pubDate>Mon, 02 Feb 2015 20:30:22 CST</pubDate>
+      
+      <guid>http://yujinqiu.github.io/posts/BigDataDraft/</guid>
+      <description>
+
+&lt;h2 id=&#34;toc_0&#34;&gt;hbase 查看master&lt;/h2&gt;
+
+&lt;p&gt;hbase master 信息存储在zookeeper 中, 可以在 zookeeper 中查询.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;zkCli.sh -server myzoo  get  /hbase/master
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;toc_1&#34;&gt;如何启动 hmaster/regionserver&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code&gt;hbase-daemon.sh start master #hmaster, stop 同理
+hbase-daemon.sh start regionserver #regionserver, stop 同理
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;toc_2&#34;&gt;start master 和 ./bin/start-hbase.sh 有啥区别?&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code&gt;hbase-daemon.sh start master 是用来启动单个 master
+./bin/start-hbase.sh 会启动整个集群, 其中会读取 hbase-0.96.2-hadoop1/conf/regionservers 用来标记 regionservers 的列表, 扩容的时候不一定需要添加进去, 因为 regionserver 的机器存储在 zookeeper.
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>PatternDraft</title>
+      <link>http://yujinqiu.github.io/posts/PatternDraft/</link>
+      <pubDate>Sun, 01 Feb 2015 13:01:41 CST</pubDate>
+      
+      <guid>http://yujinqiu.github.io/posts/PatternDraft/</guid>
+      <description>
+
+&lt;h2 id=&#34;toc_0&#34;&gt;It&amp;rsquo;s just pattern and art&lt;/h2&gt;
+
+&lt;p&gt;工程性项目其实基本上都是固定模式的组合, 比如设计模式其实就是对编程世界的各种招式的拆解成为定式, 之所以又可以成为 art, 在于组合.  组合带来多样性和复杂性. 不同的人组合不同, favor 也不同, 然后相同 favor 的人一起组成一个 group, 然后就有派系之争.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_1&#34;&gt;CRC32&lt;/h2&gt;
+
+&lt;p&gt;经常我们期望将一个字符串转换为一个数值, 用来进行分流.  最开始自己实现的时候利用了简单的思想 将字符的 ascii 进行 sum, 上周在听 codis 分享的时候, 发现codis 利用了 CRC32算法.&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>FPMDraft</title>
@@ -1074,31 +1121,182 @@ read_only       On #这里应该为 OFF
     </item>
     
     <item>
-      <title>AppleDraft</title>
-      <link>http://yujinqiu.github.io/posts/Apple/</link>
+      <title>Git Draft</title>
+      <link>http://yujinqiu.github.io/posts/GitDraft/</link>
       <pubDate>Tue, 25 Nov 2014 21:36:12 CST</pubDate>
       
-      <guid>http://yujinqiu.github.io/posts/Apple/</guid>
+      <guid>http://yujinqiu.github.io/posts/GitDraft/</guid>
       <description>
 
-&lt;h1 id=&#34;toc_0&#34;&gt;Apple&lt;/h1&gt;
+&lt;h1 id=&#34;toc_0&#34;&gt;Git&lt;/h1&gt;
 
-&lt;h2 id=&#34;toc_1&#34;&gt;iphone 屏幕小白点怎么开启?&lt;/h2&gt;
+&lt;h2 id=&#34;toc_1&#34;&gt;原子提交&lt;/h2&gt;
 
-&lt;p&gt;看到别人的屏幕有一个小白点, 点击之后出现siri, device, favorites 和 home 怎么打开?&lt;br /&gt;
-那个东西叫Assistive Touch , 在 /setting/general/Accessibility/AssistiveTouch 里边可以打开.&lt;/p&gt;
+&lt;p&gt;在我们修改文件的时候, 通常是希望一次提交只包含该次功能修改相关的操作.&lt;br /&gt;
+但是如果一个文件包含多个操作该怎么办 ?&lt;br /&gt;
+或者你的一个程序文件里边,为了调试写了很多的log日志输出, 你不希望这些语句ci 到server上, 该怎么办 ?&lt;/p&gt;
 
-&lt;h2 id=&#34;toc_2&#34;&gt;iphone越狱&lt;/h2&gt;
+&lt;p&gt;&lt;code&gt;git add -p&lt;/code&gt; 能够解决上面的场景(虽然已经add 过,还是需要add 到 stage 进去).&lt;br /&gt;
+执行之后会提示:&lt;/p&gt;
 
-&lt;p&gt;其实不想一开始就写这篇文章,实在受不了美国v版的中文输入法, 就动起了越狱的心思.网上看了有什么pp助手,91助手之类的工具, 本着对国内流氓公司的不信任的关系,另外恰巧在安装&lt;a href=&#34;http://justgetflux.com/&#34;&gt;f.lux&lt;/a&gt; 遇到&lt;a href=&#34;http://evasi0n.com/&#34;&gt;破解的说明&lt;/a&gt;, 具体操作说明很清楚不到10min就越狱完成. 需要注意点:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;Stage this hunk [y,n,q,a,d,/,e,?]?
+&lt;/code&gt;&lt;/pre&gt;
 
-&lt;ol&gt;
-&lt;li&gt;越狱前强烈建议利用itunes来进行完整备份&lt;/li&gt;
-&lt;li&gt;关闭passcode功能&lt;/li&gt;
-&lt;li&gt;退出所有的应用&lt;/li&gt;
-&lt;/ol&gt;
+&lt;p&gt;hit &lt;code&gt;s&lt;/code&gt; to split whatever change into smaller chunks. This only works if there is at least one unchanged line in the &amp;ldquo;middle&amp;rdquo; of the hunk, which is where hunk will be split&lt;br /&gt;
+then hit &lt;code&gt;y&lt;/code&gt; to stage that chunk&lt;br /&gt;
+or &lt;code&gt;n&lt;/code&gt; to not stage that hunk&lt;br /&gt;
+or &lt;code&gt;e&lt;/code&gt; to manually edit the chunk (useful when git can&amp;rsquo;t split it automatically)&lt;br /&gt;
+and &lt;code&gt;d&lt;/code&gt; to exit or go to the next file.&lt;br /&gt;
+Use &lt;code&gt;?&lt;/code&gt; to get the whole list of available options.&lt;/p&gt;
 
-&lt;p&gt;I&lt;/p&gt;
+&lt;h2 id=&#34;toc_2&#34;&gt;Git checkout 某个分支&lt;/h2&gt;
+
+&lt;h3 id=&#34;toc_3&#34;&gt;背景&lt;/h3&gt;
+
+&lt;p&gt;在使用 git 的时候, 经常会使用第三方开发的程序/lib 的特定版本(兼容性问题) ,&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;git tag -l
+git checkout tags/&amp;lt;tag_name&amp;gt; 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;toc_4&#34;&gt;Git checkout 远程的一个分支&lt;/h2&gt;
+
+&lt;h3 id=&#34;toc_5&#34;&gt;背景&lt;/h3&gt;
+
+&lt;p&gt;在多人协作的开发场景下, Dev B 提交了一个分支, 需要拉到本地.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;git fetch origin 
+git branch -v -a 
+git checkout -b test origin/test
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;toc_6&#34;&gt;Git 多人开发流程&lt;/h2&gt;
+
+&lt;h3 id=&#34;toc_7&#34;&gt;如何发 PR&lt;/h3&gt;
+
+&lt;p&gt;以下以 wiki-pages 为例&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;把项目 fork 到自己名下，然后 clone 到本地&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;git clone git@git.xiaojukeji.com:yexiliang/wiki-pages.git
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;将原始项目加为上游&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;git remote add upstream git@git.xiaojukeji.com:op/wiki-pages.git
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;在本地项目建立分支并切换到该分支&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;git checkout -b dev
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;在 dev 分支上开发，提交&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;touch foo.txt
+git add foo.txt
+git commit
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;切换到 master 分支并合并上游&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;git checkout master
+git fetch upstream
+git merge upstream/master
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;切换到 dev 分支，合并 master，推送代码&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;git checkout dev
+git rebase master
+git push
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;到 github / gitlab 选 dev 分支发 pull request&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;toc_8&#34;&gt;Git conflict 如何保持一方修改&lt;/h2&gt;
+
+&lt;h3 id=&#34;toc_9&#34;&gt;背景&lt;/h3&gt;
+
+&lt;p&gt;在多人协作的情况下, 经常会出现冲突, 有时候不想 merge conflict, 直接使用双方的修改内容.&lt;/p&gt;
+
+&lt;h4 id=&#34;toc_10&#34;&gt;保持本地修改, 放弃远程版本&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code&gt;git checkout --ours filename.c
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;toc_11&#34;&gt;使用远程版本, 放弃本地修改&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code&gt;git checkout --theirs filename.c
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;toc_12&#34;&gt;Git 回滚到上一个版本&lt;/h2&gt;
+
+&lt;p&gt;作为项目的负责人, 通过 code review 并不能保证其中提交内容ok, 如果出现异常, 需要仅限回滚.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;branch1    branch2
+    \        /
+     \      /
+      \    /
+       \  /
+       new branch (hashcode)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;假设用户提交的 branch2  有问题, 需要回滚回 branch1&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;git  revert  -m 1  hashcode
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;如何得到 &lt;code&gt;-m&lt;/code&gt; 之后对应的 branch  是  1 ? 2 ?&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;/go/src/ServiceTree$ git show af24b57a530adcf24d098676809bc88939336063  
+commit af24b57a530adcf24d098676809bc88939336063  
+Merge: 609bb8e d160c3f   #注意这里
+Date:   Sat Dec 27 11:30:37 2014 +0800   
+
+Merge branch &#39;dev&#39; of ssh://git.xiaojukeji.com:22/op/servicetree into dev
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;从 Merge 中可以选择 &lt;code&gt;-m&lt;/code&gt; 对应的选项.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_13&#34;&gt;Git 删除远程 repo 文件, 保留本地文件&lt;/h2&gt;
+
+&lt;h3 id=&#34;toc_14&#34;&gt;背景&lt;/h3&gt;
+
+&lt;p&gt;在项目开发过程中, 有一个策略文件, 由于经常需要变更不太适合进入 repo, 最开始的时候没有考虑清楚提交进去,  现在需要从远程 repo 删除, 但是需要保留本地文件, 因为项目运行需要依赖这个文件.&lt;/p&gt;
+
+&lt;h3 id=&#34;toc_15&#34;&gt;解决方案&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;git rm --cached  FILE
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;toc_16&#34;&gt;Tortoise Git 免密码 Push 问题&lt;/h2&gt;
+
+&lt;h3 id=&#34;toc_17&#34;&gt;背景&lt;/h3&gt;
+
+&lt;p&gt;和 FE 同学进行合作, 为了提高协同工作的效率, 开始手把手教 FE 同学使用 Git, 其中为了避免 FE 同学在 git clone 和 push 的时候输入密码, 使用 Puttygen 生成对应的公钥和私钥对, 开始的时候一切都 ok.&lt;br /&gt;
+第二天 FE 同学反馈说需要输入密码. 考虑到 FE 同学进行重启, 将问题怀疑在ssh-agent 没有启动, search 之后, 常见的方案是:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;eval `ssh-agent -s` 
+ssh-add  $&amp;lt;path_to_private_key&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;发现没有效果.   继续 search 之后, 发现Puttygen 上面居然有一个 Pagent, 看名字应该是这个东西.  然后启动之后, 居然没有弹出窗体, 难道没有启动? 继续执行, 提示已经 running. WTF!!!. 无意间想到, 可能在 系统托盘(system tray)里边, 找到之后, 右键直接 add key 之后一切 ok.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_18&#34;&gt;Git tag&lt;/h2&gt;
+
+&lt;h3 id=&#34;toc_19&#34;&gt;背景&lt;/h3&gt;
+
+&lt;p&gt;在使用git的过程中, 我们通常喜欢利用 tag 来进行标记, 进行发布.&lt;/p&gt;
+
+&lt;h3 id=&#34;toc_20&#34;&gt;How to&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;git tag -a  v1.0.0 #会提示对应输入, 要求输入 annotation
+git tag -l -n3  #注意-n 和 3 之间不能有空格. 
+# three lines of message for every tag
+&lt;/code&gt;&lt;/pre&gt;
 </description>
     </item>
     
@@ -1367,443 +1565,31 @@ ls | grep -E &#39;\.log$&#39; | parallel -m mv {} destdir
     </item>
     
     <item>
-      <title>Mac os X Draft</title>
-      <link>http://yujinqiu.github.io/posts/Mac/</link>
+      <title>AppleDraft</title>
+      <link>http://yujinqiu.github.io/posts/Apple/</link>
       <pubDate>Tue, 25 Nov 2014 21:36:12 CST</pubDate>
       
-      <guid>http://yujinqiu.github.io/posts/Mac/</guid>
+      <guid>http://yujinqiu.github.io/posts/Apple/</guid>
       <description>
 
-&lt;p&gt;#Mac os X
-##Yosemite 升级之后应该进行什么操作?&lt;br /&gt;
-1. 从 mavericks 升级到 mac os x 之后, 会遇到一些比较诡异的问题(比如找不到 clang), 下面的命令会帮助你提前避免一些问题.&lt;/p&gt;
+&lt;h1 id=&#34;toc_0&#34;&gt;Apple&lt;/h1&gt;
 
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;sudo xcode-select --install  
-sudo xcode-select --switch /Applications/Xcode.app   
-sudo xcodebuild -license  
-sudo gem update --system  
-sudo gem install xcodeproj   
-sudo brew update   
-&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&#34;toc_1&#34;&gt;iphone 屏幕小白点怎么开启?&lt;/h2&gt;
+
+&lt;p&gt;看到别人的屏幕有一个小白点, 点击之后出现siri, device, favorites 和 home 怎么打开?&lt;br /&gt;
+那个东西叫Assistive Touch , 在 /setting/general/Accessibility/AssistiveTouch 里边可以打开.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_2&#34;&gt;iphone越狱&lt;/h2&gt;
+
+&lt;p&gt;其实不想一开始就写这篇文章,实在受不了美国v版的中文输入法, 就动起了越狱的心思.网上看了有什么pp助手,91助手之类的工具, 本着对国内流氓公司的不信任的关系,另外恰巧在安装&lt;a href=&#34;http://justgetflux.com/&#34;&gt;f.lux&lt;/a&gt; 遇到&lt;a href=&#34;http://evasi0n.com/&#34;&gt;破解的说明&lt;/a&gt;, 具体操作说明很清楚不到10min就越狱完成. 需要注意点:&lt;/p&gt;
 
 &lt;ol&gt;
-&lt;li&gt;同时 Yosemite 会收集用户的隐私数据, 建议通过&lt;a href=&#34;https://fix-macosx.com/&#34;&gt;fix-macosx&lt;/a&gt;进行修复&lt;/li&gt;
+&lt;li&gt;越狱前强烈建议利用itunes来进行完整备份&lt;/li&gt;
+&lt;li&gt;关闭passcode功能&lt;/li&gt;
+&lt;li&gt;退出所有的应用&lt;/li&gt;
 &lt;/ol&gt;
 
-&lt;h3 id=&#34;toc_0&#34;&gt;Mac os X 窗体最小化之后恢复&lt;/h3&gt;
-
-&lt;p&gt;Mac os X 在最小化窗体之后, &lt;code&gt;command + tab&lt;/code&gt; 是不能够直接恢复, 具体操作如下&lt;br /&gt;
-command + tab 定位到对应的 Application 然后 &lt;code&gt;alt&lt;/code&gt; 然后同时放开 &lt;code&gt;alt command&lt;/code&gt;&lt;/p&gt;
-
-&lt;h3 id=&#34;toc_1&#34;&gt;清除 DNS cache&lt;/h3&gt;
-
-&lt;pre&gt;&lt;code&gt;sudo dscacheutil -flushcache
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;toc_2&#34;&gt;mac os x 权限位问题&lt;/h3&gt;
-
-&lt;p&gt;在 mac os terminal 中我们经常可以看到 带有 &lt;code&gt;+&lt;/code&gt;  和  &lt;code&gt;@&lt;/code&gt;  的权限问题&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;-rw-r--r--@  1 knight  staff      775 Feb 26  2014 Apple.md
--rw-r--r--   1 knight  staff     3608 Oct 25 14:23 CliDraft.md
--rw-r--r--@  1 knight  staff     1208 Nov 16  2013 EspeakDraft.md
--rw-r--r--@  1 knight  staff     3470 Dec 31  2013 FPDraft.md
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h4 id=&#34;toc_3&#34;&gt;@ 字符&lt;/h4&gt;
-
-&lt;p&gt;&lt;code&gt;@&lt;/code&gt; 表示这个文件拥有扩展的属性( additional attribute) , 可以通过&lt;code&gt;xattr&lt;/code&gt; 来查看详细信息:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;xattr -l  &amp;lt;filename&amp;gt; 
-
-➜  engineerdraft git:(master) ✗ xattr -l Apple.md
-com.apple.TextEncoding: utf-8;134217984
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;扩展的属性用途是: 定义一些打开文件的程序比如 Mou 打开 markdown 文件.&lt;/p&gt;
-
-&lt;h4 id=&#34;toc_4&#34;&gt;+ 字符&lt;/h4&gt;
-
-&lt;p&gt;+ 表示这个文件用户 ACL(Access Control List) 相对于文件的权限能够耕细粒度的控制.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;ls -le 可以查看文件的 acl 权限
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;##如何快速访问Menu或者mac访问Menu的快捷键
-在window的用户会有这样的习惯, 通过alt来快速访问菜单栏. 在mac 下怎么通过键盘来快速访问?
-终于在&lt;a href=&#34;http://lifehacker.com/321595/access-the-dock-and-menu-bar-from-your-keyboard&#34;&gt;access-the-dock-and-menu-bar-from-your-keyboard&lt;/a&gt; 找到方法.    
-其实很简单就是通过 &lt;code&gt;ctrl+F2&lt;/code&gt;(menubar) &lt;code&gt;ctrl+F3&lt;/code&gt;(dock), 然后直接输入对应的菜单名称. 比如:&lt;code&gt;View&lt;/code&gt;, 输入回车即可选择, 然后继续输入对应的名称,或者通过方向键即可选择.
-打开Menu的Help的快捷键是&lt;code&gt;command + shift + /&lt;/code&gt;, 可以这样记住: shift+/ = ?  快捷键就是command + ? == help&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_5&#34;&gt;mac 计算md5 值&lt;/h2&gt;
-
-&lt;p&gt;在linux 下有md5sum 这个命令, 在mac 下发现居然没有. 仔细查找之后发现原来叫md5. 运行之后发现和md5sum输出的结果不一样, 其实可以利用&lt;code&gt;md5 -r&lt;/code&gt;就可以得到一样的结果.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_6&#34;&gt;mac 版本管理&lt;/h2&gt;
-
-&lt;p&gt;mac 的 keynote, pages, numbers 和原始文本编辑器是具有版本管理的. 入口在&lt;code&gt;File-&amp;gt; revert to -&amp;gt; brow all version&lt;/code&gt;, 可以进入查看和 time machine 一样的界面.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_7&#34;&gt;快速打开stikcy note 快捷键&lt;/h2&gt;
-
-&lt;p&gt;shift+ command + y ,  退出:  command + q&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_8&#34;&gt;屏幕放大&lt;/h2&gt;
-
-&lt;p&gt;ctrl + 鼠标放大,缩小&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_9&#34;&gt;快速预览文件( quick look)&lt;/h2&gt;
-
-&lt;h3 id=&#34;toc_10&#34;&gt;背景&lt;/h3&gt;
-
-&lt;p&gt;经常我们在命令行里边,看到某个文件之后, 希望能够 quick look, 一般的做法是, open File 打开, 然后关闭, 其实我们只是希望能够简单看一下, 可以利用以下命令来实现 :&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;qlmanage -p  File
-&lt;/code&gt;&lt;/pre&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Git Draft</title>
-      <link>http://yujinqiu.github.io/posts/GitDraft/</link>
-      <pubDate>Tue, 25 Nov 2014 21:36:12 CST</pubDate>
-      
-      <guid>http://yujinqiu.github.io/posts/GitDraft/</guid>
-      <description>
-
-&lt;h1 id=&#34;toc_0&#34;&gt;Git&lt;/h1&gt;
-
-&lt;h2 id=&#34;toc_1&#34;&gt;原子提交&lt;/h2&gt;
-
-&lt;p&gt;在我们修改文件的时候, 通常是希望一次提交只包含该次功能修改相关的操作.&lt;br /&gt;
-但是如果一个文件包含多个操作该怎么办 ?&lt;br /&gt;
-或者你的一个程序文件里边,为了调试写了很多的log日志输出, 你不希望这些语句ci 到server上, 该怎么办 ?&lt;/p&gt;
-
-&lt;p&gt;&lt;code&gt;git add -p&lt;/code&gt; 能够解决上面的场景(虽然已经add 过,还是需要add 到 stage 进去).&lt;br /&gt;
-执行之后会提示:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;Stage this hunk [y,n,q,a,d,/,e,?]?
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;hit &lt;code&gt;s&lt;/code&gt; to split whatever change into smaller chunks. This only works if there is at least one unchanged line in the &amp;ldquo;middle&amp;rdquo; of the hunk, which is where hunk will be split&lt;br /&gt;
-then hit &lt;code&gt;y&lt;/code&gt; to stage that chunk&lt;br /&gt;
-or &lt;code&gt;n&lt;/code&gt; to not stage that hunk&lt;br /&gt;
-or &lt;code&gt;e&lt;/code&gt; to manually edit the chunk (useful when git can&amp;rsquo;t split it automatically)&lt;br /&gt;
-and &lt;code&gt;d&lt;/code&gt; to exit or go to the next file.&lt;br /&gt;
-Use &lt;code&gt;?&lt;/code&gt; to get the whole list of available options.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_2&#34;&gt;Git checkout 某个分支&lt;/h2&gt;
-
-&lt;h3 id=&#34;toc_3&#34;&gt;背景&lt;/h3&gt;
-
-&lt;p&gt;在使用 git 的时候, 经常会使用第三方开发的程序/lib 的特定版本(兼容性问题) ,&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;git tag -l
-git checkout tags/&amp;lt;tag_name&amp;gt; 
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;toc_4&#34;&gt;Git checkout 远程的一个分支&lt;/h2&gt;
-
-&lt;h3 id=&#34;toc_5&#34;&gt;背景&lt;/h3&gt;
-
-&lt;p&gt;在多人协作的开发场景下, Dev B 提交了一个分支, 需要拉到本地.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;git fetch origin 
-git branch -v -a 
-git checkout -b test origin/test
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;toc_6&#34;&gt;Git 多人开发流程&lt;/h2&gt;
-
-&lt;h3 id=&#34;toc_7&#34;&gt;如何发 PR&lt;/h3&gt;
-
-&lt;p&gt;以下以 wiki-pages 为例&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;p&gt;把项目 fork 到自己名下，然后 clone 到本地&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;git clone git@git.xiaojukeji.com:yexiliang/wiki-pages.git
-&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;将原始项目加为上游&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;git remote add upstream git@git.xiaojukeji.com:op/wiki-pages.git
-&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;在本地项目建立分支并切换到该分支&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;git checkout -b dev
-&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;在 dev 分支上开发，提交&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;touch foo.txt
-git add foo.txt
-git commit
-&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;切换到 master 分支并合并上游&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;git checkout master
-git fetch upstream
-git merge upstream/master
-&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;切换到 dev 分支，合并 master，推送代码&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;git checkout dev
-git rebase master
-git push
-&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;到 github / gitlab 选 dev 分支发 pull request&lt;/p&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&#34;toc_8&#34;&gt;Git conflict 如何保持一方修改&lt;/h2&gt;
-
-&lt;h3 id=&#34;toc_9&#34;&gt;背景&lt;/h3&gt;
-
-&lt;p&gt;在多人协作的情况下, 经常会出现冲突, 有时候不想 merge conflict, 直接使用双方的修改内容.&lt;/p&gt;
-
-&lt;h4 id=&#34;toc_10&#34;&gt;保持本地修改, 放弃远程版本&lt;/h4&gt;
-
-&lt;pre&gt;&lt;code&gt;git checkout --ours filename.c
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h4 id=&#34;toc_11&#34;&gt;使用远程版本, 放弃本地修改&lt;/h4&gt;
-
-&lt;pre&gt;&lt;code&gt;git checkout --theirs filename.c
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;toc_12&#34;&gt;Git 回滚到上一个版本&lt;/h2&gt;
-
-&lt;p&gt;作为项目的负责人, 通过 code review 并不能保证其中提交内容ok, 如果出现异常, 需要仅限回滚.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;branch1    branch2
-    \        /
-     \      /
-      \    /
-       \  /
-       new branch (hashcode)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;假设用户提交的 branch2  有问题, 需要回滚回 branch1&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;git  revert  -m 1  hashcode
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;如何得到 &lt;code&gt;-m&lt;/code&gt; 之后对应的 branch  是  1 ? 2 ?&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;/go/src/ServiceTree$ git show af24b57a530adcf24d098676809bc88939336063  
-commit af24b57a530adcf24d098676809bc88939336063  
-Merge: 609bb8e d160c3f   #注意这里
-Date:   Sat Dec 27 11:30:37 2014 +0800   
-
-Merge branch &#39;dev&#39; of ssh://git.xiaojukeji.com:22/op/servicetree into dev
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;从 Merge 中可以选择 &lt;code&gt;-m&lt;/code&gt; 对应的选项.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_13&#34;&gt;Git 删除远程 repo 文件, 保留本地文件&lt;/h2&gt;
-
-&lt;h3 id=&#34;toc_14&#34;&gt;背景&lt;/h3&gt;
-
-&lt;p&gt;在项目开发过程中, 有一个策略文件, 由于经常需要变更不太适合进入 repo, 最开始的时候没有考虑清楚提交进去,  现在需要从远程 repo 删除, 但是需要保留本地文件, 因为项目运行需要依赖这个文件.&lt;/p&gt;
-
-&lt;h3 id=&#34;toc_15&#34;&gt;解决方案&lt;/h3&gt;
-
-&lt;pre&gt;&lt;code&gt;git rm --cached  FILE
-&lt;/code&gt;&lt;/pre&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>SSHDraft</title>
-      <link>http://yujinqiu.github.io/posts/SSHDraft/</link>
-      <pubDate>Sun, 23 Nov 2014 11:47:25 CST</pubDate>
-      
-      <guid>http://yujinqiu.github.io/posts/SSHDraft/</guid>
-      <description>
-
-&lt;h2 id=&#34;toc_0&#34;&gt;Black Magic Of SSH&lt;/h2&gt;
-
-&lt;h3 id=&#34;toc_1&#34;&gt;绑定本地端口( Dynamic Port Forwarding)&lt;/h3&gt;
-
-&lt;p&gt;其实本质上就是一个 SOCKS5 proxy&lt;br /&gt;
-ssh 通过加密传输数据, 特别适合**国情, 加入我们要让8080 端口的数据, 全部通过 SSH  加密转发到远程主机上&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;ssh  -D 8080 user@host
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;toc_2&#34;&gt;遇到错误&lt;/h3&gt;
-
-&lt;pre&gt;&lt;code&gt;Bad dynamic forwarding specification
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;原因: ssh -D user@host 忘记了指定端口&lt;/p&gt;
-
-&lt;h4 id=&#34;toc_3&#34;&gt;应用场景&lt;/h4&gt;
-
-&lt;p&gt;在咖啡厅等公共场所, 为了上网安全, 可以使用 ssh动态转发来保证安全.&lt;/p&gt;
-
-&lt;h3 id=&#34;toc_4&#34;&gt;本地端口转发( Local Port Forwarding)&lt;/h3&gt;
-
-&lt;h4 id=&#34;toc_5&#34;&gt;背景&lt;/h4&gt;
-
-&lt;p&gt;公司从安全性上考虑, 通常会隔离网络, 不允许直接访问, 简单拓扑如下:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;          host2
-host1 --&amp;gt;  X  --&amp;gt; host3
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;host1 无法直接访问 host3, host1 可以访问 host2, host2 可以访问 host3.&lt;br /&gt;
-可以通过 ssh 的 &lt;strong&gt;本地端口转发&lt;/strong&gt; 来进行&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;ssh -L 2121:host3:21 user@host2
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;strong&gt;本地端口转发&lt;/strong&gt; 三个参数值表示:  本机绑定端口:目标主机:目标主机端口,  其中&lt;strong&gt;本机绑定端口&lt;/strong&gt;意思是会在本机启动一个&lt;strong&gt;本地监听的端口&lt;/strong&gt;.&lt;br /&gt;
-上面的命令实现的效果就是, 我们只要连接上 host1的2121 端口, 就等于连接上了 host2的21端口.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;ftp localhost:2121
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;strong&gt;本地端口转发&lt;/strong&gt; 让 host1 和 host2 直接形成 &lt;strong&gt;SSH 隧道&lt;/strong&gt;&lt;br /&gt;
-注意其中&lt;strong&gt;目标主机&lt;/strong&gt;的机器名或者 ip 是香港 host3 而言的.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;ssh -L 5900:localhost:5900  host2
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;表示将本机的5900端口绑定到 host3的5900 端口. localhost 是想对 host2 而言.&lt;/p&gt;
-
-&lt;p&gt;本地端口转发的意思是:  绑定本地机器端口, 进行数据转发.&lt;/p&gt;
-
-&lt;h3 id=&#34;toc_6&#34;&gt;远程端口转发(Remote Port Forwarding)&lt;/h3&gt;
-
-&lt;p&gt;远程端口转发: 对应就是 绑定远程机器端口, 进行数据转发.&lt;/p&gt;
-
-&lt;h4 id=&#34;toc_7&#34;&gt;背景&lt;/h4&gt;
-
-&lt;p&gt;公司又从安全性上考虑, host2 通过 NAT 出去可以访问 host1,  host1 机器无法访问 host2, 同时 host2 和 host3 机器间能够相互访问.   我们希望能够 host1 直接访问 host3&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;host1 &amp;lt;- host2
-       |     |
-       X     |
-       |     |
-       +---host3
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;解决的办法是:   既然 host2 可以连接 host1, 那么就从 host2上建立也 host1的连接, 然后在 host1上使用这个连接即可.&lt;br /&gt;
-在 host2上执行&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    ssh -R  2121:host3:21 host1
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;远程端口转发三个参数含义:  远程机器绑定端口: 目标主机:目标主机(Listen) 端口. 上面命令的意思是: 让 host1监听自己的2121 端口, 然后将所有的数据, 从 host2 转发到 host3 的21端口.&lt;br /&gt;
-绑定之后, 可以在 host1 上直连 host3.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;ftp localhost:2121
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h5 id=&#34;toc_8&#34;&gt;注意点&lt;/h5&gt;
-
-&lt;ol&gt;
-&lt;li&gt;2121 远程机器端口会在 ssh 运行之后, 自动在 host1 机器上启动.&lt;/li&gt;
-&lt;li&gt;localhost 是针对host2 而言. 对比 Local 和 Remote 本质上 &lt;strong&gt;localhost&lt;/strong&gt; 是针对 proxy 角色而言的,  在 local forwarding proxy 是:  host2,  remote 的 proxy 也是 host2&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h4 id=&#34;toc_9&#34;&gt;典型应用场景&lt;/h4&gt;
-
-&lt;p&gt;你在本机上开发了一个 web (9000端口) , 然后你想向你的朋友演示, 但是你没有外网 ip, 所有不可能直接访问.&lt;br /&gt;
-幸运的是你有一个外网可以访问的 VPS(3000端口), 这时候的解决方案是:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    ssh -R 3000:loclhost:9000 user@vps
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;默认情况下, ssh 是不会允许远程机器来进行端口转发.  需要在 &lt;strong&gt;host1&lt;/strong&gt;上增加一行配置,&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;    vim /etc/ssh/sshd_config
-    GatewayPorts yes
-    sudo service ssh restart 
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;toc_10&#34;&gt;SSH Agent Forwarding&lt;/h3&gt;
-
-&lt;h4 id=&#34;toc_11&#34;&gt;典型应用场景&lt;/h4&gt;
-
-&lt;p&gt;本机 laptop 和 github.com 建立了信任关系, 可以直接 ssh 上去,  然后登陆自己的 vps, 希望能够在 vps 上登陆 github.com , 正常情况是把 vps 的 public key 放到 github.com 但是这样有点麻烦, 可以直接用下面:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;ssh -A  vpsserver  #会把本地的 ssh private key 带过去
-vpsservr$  ssh github.com
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;toc_12&#34;&gt;SSH 别名&lt;/h3&gt;
-
-&lt;h4 id=&#34;toc_13&#34;&gt;典型应用场景&lt;/h4&gt;
-
-&lt;p&gt;自己手上有几台机器, 名字都比较长, 可以采用 ssh 别名来进行.&lt;br /&gt;
-&lt;code&gt;~/.ssh/config&lt;/code&gt;&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;Host AliasName
-Hostname bastin.east.doc.example.com
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;toc_14&#34;&gt;SSH 嵌套&lt;/h3&gt;
-
-&lt;pre&gt;&lt;code&gt;ssh -t hostA  ssh -t hostB ssh -t hostC
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;toc_15&#34;&gt;SSH 有用参数&lt;/h3&gt;
-
-&lt;pre&gt;&lt;code&gt;-N Do not execute a remote command.  This is useful for just forwarding
-         ports (protocol version 2 only).
--T 不为这个连接分配 TTY
--f      Requests ssh to go to background just before command execution.  This
-         is useful if ssh is going to ask for passwords or passphrases, but
-         the user wants it in the background.
-         表示SSH连接成功后，转入后台运行。这样一来，你就可以在不中断SSH连接的情况下，在本地shell中执行其他操作。
-
--g      Allows remote hosts to connect to local forwarded ports. 
-
--n      Redirects stdin from /dev/null (actually, prevents reading from stdin).  This must be used when ssh is run in the background.  A common trick
-         is to use this to run X11 programs on a remote machine.  For example, ssh -n shadows.cs.hut.fi emacs &amp;amp; will start an emacs on shad-
-         ows.cs.hut.fi, and the X11 connection will be automatically forwarded over an encrypted channel.  The ssh program will be put in the back-
-         ground.  (This does not work if ssh needs to ask for a password or passphrase; see also the -f option.)
- -o &amp;quot;StrictHostKeyChecking no&amp;quot;  取消机器 fingerprint 检查, 避免输入 yes/no 交互
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;比较常见选项组合:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;-nNT
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;toc_16&#34;&gt;Rsync 指定端口&lt;/h3&gt;
-
-&lt;h4 id=&#34;toc_17&#34;&gt;背景&lt;/h4&gt;
-
-&lt;p&gt;需要从服务器A(10086)向服务器 B(22端口) rsync 数据, 处于安全性上考虑, 服务器 A 的 ssh 隐藏为其他端口(10086 为例), 如果直接 rsync 会提示 rsync 直接采用10086 端口&lt;br /&gt;
-无法进行数据同步.  解决方法:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;rsync -HavP -e &#39;ssh -p 22&#39; username@hostname:src dst
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h4 id=&#34;toc_18&#34;&gt;Reference&lt;/h4&gt;
-
-&lt;p&gt;&lt;a href=&#34;http://blog.trackets.com/2014/05/17/ssh-tunnel-local-and-remote-port-forwarding-explained-with-examples.html&#34;&gt;SSH Tunnel - Local and Remote Port Forwarding Explained With Examples&lt;/a&gt;&lt;/p&gt;
-
-&lt;h3 id=&#34;toc_19&#34;&gt;SSH 指定端口&lt;/h3&gt;
-
-&lt;p&gt;背景是为了安全起见, 通常会将 ssh 端口修改为非22端口, 而在使用 git 的时候, 通常是 ssh 端口, 常见的解决方法是修改 .git/conf 下调整为&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;ssh://git@domain.com:22/~/Projects/p1.git
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;每次都需要修改比较烦人, 比较简洁的方案是: 修改&lt;code&gt;.ssh/config&lt;/code&gt; 文件, 其中 &lt;code&gt;foo.com&lt;/code&gt; 是 git server 的域名&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;Host foo.com
-    HostName foo.com
-    Port 22
-    GSSAPIAuthentication no
-&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;I&lt;/p&gt;
 </description>
     </item>
     
