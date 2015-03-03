@@ -84,9 +84,131 @@ source types:
 &lt;pre&gt;&lt;code&gt;fpm -s dir -t rpm -n jq -v 1.4.0 --prefix=/bin/  jq
 
 
-http://golang-basic.blogspot.jp/2014/10/dynamic-programming-problem-maximum.html
+http://golang-basic.blogspot.jp/2014/10/dynamic-programming-problem-maximum.html  
 &lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
 &lt;/ol&gt;
+
+&lt;h3 id=&#34;toc_3&#34;&gt;fpm 制定 package 依赖&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;fpm -s dir -t rpm -n langley_online -v 1.0.0 -d &#39;thrift &amp;gt;= 0.9.1&#39; -d &#39;boost &amp;gt;= 1.41.0&#39; -d &#39;libevent &amp;gt;= 2.0.21&#39; -d &#39;fastbit &amp;gt;= 2.0.1&#39; --prefix=/home/&amp;lt;user&amp;gt;   --after-install=langley_online/install/install_hook.sh langley_online
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;toc_4&#34;&gt;如何打包 C/C++ 项目&lt;/h3&gt;
+
+&lt;p&gt;c/c++ 项目中比较讨厌的是项目的依赖, 为了提高开发效率需要将各种依赖包打包为 RPM, 最开始一直想不明白的是, 如果我 make &amp;amp;&amp;amp; make install 之后就 pack 了, 那么如何pack呢 ?   直到今天多管闲事帮同事打包thrift之后才知道 how.&lt;/p&gt;
+
+&lt;h4 id=&#34;toc_5&#34;&gt;How&lt;/h4&gt;
+
+&lt;p&gt;答案其实很简单&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;make
+make install DESTDIR=&amp;lt;dir&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;一般正常情况下, 会在&lt;code&gt;&amp;lt;dir&amp;gt;&lt;/code&gt; 下面生成 usr 目录, 然后利用 fpm 直接进入 &lt;code&gt;&amp;lt;dir&amp;gt;&lt;/code&gt; 进行打包, 指定&lt;code&gt;prefix=/&lt;/code&gt; 即可.&lt;br /&gt;
+仔细思考之后, 其实 fpm 在使用 &lt;code&gt;-s dir&lt;/code&gt; 的时候的本质, 就是pack 整个包, 因此可以推断在 &lt;code&gt;./configure --prefix=&amp;lt;dir&amp;gt;&lt;/code&gt; 应该也是可以的.&lt;/p&gt;
+
+&lt;h3 id=&#34;toc_6&#34;&gt;如何打包 python module&lt;/h3&gt;
+
+&lt;p&gt;Q: 我是 python 党, 用 pip 安装 python 的各种包好方便, but 线上没有访问外网权限, 怎么破?&lt;br /&gt;
+A: 为了安全线上只有部分机器可以访问外网, 因此除非你在内网搭建一个代理, 然后 pip 通过流量到 pip.  好消息是强大的 FPM 可以把python 的 pip 包打成 RPM.   python 的 thrift module 为例.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt; [root@svn02 ~]# fpm -s python -t rpm -a x86_64  thrift
+ no value for epoch is set, defaulting to nil {:level=&amp;gt;:warn}
+ no value for epoch is set, defaulting to nil {:level=&amp;gt;:warn}
+ Created package {:path=&amp;gt;&amp;quot;python-thrift-0.9.2-1.x86_64.rpm&amp;quot;}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;参数详解:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;-s INPUT_TYPE                 the package type to use as input (gem, rpm, python, etc)  
+-t OUTPUT_TYPE                the type of package you want to create (deb, rpm, solaris, etc)
+-a, --architecture ARCHITECTURE The architecture name.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;对应 python module, fpm 会自动下载对应的 package, 因此只需要指定 thrift 即可.&lt;/p&gt;
+
+&lt;h3 id=&#34;toc_7&#34;&gt;查看安装 pkg 详情&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;rpm -q &amp;lt;pkg&amp;gt; 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;eg:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;root@10.223.21.205:~# rpm -q thrift
+thrift-0.9.2-1.x86_64
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;toc_8&#34;&gt;yum 如何查看一个 rpm pkg 的详情&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;yum info  &amp;lt;pkg&amp;gt; 
+yum list  &amp;lt;pkg&amp;gt; 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;toc_9&#34;&gt;yum 制定安装特定版本&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;yum install &amp;lt;package name&amp;gt;-&amp;lt;version info&amp;gt;.&amp;lt;release info&amp;gt;.&amp;lt;architecture&amp;gt; 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;eg:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;sudo yum install httpd
+sudo yum install httpd-2.4.6-6
+sudo yum install httpd-2.4.6-6.fc20
+sudo yum install httpd-2.4.6-6.fc20.x84_64
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;toc_10&#34;&gt;下载 rpm 包, 然后手动进行安装&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;yumdownloader --resolve &amp;lt;package&amp;gt;
+yum localinstall &amp;lt;path to rpm&amp;gt;  
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;toc_11&#34;&gt;yum 取消安装操作&lt;/h3&gt;
+
+&lt;h4 id=&#34;toc_12&#34;&gt;背景&lt;/h4&gt;
+
+&lt;p&gt;最近有一个glibc 安全漏洞, 安全组同学要求进行升级, 利用 yum 升级之后, 发现坑爹有问题, 需要进行回滚. 可是 glibc 依赖 package 太多, &lt;code&gt;yum downgrade pkg1.rpm pkg2.rpm ...&lt;/code&gt; 会累死人.&lt;br /&gt;
+终于发现必杀技:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;yum history #查看历史列表
+
+ID     | Command line             | Date and time    | Action(s)      | Altered
+-------------------------------------------------------------------------------
+120 | install glibc            | 2014-08-26 09:19 | Install        |    5   
+yum history  undo  120 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;toc_13&#34;&gt;fpm 解决 gem 依赖问题&lt;/h3&gt;
+
+&lt;h4 id=&#34;toc_14&#34;&gt;背景&lt;/h4&gt;
+
+&lt;p&gt;公司有同事需要在自己的公司上的一台服务器利用 fpm 进行打包, 原来其实可以通过以下命令进行安装&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;yum install ruby-devel gcc
+gem install fpm  
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;当是在想为什么不用 fpm self-bootstrap, 利用 fpm pack 自己呢.&lt;/p&gt;
+
+&lt;p&gt;开始简单以为, 就 ok&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;fpm -s gem  -t rpm  fpm 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;结果发现自己想简单了, fpm 底层还有各种依赖. 后面通过以下方案解决:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;mkdir /tmp/gems
+gem install --no-ri --no-rdoc --install-dir /tmp/gems fpm 
+find /tmp/gems/cache -name &#39;*.gem&#39; | xargs -rn1 fpm -d ruby -d rubygems --prefix /usr/lib/ruby/gems/1.8 -s gem -t rpm 
+然后将  生成的 rpm 放到 repo server 里边, 建立索引即可.  
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;注意&lt;code&gt;--prefix&lt;/code&gt; 指的是 gem 的 &lt;code&gt;INSTALLATION DIRECTORY&lt;/code&gt; 可以通过以下方式获取&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;root@10.223.21.205:~# gem env | grep INSTALL
+- INSTALLATION DIRECTORY: /usr/lib/ruby/gems/1.8
+&lt;/code&gt;&lt;/pre&gt;
 </description>
     </item>
     
@@ -835,6 +957,33 @@ log.SetOutput(f)
 
 &lt;pre&gt;&lt;code&gt;log.SetFlags(log.Ldate | log.Ltime | log.Lshortfile)
 &lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;toc_28&#34;&gt;Golang 判断文件是否存在&lt;/h2&gt;
+
+&lt;h3 id=&#34;toc_29&#34;&gt;文件存在&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;if _, err := os.Stat(filename); err == nil {
+    fmt.Println(&amp;quot;file exists&amp;quot;)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;toc_30&#34;&gt;文件不存在&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;if _, err := os.Stat(filename); os.IsNotExist(err) {
+    fmt.Println(&amp;quot;no such filename&amp;quot;)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;toc_31&#34;&gt;好奇os.IsNotExist(err) 如何获取到错误类型?&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;// IsNotExist returns a boolean indicating whether the error is known to
+// report that a file or directory does not exist. It is satisfied by
+// ErrNotExist as well as some syscall errors.
+func IsNotExist(err error) bool {
+    return isNotExist(err)
+}
+#其中 isNotExist() 是为了实现跨平台, 在 error_plan9.go 和 error_unix.go 和 error_windows.go 里边分别实现了 isNotExist. 
+&lt;/code&gt;&lt;/pre&gt;
 </description>
     </item>
     
@@ -1116,186 +1265,6 @@ read_only       On #这里应该为 OFF
 &lt;p&gt;3: 设置 read_only = off&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;set GLOBAL read_only = false;  
-&lt;/code&gt;&lt;/pre&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Git Draft</title>
-      <link>http://yujinqiu.github.io/posts/GitDraft/</link>
-      <pubDate>Tue, 25 Nov 2014 21:36:12 CST</pubDate>
-      
-      <guid>http://yujinqiu.github.io/posts/GitDraft/</guid>
-      <description>
-
-&lt;h1 id=&#34;toc_0&#34;&gt;Git&lt;/h1&gt;
-
-&lt;h2 id=&#34;toc_1&#34;&gt;原子提交&lt;/h2&gt;
-
-&lt;p&gt;在我们修改文件的时候, 通常是希望一次提交只包含该次功能修改相关的操作.&lt;br /&gt;
-但是如果一个文件包含多个操作该怎么办 ?&lt;br /&gt;
-或者你的一个程序文件里边,为了调试写了很多的log日志输出, 你不希望这些语句ci 到server上, 该怎么办 ?&lt;/p&gt;
-
-&lt;p&gt;&lt;code&gt;git add -p&lt;/code&gt; 能够解决上面的场景(虽然已经add 过,还是需要add 到 stage 进去).&lt;br /&gt;
-执行之后会提示:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;Stage this hunk [y,n,q,a,d,/,e,?]?
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;hit &lt;code&gt;s&lt;/code&gt; to split whatever change into smaller chunks. This only works if there is at least one unchanged line in the &amp;ldquo;middle&amp;rdquo; of the hunk, which is where hunk will be split&lt;br /&gt;
-then hit &lt;code&gt;y&lt;/code&gt; to stage that chunk&lt;br /&gt;
-or &lt;code&gt;n&lt;/code&gt; to not stage that hunk&lt;br /&gt;
-or &lt;code&gt;e&lt;/code&gt; to manually edit the chunk (useful when git can&amp;rsquo;t split it automatically)&lt;br /&gt;
-and &lt;code&gt;d&lt;/code&gt; to exit or go to the next file.&lt;br /&gt;
-Use &lt;code&gt;?&lt;/code&gt; to get the whole list of available options.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_2&#34;&gt;Git checkout 某个分支&lt;/h2&gt;
-
-&lt;h3 id=&#34;toc_3&#34;&gt;背景&lt;/h3&gt;
-
-&lt;p&gt;在使用 git 的时候, 经常会使用第三方开发的程序/lib 的特定版本(兼容性问题) ,&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;git tag -l
-git checkout tags/&amp;lt;tag_name&amp;gt; 
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;toc_4&#34;&gt;Git checkout 远程的一个分支&lt;/h2&gt;
-
-&lt;h3 id=&#34;toc_5&#34;&gt;背景&lt;/h3&gt;
-
-&lt;p&gt;在多人协作的开发场景下, Dev B 提交了一个分支, 需要拉到本地.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;git fetch origin 
-git branch -v -a 
-git checkout -b test origin/test
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;toc_6&#34;&gt;Git 多人开发流程&lt;/h2&gt;
-
-&lt;h3 id=&#34;toc_7&#34;&gt;如何发 PR&lt;/h3&gt;
-
-&lt;p&gt;以下以 wiki-pages 为例&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;p&gt;把项目 fork 到自己名下，然后 clone 到本地&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;git clone git@git.xiaojukeji.com:yexiliang/wiki-pages.git
-&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;将原始项目加为上游&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;git remote add upstream git@git.xiaojukeji.com:op/wiki-pages.git
-&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;在本地项目建立分支并切换到该分支&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;git checkout -b dev
-&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;在 dev 分支上开发，提交&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;touch foo.txt
-git add foo.txt
-git commit
-&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;切换到 master 分支并合并上游&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;git checkout master
-git fetch upstream
-git merge upstream/master
-&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;切换到 dev 分支，合并 master，推送代码&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;git checkout dev
-git rebase master
-git push
-&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;到 github / gitlab 选 dev 分支发 pull request&lt;/p&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&#34;toc_8&#34;&gt;Git conflict 如何保持一方修改&lt;/h2&gt;
-
-&lt;h3 id=&#34;toc_9&#34;&gt;背景&lt;/h3&gt;
-
-&lt;p&gt;在多人协作的情况下, 经常会出现冲突, 有时候不想 merge conflict, 直接使用双方的修改内容.&lt;/p&gt;
-
-&lt;h4 id=&#34;toc_10&#34;&gt;保持本地修改, 放弃远程版本&lt;/h4&gt;
-
-&lt;pre&gt;&lt;code&gt;git checkout --ours filename.c
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h4 id=&#34;toc_11&#34;&gt;使用远程版本, 放弃本地修改&lt;/h4&gt;
-
-&lt;pre&gt;&lt;code&gt;git checkout --theirs filename.c
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;toc_12&#34;&gt;Git 回滚到上一个版本&lt;/h2&gt;
-
-&lt;p&gt;作为项目的负责人, 通过 code review 并不能保证其中提交内容ok, 如果出现异常, 需要仅限回滚.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;branch1    branch2
-    \        /
-     \      /
-      \    /
-       \  /
-       new branch (hashcode)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;假设用户提交的 branch2  有问题, 需要回滚回 branch1&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;git  revert  -m 1  hashcode
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;如何得到 &lt;code&gt;-m&lt;/code&gt; 之后对应的 branch  是  1 ? 2 ?&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;/go/src/ServiceTree$ git show af24b57a530adcf24d098676809bc88939336063  
-commit af24b57a530adcf24d098676809bc88939336063  
-Merge: 609bb8e d160c3f   #注意这里
-Date:   Sat Dec 27 11:30:37 2014 +0800   
-
-Merge branch &#39;dev&#39; of ssh://git.xiaojukeji.com:22/op/servicetree into dev
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;从 Merge 中可以选择 &lt;code&gt;-m&lt;/code&gt; 对应的选项.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_13&#34;&gt;Git 删除远程 repo 文件, 保留本地文件&lt;/h2&gt;
-
-&lt;h3 id=&#34;toc_14&#34;&gt;背景&lt;/h3&gt;
-
-&lt;p&gt;在项目开发过程中, 有一个策略文件, 由于经常需要变更不太适合进入 repo, 最开始的时候没有考虑清楚提交进去,  现在需要从远程 repo 删除, 但是需要保留本地文件, 因为项目运行需要依赖这个文件.&lt;/p&gt;
-
-&lt;h3 id=&#34;toc_15&#34;&gt;解决方案&lt;/h3&gt;
-
-&lt;pre&gt;&lt;code&gt;git rm --cached  FILE
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;toc_16&#34;&gt;Tortoise Git 免密码 Push 问题&lt;/h2&gt;
-
-&lt;h3 id=&#34;toc_17&#34;&gt;背景&lt;/h3&gt;
-
-&lt;p&gt;和 FE 同学进行合作, 为了提高协同工作的效率, 开始手把手教 FE 同学使用 Git, 其中为了避免 FE 同学在 git clone 和 push 的时候输入密码, 使用 Puttygen 生成对应的公钥和私钥对, 开始的时候一切都 ok.&lt;br /&gt;
-第二天 FE 同学反馈说需要输入密码. 考虑到 FE 同学进行重启, 将问题怀疑在ssh-agent 没有启动, search 之后, 常见的方案是:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;eval `ssh-agent -s` 
-ssh-add  $&amp;lt;path_to_private_key&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;发现没有效果.   继续 search 之后, 发现Puttygen 上面居然有一个 Pagent, 看名字应该是这个东西.  然后启动之后, 居然没有弹出窗体, 难道没有启动? 继续执行, 提示已经 running. WTF!!!. 无意间想到, 可能在 系统托盘(system tray)里边, 找到之后, 右键直接 add key 之后一切 ok.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_18&#34;&gt;Git tag&lt;/h2&gt;
-
-&lt;h3 id=&#34;toc_19&#34;&gt;背景&lt;/h3&gt;
-
-&lt;p&gt;在使用git的过程中, 我们通常喜欢利用 tag 来进行标记, 进行发布.&lt;/p&gt;
-
-&lt;h3 id=&#34;toc_20&#34;&gt;How to&lt;/h3&gt;
-
-&lt;pre&gt;&lt;code&gt;git tag -a  v1.0.0 #会提示对应输入, 要求输入 annotation
-git tag -l -n3  #注意-n 和 3 之间不能有空格. 
-# three lines of message for every tag
 &lt;/code&gt;&lt;/pre&gt;
 </description>
     </item>
@@ -1590,6 +1559,102 @@ ls | grep -E &#39;\.log$&#39; | parallel -m mv {} destdir
 &lt;/ol&gt;
 
 &lt;p&gt;I&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Mac os X Draft</title>
+      <link>http://yujinqiu.github.io/posts/Mac/</link>
+      <pubDate>Tue, 25 Nov 2014 21:36:12 CST</pubDate>
+      
+      <guid>http://yujinqiu.github.io/posts/Mac/</guid>
+      <description>
+
+&lt;p&gt;#Mac os X
+##Yosemite 升级之后应该进行什么操作?&lt;br /&gt;
+1. 从 mavericks 升级到 mac os x 之后, 会遇到一些比较诡异的问题(比如找不到 clang), 下面的命令会帮助你提前避免一些问题.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;sudo xcode-select --install  
+sudo xcode-select --switch /Applications/Xcode.app   
+sudo xcodebuild -license  
+sudo gem update --system  
+sudo gem install xcodeproj   
+sudo brew update   
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ol&gt;
+&lt;li&gt;同时 Yosemite 会收集用户的隐私数据, 建议通过&lt;a href=&#34;https://fix-macosx.com/&#34;&gt;fix-macosx&lt;/a&gt;进行修复&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&#34;toc_0&#34;&gt;Mac os X 窗体最小化之后恢复&lt;/h3&gt;
+
+&lt;p&gt;Mac os X 在最小化窗体之后, &lt;code&gt;command + tab&lt;/code&gt; 是不能够直接恢复, 具体操作如下&lt;br /&gt;
+command + tab 定位到对应的 Application 然后 &lt;code&gt;alt&lt;/code&gt; 然后同时放开 &lt;code&gt;alt command&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;toc_1&#34;&gt;清除 DNS cache&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;sudo dscacheutil -flushcache
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;toc_2&#34;&gt;mac os x 权限位问题&lt;/h3&gt;
+
+&lt;p&gt;在 mac os terminal 中我们经常可以看到 带有 &lt;code&gt;+&lt;/code&gt;  和  &lt;code&gt;@&lt;/code&gt;  的权限问题&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;-rw-r--r--@  1 knight  staff      775 Feb 26  2014 Apple.md
+-rw-r--r--   1 knight  staff     3608 Oct 25 14:23 CliDraft.md
+-rw-r--r--@  1 knight  staff     1208 Nov 16  2013 EspeakDraft.md
+-rw-r--r--@  1 knight  staff     3470 Dec 31  2013 FPDraft.md
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;toc_3&#34;&gt;@ 字符&lt;/h4&gt;
+
+&lt;p&gt;&lt;code&gt;@&lt;/code&gt; 表示这个文件拥有扩展的属性( additional attribute) , 可以通过&lt;code&gt;xattr&lt;/code&gt; 来查看详细信息:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;xattr -l  &amp;lt;filename&amp;gt; 
+
+➜  engineerdraft git:(master) ✗ xattr -l Apple.md
+com.apple.TextEncoding: utf-8;134217984
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;扩展的属性用途是: 定义一些打开文件的程序比如 Mou 打开 markdown 文件.&lt;/p&gt;
+
+&lt;h4 id=&#34;toc_4&#34;&gt;+ 字符&lt;/h4&gt;
+
+&lt;p&gt;+ 表示这个文件用户 ACL(Access Control List) 相对于文件的权限能够耕细粒度的控制.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;ls -le 可以查看文件的 acl 权限
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;##如何快速访问Menu或者mac访问Menu的快捷键
+在window的用户会有这样的习惯, 通过alt来快速访问菜单栏. 在mac 下怎么通过键盘来快速访问?
+终于在&lt;a href=&#34;http://lifehacker.com/321595/access-the-dock-and-menu-bar-from-your-keyboard&#34;&gt;access-the-dock-and-menu-bar-from-your-keyboard&lt;/a&gt; 找到方法.    
+其实很简单就是通过 &lt;code&gt;ctrl+F2&lt;/code&gt;(menubar) &lt;code&gt;ctrl+F3&lt;/code&gt;(dock), 然后直接输入对应的菜单名称. 比如:&lt;code&gt;View&lt;/code&gt;, 输入回车即可选择, 然后继续输入对应的名称,或者通过方向键即可选择.
+打开Menu的Help的快捷键是&lt;code&gt;command + shift + /&lt;/code&gt;, 可以这样记住: shift+/ = ?  快捷键就是command + ? == help&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_5&#34;&gt;mac 计算md5 值&lt;/h2&gt;
+
+&lt;p&gt;在linux 下有md5sum 这个命令, 在mac 下发现居然没有. 仔细查找之后发现原来叫md5. 运行之后发现和md5sum输出的结果不一样, 其实可以利用&lt;code&gt;md5 -r&lt;/code&gt;就可以得到一样的结果.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_6&#34;&gt;mac 版本管理&lt;/h2&gt;
+
+&lt;p&gt;mac 的 keynote, pages, numbers 和原始文本编辑器是具有版本管理的. 入口在&lt;code&gt;File-&amp;gt; revert to -&amp;gt; brow all version&lt;/code&gt;, 可以进入查看和 time machine 一样的界面.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_7&#34;&gt;快速打开stikcy note 快捷键&lt;/h2&gt;
+
+&lt;p&gt;shift+ command + y ,  退出:  command + q&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_8&#34;&gt;屏幕放大&lt;/h2&gt;
+
+&lt;p&gt;ctrl + 鼠标放大,缩小&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_9&#34;&gt;快速预览文件( quick look)&lt;/h2&gt;
+
+&lt;h3 id=&#34;toc_10&#34;&gt;背景&lt;/h3&gt;
+
+&lt;p&gt;经常我们在命令行里边,看到某个文件之后, 希望能够 quick look, 一般的做法是, open File 打开, 然后关闭, 其实我们只是希望能够简单看一下, 可以利用以下命令来实现 :&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;qlmanage -p  File
+&lt;/code&gt;&lt;/pre&gt;
 </description>
     </item>
     

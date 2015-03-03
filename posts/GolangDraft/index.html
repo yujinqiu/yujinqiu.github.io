@@ -454,6 +454,33 @@ log.SetOutput(f)
 <pre><code>log.SetFlags(log.Ldate | log.Ltime | log.Lshortfile)
 </code></pre>
 
+<h2 id="toc_28">Golang 判断文件是否存在</h2>
+
+<h3 id="toc_29">文件存在</h3>
+
+<pre><code>if _, err := os.Stat(filename); err == nil {
+    fmt.Println(&quot;file exists&quot;)
+}
+</code></pre>
+
+<h3 id="toc_30">文件不存在</h3>
+
+<pre><code>if _, err := os.Stat(filename); os.IsNotExist(err) {
+    fmt.Println(&quot;no such filename&quot;)
+}
+</code></pre>
+
+<h3 id="toc_31">好奇os.IsNotExist(err) 如何获取到错误类型?</h3>
+
+<pre><code>// IsNotExist returns a boolean indicating whether the error is known to
+// report that a file or directory does not exist. It is satisfied by
+// ErrNotExist as well as some syscall errors.
+func IsNotExist(err error) bool {
+    return isNotExist(err)
+}
+#其中 isNotExist() 是为了实现跨平台, 在 error_plan9.go 和 error_unix.go 和 error_windows.go 里边分别实现了 isNotExist. 
+</code></pre>
+
         </section>
   
       

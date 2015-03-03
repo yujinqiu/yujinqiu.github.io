@@ -1,0 +1,249 @@
+
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <base href="http://yujinqiu.github.io">
+    <title>  </title>
+    <link rel="canonical" href="http://yujinqiu.github.io/posts/%E9%83%A8%E7%BD%B2%E7%B3%BB%E7%BB%9F/">
+    
+
+<link rel="stylesheet" href="/css/poole.css">
+
+<link rel="stylesheet" href="/css/lanyon.css">
+
+</head>
+
+
+<body class="theme-base-0b">
+  
+
+
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+
+
+<div class="sidebar" id="sidebar">
+
+  <nav class="sidebar-nav">
+    <p><img src="img/logo.png" width="80"></p>
+    <a class="sidebar-nav-item" href="/">Home</a>
+
+    <a class="sidebar-nav-item" href="/posts">Blog</a>
+
+    <a class="sidebar-nav-item" href="https://github.com/yujinqiu">Github</a>
+  </nav>
+
+  <div class="sidebar-item">
+    <p>
+      Powered by <a href="http://hugo.spf13.com">Hugo</a>. Design reused from <a href="https://github.com/spencerlyon2">Spencer Lyon</a> which was modified from this Jekyl theme <a href="http://lanyon.getpoole.com">Lanyon</a> under this <a href="https://github.com/spencerlyon2/hugo_gh_blog/blob/master/LICENSE">licence</a>.
+    </p>
+  </div>
+</div>
+
+
+
+
+  
+  <div class="wrap">
+    <div class="masthead">
+      <div class="container">
+        <h3 class="masthead-title">
+          <a href="/posts" title="Blog">Blog Posts</a>
+        </h3>
+        <hr>
+      </div>
+    </div>
+
+    
+    <div class="container content">
+      <div class="post-tile-meta">
+        <h1 class="post-title"></h1>
+        Tue Jan 1, 2008 
+<div class="container category">
+  <ul class="catlist">
+    <li><em>Categories: </em></li>
+    
+  </ul>
+</div>
+</p>
+      </div>
+        <section id="main">
+          
+
+<h1 id="toc_0">部署系统</h1>
+
+<h2 id="toc_1">打包介绍</h2>
+
+<h3 id="toc_2">背景</h3>
+
+<p>部署系统利用 RPM 包进行安装, 在完成打包之后只需要<code>yum install &lt;pkg&gt;</code> 就可以轻松搞定.  为避免给大家频繁提问和答疑中断, 下文对打包进行详细说明.</p>
+
+<h3 id="toc_3">原理</h3>
+
+<p>当我们在运行 <code>yum install &lt;pkg&gt;</code> 之后, yum 会根据<code>/etc/yum.repos.d</code> 下的配置文件到对应的 repo 查找对应的 pkg. 其中我们在深圳机房搭建了自己的 repo server.  配置在<code>local.repo</code></p>
+
+<pre><code>    [local_repo]
+    name=Local Repository
+    baseurl=http://svn02.qq/centos/os/6/x86_64/
+    enabled=1
+    gpgcheck=0
+</code></pre>
+
+<p>所以如果你<code>yum search &lt;pkg&gt;</code>, 没有发现自己需要安装的 pkg ,说明没有在 repo 中创建对应的 repo.  需要您打包一个程序并放入到 yum repo 中.</p>
+
+<h3 id="toc_4">如何打包一个程序并放入 yum repo</h3>
+
+<p>打包 RPM 利用到了强大的 <a href="https://github.com/jordansissel/fpm">FPM 工具</a>.  该工具功能非常强大, 下面结合具体场景只介绍常用的功能, 更多功能需要自己学习.</p>
+
+<h4 id="toc_5">Case 1</h4>
+
+<p>Q: 我是 python 党, 用 pip 安装 python 的各种包好方便, but 线上没有访问外网权限, 怎么破?
+A: 为了安全线上只有部分机器可以访问外网, 因此除非你在内网搭建一个代理, 然后 pip 通过流量到 pip.  好消息是强大的 FPM 可以把python 的 pip 包打成 RPM.   python 的 thrift module 为例.</p>
+
+<pre><code> [root@svn02 ~]# fpm -s python -t rpm -a x86_64  thrift
+ no value for epoch is set, defaulting to nil {:level=&gt;:warn}
+ no value for epoch is set, defaulting to nil {:level=&gt;:warn}
+ Created package {:path=&gt;&quot;python-thrift-0.9.2-1.x86_64.rpm&quot;}
+</code></pre>
+
+<p>参数详解:</p>
+
+<pre><code>-s INPUT_TYPE                 the package type to use as input (gem, rpm, python, etc)  
+-t OUTPUT_TYPE                the type of package you want to create (deb, rpm, solaris, etc)
+-a, --architecture ARCHITECTURE The architecture name.
+</code></pre>
+
+<p>对应 python module, fpm 会自动下载对应的 package, 因此只需要指定 thrift 即可.<br />
+完成打包之后, 如果不需要了解其他, 直接跳到&rdquo;如何将 package 加入 repo&rdquo;.</p>
+
+<h4 id="toc_6">Case 2</h4>
+
+<p>如何打包一个开源程序<br />
+Q: 我想要 rpm 安装 python2.7 怎么破?<br />
+A: 本人不是专业 python 党, 鉴于之前在个人电脑上升级 python2.6 到 python 2.7 导致 yum 不可用留下阴影, python 党自己折腾吧.  下面以 Go 为例<br />
+go 程序手工安装步骤:<br />
+1. wget 下载对应的程序<br />
+2. tar -C /usr/local -xzf go$VERSION.$OS-$ARCH.tar.gz<br />
+3. export PATH=$PATH:/usr/local/go/bin 到 /etc/profile 里边.<br />
+所以 rpm 安装之后应该实现的目标是:<br />
+1. 将 go 程序安装到/usr/local 内<br />
+2. 安装完成之后, 将<code>export PATH=$PATH:/usr/local/go/bin</code>添加到 /etc/profile 内, 可以通过后置命令来执行.</p>
+
+<p>Show Me the Code:</p>
+
+<pre><code>wget https://storage.googleapis.com/golang/go1.4.0.linux-amd64.tar.gz 
+tar -xzf go1.4.0.linux-amd64.tar.gz #得到一个 go 目录
+mkdir go/postscript  #创建一个后置命令的目录, 里面存储对应的后置脚本
+#创建对应 export.sh 脚本
+cat export.sh
+echo 'export PATH=$PATH:/usr/local/go/bin/' &gt;&gt; /etc/profile
+
+[root@svn02 ~]# fpm -s dir -t rpm -n golang -v 1.4.0 --prefix=/usr/local --after-install=go/postscript/export.sh  go
+no value for epoch is set, defaulting to nil {:level=&gt;:warn}
+no value for epoch is set, defaulting to nil {:level=&gt;:warn}
+Created package {:path=&gt;&quot;golang-1.4.0-1.x86_64.rpm&quot;}
+</code></pre>
+
+<p>完成打包之后, 如果不需要了解其他, 直接跳到&rdquo;如何将 package 加入 repo&rdquo;.</p>
+
+<h3 id="toc_7">Case 3</h3>
+
+<p>如何打包 RD 开发的程序<br />
+Q: RD 开发了一个程序需要发布到线上,说是可以打成 RPM, 然后 <code>yum install -y pkg</code> 一键部署<br />
+A: RD RPM 上线需要有几个前提: 1: 全量发布(程序,配置, 数据) 2:主干发布(打包脚本会自动去 svn/git 对应 repo下载最新程序, 分支不支持,以后也不打算支持, 建议走 分支开发, 主干发布), 达到这个要求之后, 即可联系 OP, 进行 RPM 打包.</p>
+
+<p>OP 操作:</p>
+
+<pre><code>   cd /home/xiaoju/opbin/buildpackage 
+</code></pre>
+
+<p>如果新增模块: copy 一份配置出来, 修改内部配置. lanley 为例</p>
+
+<pre><code>{
+    &quot;Name&quot;: &quot;langley&quot;,                                       #模块名
+    &quot;Version&quot;: &quot;1&quot;,                                          #版本, 新增模块为1, 以后系统会自动新增
+    &quot;Scm&quot;: &quot;git&quot;,                                            #代码仓库
+    &quot;Path&quot;: &quot;git@git.xiaojukeji.com:foundation/langley.git&quot;, #代码路径
+    &quot;Prefix&quot;: &quot;/data/bi/langley_src&quot;,                        #安装路径前缀
+    &quot;BuildDir&quot;: &quot;./&quot;,                                        #打包路径, 因为有些 package 需要在 ./output 下
+    &quot;Depends&quot;: &quot;&quot;,                                           #依赖模块
+    &quot;User&quot;: &quot;xiaoju&quot;,                                        #安装完成之后属主
+    &quot;Group&quot;: &quot;xiaoju&quot;,                                       #安装完成之后属主
+    &quot;Category&quot;: &quot;corp:didi,depart:dache,module:tag-mongo,resource:package&quot;,  #服务树挂载节点
+    &quot;InputType&quot;: &quot;dir&quot;,                                      #基本上不用修改
+    &quot;OutputType&quot;: &quot;rpm&quot;,                                     #基本上不用改
+    &quot;Description&quot;: &quot;osprey php&quot;                              #模块描述
+}
+</code></pre>
+
+<p>然后执行打包.<br />
+如果已经打包过模块, 直接打包.</p>
+
+<p>执行打包:</p>
+
+<pre><code>./build -file=package.info 
+</code></pre>
+
+<p>正常情况下进度条100% 之后, 就 ok, 会自动将 package 加入 repo 中, 对的, 就是全自动的, 可以不用理会下面的&rdquo; 如何将 package 加入 repo&rdquo;, 就是这么任性.</p>
+
+<h3 id="toc_8">如何将 package 加入 repo</h3>
+
+<p>Q: 我已经将程序打包成 RPM 了,  为啥<code>yum install -y</code> 还不生效呢?<br />
+A: 生成 RPM 包之后, 需要将 RPM 包放到 yum server 中, 还记得最开始的 local.repo不? 对! 需要放到OP自建的 yum repo( 目前只有 op 有权限)</p>
+
+<pre><code>svn02.qq:/home/xiaoju/data/repository/centos/os/6/x86_64/Packages/
+cd /home/xiaoju/data/repository/centos/os/6/x86_64
+createrepo --update ./  #建立索引, 不可以偷懒
+</code></pre>
+
+<p>完成打包之后, 就可以在各台机器上<code>yum install &lt;pkg&gt;</code> 了, 由于 yum 本地会 cache, 因此如果 search 不到可以利用</p>
+
+<pre><code>yum  clean all       #Remove cached data
+yum search &lt;pkg&gt;     #此时,应该可以 search 到. 
+yum install -y &lt;pkg&gt; 
+</code></pre>
+
+        </section>
+  
+      
+
+<div class="container">
+  <hr />
+  
+    <span class="left">
+    &nbsp; <em>&laquo; Previous:</em> <a class="next" href="http://yujinqiu.github.io/posts/VimDraft/"></a>
+    </span>
+  
+
+  
+    <span class="right">
+    <em>Next: </em><a class="next" href="http://yujinqiu.github.io/posts/NginxDraft/"> &nbsp; </a> &raquo;
+    </span>
+  
+</div>
+
+    </div>
+  </div>
+
+  <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+
+  <br />
+
+
+  
+  
+
+<div class="container content">
+<footer>
+</footer>
+</div>
+
+</body>
+</html>
+
+
+
+

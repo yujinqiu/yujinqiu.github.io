@@ -198,6 +198,23 @@ systemctl start sshd.service
 systemctl status sshd.service
 </code></pre>
 
+<h2 id="toc_15">故意生成 coredump</h2>
+
+<p>最近在研究如何限制 linux coredump, 主要解决问题</p>
+
+<ol>
+<li>避免多线程程序同时大量 coredump<br /></li>
+
+<li><p>避免大内存程序 coredump<br />
+其中为了方便测试, 研究如何强制 coredump ,  方法其实很简单<br />
+其中 <code>python</code> 进入交互模式, 然后 <code>ctrl + \</code> 强制进行 coredump</p>
+
+<h3 id="toc_16">原理</h3>
+
+<p><code>ctrl + \</code> 在 linux 平台上会生成 QUIT signal , 通常会导致改程序退出或者 coredump<br />
+这个是 *ninx 平台的特点, 和python 没有关系, 你也可以 <code>sleep 30</code> 然后 <code>ctrl + \</code> 强制进行 coredump .</p></li>
+</ol>
+
         </section>
   
       
@@ -206,13 +223,13 @@ systemctl status sshd.service
   <hr />
   
     <span class="left">
-    &nbsp; <em>&laquo; Previous:</em> <a class="next" href="http://yujinqiu.github.io/posts/VimDraft/"></a>
+    &nbsp; <em>&laquo; Previous:</em> <a class="next" href="http://yujinqiu.github.io/posts/hugoblog/">Deploying blog with docker and hugo</a>
     </span>
   
 
   
     <span class="right">
-    <em>Next: </em><a class="next" href="http://yujinqiu.github.io/posts/NginxDraft/"> &nbsp; </a> &raquo;
+    <em>Next: </em><a class="next" href="http://yujinqiu.github.io/posts/VimDraft/"> &nbsp; </a> &raquo;
     </span>
   
 </div>

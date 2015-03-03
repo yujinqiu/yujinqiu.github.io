@@ -272,6 +272,17 @@ Hostname bastin.east.doc.example.com
 
 <p>通过读取 private key 得到 public key , 然后直接对比 public 可以 即可</p>
 
+<h3 id="toc_22">获取机器的fingerprint</h3>
+
+<h4 id="toc_23">背景</h4>
+
+<p>最近在折腾<a href="https://github.com/tg123/sshpiper">sshpiper</a> 的时候遇到了一个诡异的问题, 需要判断 sshpiper 连接到的是哪台机器上.  在第一次连接的时候 ssh 会显示连接机器的 fingerprint, 因此需要通过机器的 fingerprint 来确定对应的机器.</p>
+
+<h4 id="toc_24">获取方法</h4>
+
+<pre><code>ssh-keygen -l -f &lt;privatekey&gt;
+</code></pre>
+
         </section>
   
       
@@ -280,7 +291,7 @@ Hostname bastin.east.doc.example.com
   <hr />
   
     <span class="left">
-    &nbsp; <em>&laquo; Previous:</em> <a class="next" href="http://yujinqiu.github.io/posts/Mac/">Mac os X Draft</a>
+    &nbsp; <em>&laquo; Previous:</em> <a class="next" href="http://yujinqiu.github.io/posts/ParallelDraft/">CliDraft</a>
     </span>
   
 
