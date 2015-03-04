@@ -68,6 +68,22 @@
 
 <article class="post">
     <header>
+      <h2><a href='http://yujinqiu.github.io/posts/Terminology/'> Terminology</a> </h2>
+      <div class="meta">Wed, Mar 4, 2015</div>
+    </header>
+
+    Concise description It is the client’s responsibility to perform idempotent operations or de-dupe.
+    <footer style="text-align:right; ">
+        <a href='http://yujinqiu.github.io/posts/Terminology/'><nobr>Read more →</nobr></a>
+    </footer>
+    <hr/>
+</article>
+
+            
+            
+
+<article class="post">
+    <header>
       <h2><a href='http://yujinqiu.github.io/posts/BigDataDraft/'> BigDataDraft</a> </h2>
       <div class="meta">Mon, Feb 2, 2015</div>
     </header>
@@ -319,46 +335,6 @@ ssh -D 的本质上是一个 sock5 的代理, 不是 http/https 代理, 所以�
 
     <footer style="text-align:right; ">
         <a href='http://yujinqiu.github.io/posts/CurlDraft/'><nobr>Read more →</nobr></a>
-    </footer>
-    <hr/>
-</article>
-
-            
-            
-
-<article class="post">
-    <header>
-      <h2><a href='http://yujinqiu.github.io/posts/GolangDraft/'> GolangDraft</a> </h2>
-      <div class="meta">Fri, Dec 12, 2014</div>
-    </header>
-
-    <h2>Golang 相关 tools 安装</h2>
-
-<h3>背景</h3>
-
-<p>在学习 golang 过程中, 看到 Rob Pike 大神的 <a href="https://talks.golang.org/2012/waza.slide#19">slide</a> , 感觉炫酷.  安装过程如下:</p>
-
-<pre><code>go get golang.org/x/tools/cmd/present
-</code></pre>
-
-<p><strong>注意</strong> 如果期望手工 build, 进入目录:  <code>go/src/golang.org/x/tools/cmd/present</code>  不要搞错.</p>
-
-<h2>输出前缀为0的数字</h2>
-
-<h3>背景</h3>
-
-<p>在运维过程中为了管理大量的机器, 通常会对机器进行编号, 比如 <code>web001.$idc</code> <code>web0002.$idc</code>,
-在 golang 中的解决方案:</p>
-
-<pre><code>fmt.Printf(&quot;%03d&quot;, seq)
-</code></pre>
-
-<p>说明:<br />
-%3d 表示输出数字的宽度至少为 3<br />
-0   填充前导的0而非空格；对于数字，这会将填充移到正负号之后</p>
-
-    <footer style="text-align:right; ">
-        <a href='http://yujinqiu.github.io/posts/GolangDraft/'><nobr>Read more →</nobr></a>
     </footer>
     <hr/>
 </article>

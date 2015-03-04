@@ -270,6 +270,15 @@ root@host:~# date -d @1420952676
 Sun Jan 11 13:04:36 CST 2015
 </code></pre>
 
+<h3 id="toc_28">crontab</h3>
+
+<h4 id="toc_29">新增 crontab</h4>
+
+<p>经常我们需要在 crontab 中新增一个记录, 快捷的解决方案是:</p>
+
+<pre><code>(crontab -l ; echo '*/1 * * * * CMD') | crontab -
+</code></pre>
+
         </section>
   
       
