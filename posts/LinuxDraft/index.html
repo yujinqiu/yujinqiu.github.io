@@ -215,6 +215,30 @@ systemctl status sshd.service
 这个是 *ninx 平台的特点, 和python 没有关系, 你也可以 <code>sleep 30</code> 然后 <code>ctrl + \</code> 强制进行 coredump .</p></li>
 </ol>
 
+<h2 id="toc_17">疑难杂症</h2>
+
+<h3 id="toc_18">背景</h3>
+
+<p>今天同事反馈, <strong>tail</strong> 一个文件的时候 提示:   no space left on device<br />
+然后第一反应是 <code>df</code> 查看磁盘空间:</p>
+
+<pre><code>Filesystem            Size  Used Avail Use% Mounted on
+/dev/sda1             9.9G  2.1G  7.4G  22% /
+/dev/sda3              20G 1009M   18G   6% /usr/local
+tmpfs                  32G   16K   32G   1% /dev/shm
+/dev/sda4             794G  244G  511G  33% /home
+</code></pre>
+
+<p>没有看到任何空间不足的提示, 难道是 inode 节点空间不足?   <code>df -i</code> 发现也不是.<br />
+search 之后发现原来是 kernel 2.6.13 开始引入 Inotify 导致.  需要修改 <strong>max_user_watches</strong></p>
+
+<pre><code>查看: sysctl fs.inotify.max_user_watches   
+修改: sysctl fs.inotify.max_user_watches = 16384
+
+ /proc/sys/fs/inotify/max_user_watches 表示:  
+ This specifies an upper limit on the number of watches that can be created per real user ID.
+</code></pre>
+
         </section>
   
       
@@ -223,7 +247,7 @@ systemctl status sshd.service
   <hr />
   
     <span class="left">
-    &nbsp; <em>&laquo; Previous:</em> <a class="next" href="http://yujinqiu.github.io/posts/hugoblog/">Deploying blog with docker and hugo</a>
+    &nbsp; <em>&laquo; Previous:</em> <a class="next" href="http://yujinqiu.github.io/posts/VimDraft/"></a>
     </span>
   
 
