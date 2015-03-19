@@ -998,6 +998,73 @@ func IsNotExist(err error) bool {
 }
 #其中 isNotExist() 是为了实现跨平台, 在 error_plan9.go 和 error_unix.go 和 error_windows.go 里边分别实现了 isNotExist. 
 &lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;toc_32&#34;&gt;Golang 函数数组&lt;/h2&gt;
+
+&lt;h3 id=&#34;toc_33&#34;&gt;定义&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;var farr []func()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;toc_34&#34;&gt;定义并初始化&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;func do_stuff() {
+    fmt.Println(&amp;quot;do silly stuff&amp;quot;)
+}
+var  farr []func(){do_stuff}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;toc_35&#34;&gt;调用数组内的函数&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;farr[0]()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;toc_36&#34;&gt;高阶函数( high order 函数)&lt;/h3&gt;
+
+&lt;p&gt;所谓高阶函数其实就是一个比较特殊的函数, 该函数可以以输入函数, 返回函数&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;package main
+
+import &amp;quot;fmt&amp;quot;
+
+func z(i int) int {
+    return i * 100
+}
+
+func foo(bar func(int)int) (func(int) int) {
+    base := bar(1)
+    return func(y int) int {
+        return x + base  //闭包   
+    }
+}
+
+func main () {
+    a := foo(z)
+    fmt.Printf(&amp;quot;result: %v\n&amp;quot;, a(2))
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;toc_37&#34;&gt;Golang 标准库&lt;/h2&gt;
+
+&lt;p&gt;import &amp;ldquo;math/rand&amp;rdquo; , 该 package 实现伪随机数生成&lt;br /&gt;
+随机数生成是通过 Source.  顶级的函数,比如 Float64 和 Int 使用的是共享的 Source 会产生&lt;strong&gt;确定性&lt;/strong&gt; 的结果,&lt;br /&gt;
+我们可以使用 Seed 函数来初始化改变 Source 让其产生不同的行为.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;package main
+
+import (
+        &amp;quot;fmt&amp;quot;
+        &amp;quot;time&amp;quot;
+        &amp;quot;math/rand&amp;quot;
+       )
+
+func main() {
+    rand.Seed(time.Now().UnixNano())  
+    //注意如果 Seed() 内部的随机因子是确定的数, 每次运行的随机的结果是一样.
+    //曾经利用这个特性, 以每天的日期作为随机的种子进行虚拟机的数目的产生.
+    fmt.Println(rand.Intn(100))
+}
+&lt;/code&gt;&lt;/pre&gt;
 </description>
     </item>
     
