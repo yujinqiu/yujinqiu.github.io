@@ -73,6 +73,11 @@
   </url>
   
   <url>
+    <loc>http://yujinqiu.github.io/posts/ParallelDraft/</loc>
+    <lastmod>2014-11-25T21:36:12+08:00</lastmod>
+  </url>
+  
+  <url>
     <loc>http://yujinqiu.github.io/posts/GitDraft/</loc>
     <lastmod>2014-11-25T21:36:12+08:00</lastmod>
   </url>
@@ -84,11 +89,6 @@
   
   <url>
     <loc>http://yujinqiu.github.io/posts/Apple/</loc>
-    <lastmod>2014-11-25T21:36:12+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://yujinqiu.github.io/posts/ParallelDraft/</loc>
     <lastmod>2014-11-25T21:36:12+08:00</lastmod>
   </url>
   
@@ -143,17 +143,12 @@
   </url>
   
   <url>
-    <loc>http://yujinqiu.github.io/posts/NginxDraft/</loc>
-    <lastmod>2008-01-01T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://yujinqiu.github.io/posts/%E9%83%A8%E7%BD%B2%E7%B3%BB%E7%BB%9F/</loc>
-    <lastmod>2008-01-01T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
     <loc>http://yujinqiu.github.io/posts/VimDraft/</loc>
+    <lastmod>2008-01-01T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://yujinqiu.github.io/posts/NginxDraft/</loc>
     <lastmod>2008-01-01T00:00:00+00:00</lastmod>
   </url>
   
