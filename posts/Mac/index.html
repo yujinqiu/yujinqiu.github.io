@@ -94,12 +94,40 @@ sudo brew update
 <p>Mac os X 在最小化窗体之后, <code>command + tab</code> 是不能够直接恢复, 具体操作如下<br />
 command + tab 定位到对应的 Application 然后 <code>alt</code> 然后同时放开 <code>alt command</code></p>
 
-<h3 id="toc_1">清除 DNS cache</h3>
+<h3 id="toc_1">Mac 禁用启动声音</h3>
+
+<h4 id="toc_2">背景</h4>
+
+<p>每次 mac 重启或者启动的时候, 一直会有一声 bong 的声音, 在工作室或者其他人多的环境经常会影响到别人, 比较尴尬. 如何解决:</p>
+
+<h4 id="toc_3">解决方案</h4>
+
+<p>网上的各种方法其实都不是很靠谱,  经过自己的各种摸索之后, 终于找到靠谱的方案.<br />
+<strong>注意</strong>: 为了避免各种权限问题, 建议直接用 <strong>root</strong> 权限操作. <code>sudo su - root</code></p>
+
+<p>1: 在 <code>/usr/local/bin/silence.sh</code></p>
+
+<pre><code>#!/bin/bash
+
+nvram SystemAudioVolume=&quot;%01&quot;
+</code></pre>
+
+<p>2: 修改权限位, 让该脚本可以执行</p>
+
+<pre><code>chmod 755 /usr/local/bin/silence.sh
+</code></pre>
+
+<p>3: 设置系统关闭的时候执行的 hook.</p>
+
+<pre><code>defaults write com.apple.loginwindow LogoutHook /usr/local/bin/silence.sh
+</code></pre>
+
+<h3 id="toc_4">清除 DNS cache</h3>
 
 <pre><code>sudo dscacheutil -flushcache
 </code></pre>
 
-<h3 id="toc_2">mac os x 权限位问题</h3>
+<h3 id="toc_5">mac os x 权限位问题</h3>
 
 <p>在 mac os terminal 中我们经常可以看到 带有 <code>+</code>  和  <code>@</code>  的权限问题</p>
 
@@ -109,7 +137,7 @@ command + tab 定位到对应的 Application 然后 <code>alt</code> 然后同�
 -rw-r--r--@  1 knight  staff     3470 Dec 31  2013 FPDraft.md
 </code></pre>
 
-<h4 id="toc_3">@ 字符</h4>
+<h4 id="toc_6">@ 字符</h4>
 
 <p><code>@</code> 表示这个文件拥有扩展的属性( additional attribute) , 可以通过<code>xattr</code> 来查看详细信息:</p>
 
@@ -121,7 +149,7 @@ com.apple.TextEncoding: utf-8;134217984
 
 <p>扩展的属性用途是: 定义一些打开文件的程序比如 Mou 打开 markdown 文件.</p>
 
-<h4 id="toc_4">+ 字符</h4>
+<h4 id="toc_7">+ 字符</h4>
 
 <p>+ 表示这个文件用户 ACL(Access Control List) 相对于文件的权限能够耕细粒度的控制.</p>
 
@@ -134,25 +162,25 @@ com.apple.TextEncoding: utf-8;134217984
 其实很简单就是通过 <code>ctrl+F2</code>(menubar) <code>ctrl+F3</code>(dock), 然后直接输入对应的菜单名称. 比如:<code>View</code>, 输入回车即可选择, 然后继续输入对应的名称,或者通过方向键即可选择.
 打开Menu的Help的快捷键是<code>command + shift + /</code>, 可以这样记住: shift+/ = ?  快捷键就是command + ? == help</p>
 
-<h2 id="toc_5">mac 计算md5 值</h2>
+<h2 id="toc_8">mac 计算md5 值</h2>
 
 <p>在linux 下有md5sum 这个命令, 在mac 下发现居然没有. 仔细查找之后发现原来叫md5. 运行之后发现和md5sum输出的结果不一样, 其实可以利用<code>md5 -r</code>就可以得到一样的结果.</p>
 
-<h2 id="toc_6">mac 版本管理</h2>
+<h2 id="toc_9">mac 版本管理</h2>
 
 <p>mac 的 keynote, pages, numbers 和原始文本编辑器是具有版本管理的. 入口在<code>File-&gt; revert to -&gt; brow all version</code>, 可以进入查看和 time machine 一样的界面.</p>
 
-<h2 id="toc_7">快速打开stikcy note 快捷键</h2>
+<h2 id="toc_10">快速打开stikcy note 快捷键</h2>
 
 <p>shift+ command + y ,  退出:  command + q</p>
 
-<h2 id="toc_8">屏幕放大</h2>
+<h2 id="toc_11">屏幕放大</h2>
 
 <p>ctrl + 鼠标放大,缩小</p>
 
-<h2 id="toc_9">快速预览文件( quick look)</h2>
+<h2 id="toc_12">快速预览文件( quick look)</h2>
 
-<h3 id="toc_10">背景</h3>
+<h3 id="toc_13">背景</h3>
 
 <p>经常我们在命令行里边,看到某个文件之后, 希望能够 quick look, 一般的做法是, open File 打开, 然后关闭, 其实我们只是希望能够简单看一下, 可以利用以下命令来实现 :</p>
 
@@ -167,13 +195,13 @@ com.apple.TextEncoding: utf-8;134217984
   <hr />
   
     <span class="left">
-    &nbsp; <em>&laquo; Previous:</em> <a class="next" href="http://yujinqiu.github.io/posts/GitDraft/">Git Draft</a>
+    &nbsp; <em>&laquo; Previous:</em> <a class="next" href="http://yujinqiu.github.io/posts/MysqlDraft/">MysqlDraft</a>
     </span>
   
 
   
     <span class="right">
-    <em>Next: </em><a class="next" href="http://yujinqiu.github.io/posts/Apple/"> &nbsp; AppleDraft</a> &raquo;
+    <em>Next: </em><a class="next" href="http://yujinqiu.github.io/posts/ParallelDraft/"> &nbsp; CliDraft</a> &raquo;
     </span>
   
 </div>

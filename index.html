@@ -68,6 +68,22 @@
 
 <article class="post">
     <header>
+      <h2><a href='http://yujinqiu.github.io/posts/Supervisord/'> Supervisord</a> </h2>
+      <div class="meta">Wed, Mar 25, 2015</div>
+    </header>
+
+    Supervisord reload 配置 supervisorctl reread supervisorctl update
+    <footer style="text-align:right; ">
+        <a href='http://yujinqiu.github.io/posts/Supervisord/'><nobr>Read more →</nobr></a>
+    </footer>
+    <hr/>
+</article>
+
+            
+            
+
+<article class="post">
+    <header>
       <h2><a href='http://yujinqiu.github.io/posts/Terminology/'> Terminology</a> </h2>
       <div class="meta">Wed, Mar 4, 2015</div>
     </header>
@@ -294,47 +310,6 @@ ssh -D 的本质上是一个 sock5 的代理, 不是 http/https 代理, 所以�
 
     <footer style="text-align:right; ">
         <a href='http://yujinqiu.github.io/posts/BeegoDraft/'><nobr>Read more →</nobr></a>
-    </footer>
-    <hr/>
-</article>
-
-            
-            
-
-<article class="post">
-    <header>
-      <h2><a href='http://yujinqiu.github.io/posts/CurlDraft/'> CurlDraft</a> </h2>
-      <div class="meta">Thu, Dec 25, 2014</div>
-    </header>
-
-    <h2>CURL 有用操作</h2>
-
-<h3>curl post 数据</h3>
-
-<ol>
-<li><p>提交 key:value 格式数据</p>
-
-<pre><code>curl -d 'username=xyz&amp;password=xyz' http://localhost:3000/api/login
-</code></pre></li>
-
-<li><p>提交 json格式数据</p>
-
-<pre><code>curl -d '{&quot;username&quot;:&quot;xyz&quot;,&quot;password&quot;:&quot;xyz&quot;}' http://localhost:3000/api/login
-</code></pre></li>
-
-<li><p>参数内容较多,直接写入到一个文件中</p>
-
-<pre><code>curl -d @param.json  http://localhost:3000/api/login
-</code></pre></li>
-
-<li><p>上传附件</p>
-
-<pre><code>curl -F &quot;blob=@card.txt;type=text/plain&quot; http://localhost:3000/upload
-</code></pre></li>
-</ol>
-
-    <footer style="text-align:right; ">
-        <a href='http://yujinqiu.github.io/posts/CurlDraft/'><nobr>Read more →</nobr></a>
     </footer>
     <hr/>
 </article>

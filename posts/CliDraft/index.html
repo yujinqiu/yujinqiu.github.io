@@ -276,7 +276,48 @@ Sun Jan 11 13:04:36 CST 2015
 
 <p>经常我们需要在 crontab 中新增一个记录, 快捷的解决方案是:</p>
 
-<pre><code>(crontab -l ; echo '*/1 * * * * CMD') | crontab -
+<pre><code>(crontab -l ; echo '*/1 * * * * CMD') | crontab -  
+</code></pre>
+
+<h3 id="toc_30">文件行列转化</h3>
+
+<h4 id="toc_31">背景</h4>
+
+<p>经常我们需要对文件进行行列转化, 比如说</p>
+
+<p>行:</p>
+
+<pre><code>host1
+host2
+host3
+</code></pre>
+
+<p>列:</p>
+
+<pre><code>host1,host2,host3
+</code></pre>
+
+<p>转换命令:</p>
+
+<pre><code>paste -d, -s   FILE
+</code></pre>
+
+<h5 id="toc_32">paste 命令详解:</h5>
+
+<pre><code>paste merge lines of files  
+</code></pre>
+
+<p>典型用途:</p>
+
+<pre><code>paste &lt;(seq 1 3) &lt;(seq 1 3)
+1   1
+2   2
+3   3
+
+
+paste -s &lt;(seq 1 3) &lt;(seq 1 3)
+1   2   3
+1   2   3
 </code></pre>
 
         </section>
