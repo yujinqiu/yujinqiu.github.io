@@ -118,18 +118,32 @@ http://golang-basic.blogspot.jp/2014/10/dynamic-programming-problem-maximum.html
 &lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
 &lt;/ol&gt;
 
-&lt;h3 id=&#34;toc_3&#34;&gt;fpm 制定 package 依赖&lt;/h3&gt;
+&lt;h3 id=&#34;toc_3&#34;&gt;fpm 打包版本升级&lt;/h3&gt;
+
+&lt;h4 id=&#34;toc_4&#34;&gt;背景&lt;/h4&gt;
+
+&lt;p&gt;在打包 python-supervisor 的时候遇见这样的一个问题, 该打包策略比较复杂, 需要打包多次验证效果.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;fpm -s dir -t rpm  -n python-supervisor  -v &#39;3.1.3&#39; --iteration 2 -a &#39;x86_64&#39; --description=&#39;A system for controlling process state under UNIX&#39; --after-install=&#39;/root/load.sh&#39; -d &#39;python-meld3&#39; -C supervisord  .
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;执行之后, 得到的结果是 &lt;code&gt;python-supervisor-3.1.3-1.x86_64.rpm&lt;/code&gt;, 第二次打包的时候, 如果还是这样的命令得到的是相同的结果, 很多时候我们还是希望能够有一个版本的标识, 来区分各个打包的版本,  其中 &lt;code&gt;3.1.3&lt;/code&gt; 是模块的版本, 在出问题的时候为了方便追溯问题, 不建议修改.  因此只能修改 &lt;code&gt;3.1.3-1&lt;/code&gt;, 后面的 &lt;code&gt;1&lt;/code&gt; , fpm 提供了该选项.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;--iteration ITERATION
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;toc_5&#34;&gt;fpm 制定 package 依赖&lt;/h3&gt;
 
 &lt;pre&gt;&lt;code&gt;fpm -s dir -t rpm -n langley_online -v 1.0.0 -d &#39;thrift &amp;gt;= 0.9.1&#39; -d &#39;boost &amp;gt;= 1.41.0&#39; -d &#39;libevent &amp;gt;= 2.0.21&#39; -d &#39;fastbit &amp;gt;= 2.0.1&#39; --prefix=/home/&amp;lt;user&amp;gt;   --after-install=langley_online/install/install_hook.sh langley_online
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;!-- more --&gt;
 
-&lt;h3 id=&#34;toc_4&#34;&gt;如何打包 C/C++ 项目&lt;/h3&gt;
+&lt;h3 id=&#34;toc_6&#34;&gt;如何打包 C/C++ 项目&lt;/h3&gt;
 
 &lt;p&gt;c/c++ 项目中比较讨厌的是项目的依赖, 为了提高开发效率需要将各种依赖包打包为 RPM, 最开始一直想不明白的是, 如果我 make &amp;amp;&amp;amp; make install 之后就 pack 了, 那么如何pack呢 ?   直到今天多管闲事帮同事打包thrift之后才知道 how.&lt;/p&gt;
 
-&lt;h4 id=&#34;toc_5&#34;&gt;How&lt;/h4&gt;
+&lt;h4 id=&#34;toc_7&#34;&gt;How&lt;/h4&gt;
 
 &lt;p&gt;答案其实很简单&lt;/p&gt;
 
@@ -140,7 +154,7 @@ make install DESTDIR=&amp;lt;dir&amp;gt;
 &lt;p&gt;一般正常情况下, 会在&lt;code&gt;&amp;lt;dir&amp;gt;&lt;/code&gt; 下面生成 usr 目录, 然后利用 fpm 直接进入 &lt;code&gt;&amp;lt;dir&amp;gt;&lt;/code&gt; 进行打包, 指定&lt;code&gt;prefix=/&lt;/code&gt; 即可.&lt;br /&gt;
 仔细思考之后, 其实 fpm 在使用 &lt;code&gt;-s dir&lt;/code&gt; 的时候的本质, 就是pack 整个包, 因此可以推断在 &lt;code&gt;./configure --prefix=&amp;lt;dir&amp;gt;&lt;/code&gt; 应该也是可以的.&lt;/p&gt;
 
-&lt;h3 id=&#34;toc_6&#34;&gt;如何打包 python module&lt;/h3&gt;
+&lt;h3 id=&#34;toc_8&#34;&gt;如何打包 python module&lt;/h3&gt;
 
 &lt;p&gt;Q: 我是 python 党, 用 pip 安装 python 的各种包好方便, but 线上没有访问外网权限, 怎么破?&lt;br /&gt;
 A: 为了安全线上只有部分机器可以访问外网, 因此除非你在内网搭建一个代理, 然后 pip 通过流量到 pip.  好消息是强大的 FPM 可以把python 的 pip 包打成 RPM.   python 的 thrift module 为例.&lt;/p&gt;
@@ -160,7 +174,7 @@ A: 为了安全线上只有部分机器可以访问外网, 因此除非你在内
 
 &lt;p&gt;对应 python module, fpm 会自动下载对应的 package, 因此只需要指定 thrift 即可.&lt;/p&gt;
 
-&lt;h3 id=&#34;toc_7&#34;&gt;查看安装 pkg 详情&lt;/h3&gt;
+&lt;h3 id=&#34;toc_9&#34;&gt;查看安装 pkg 详情&lt;/h3&gt;
 
 &lt;pre&gt;&lt;code&gt;rpm -q &amp;lt;pkg&amp;gt; 
 &lt;/code&gt;&lt;/pre&gt;
@@ -171,13 +185,13 @@ A: 为了安全线上只有部分机器可以访问外网, 因此除非你在内
 thrift-0.9.2-1.x86_64
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h3 id=&#34;toc_8&#34;&gt;yum 如何查看一个 rpm pkg 的详情&lt;/h3&gt;
+&lt;h3 id=&#34;toc_10&#34;&gt;yum 如何查看一个 rpm pkg 的详情&lt;/h3&gt;
 
 &lt;pre&gt;&lt;code&gt;yum info  &amp;lt;pkg&amp;gt; 
 yum list  &amp;lt;pkg&amp;gt; 
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h3 id=&#34;toc_9&#34;&gt;yum 制定安装特定版本&lt;/h3&gt;
+&lt;h3 id=&#34;toc_11&#34;&gt;yum 制定安装特定版本&lt;/h3&gt;
 
 &lt;pre&gt;&lt;code&gt;yum install &amp;lt;package name&amp;gt;-&amp;lt;version info&amp;gt;.&amp;lt;release info&amp;gt;.&amp;lt;architecture&amp;gt; 
 &lt;/code&gt;&lt;/pre&gt;
@@ -190,15 +204,15 @@ sudo yum install httpd-2.4.6-6.fc20
 sudo yum install httpd-2.4.6-6.fc20.x84_64
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h3 id=&#34;toc_10&#34;&gt;下载 rpm 包, 然后手动进行安装&lt;/h3&gt;
+&lt;h3 id=&#34;toc_12&#34;&gt;下载 rpm 包, 然后手动进行安装&lt;/h3&gt;
 
 &lt;pre&gt;&lt;code&gt;yumdownloader --resolve &amp;lt;package&amp;gt;
 yum localinstall &amp;lt;path to rpm&amp;gt;  
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h3 id=&#34;toc_11&#34;&gt;yum 取消安装操作&lt;/h3&gt;
+&lt;h3 id=&#34;toc_13&#34;&gt;yum 取消安装操作&lt;/h3&gt;
 
-&lt;h4 id=&#34;toc_12&#34;&gt;背景&lt;/h4&gt;
+&lt;h4 id=&#34;toc_14&#34;&gt;背景&lt;/h4&gt;
 
 &lt;p&gt;最近有一个glibc 安全漏洞, 安全组同学要求进行升级, 利用 yum 升级之后, 发现坑爹有问题, 需要进行回滚. 可是 glibc 依赖 package 太多, &lt;code&gt;yum downgrade pkg1.rpm pkg2.rpm ...&lt;/code&gt; 会累死人.&lt;br /&gt;
 终于发现必杀技:&lt;/p&gt;
@@ -211,9 +225,9 @@ ID     | Command line             | Date and time    | Action(s)      | Altered
 yum history  undo  120 
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h3 id=&#34;toc_13&#34;&gt;fpm 解决 gem 依赖问题&lt;/h3&gt;
+&lt;h3 id=&#34;toc_15&#34;&gt;fpm 解决 gem 依赖问题&lt;/h3&gt;
 
-&lt;h4 id=&#34;toc_14&#34;&gt;背景&lt;/h4&gt;
+&lt;h4 id=&#34;toc_16&#34;&gt;背景&lt;/h4&gt;
 
 &lt;p&gt;公司有同事需要在自己的公司上的一台服务器利用 fpm 进行打包, 原来其实可以通过以下命令进行安装&lt;/p&gt;
 
@@ -242,13 +256,13 @@ find /tmp/gems/cache -name &#39;*.gem&#39; | xargs -rn1 fpm -d ruby -d rubygems 
 - INSTALLATION DIRECTORY: /usr/lib/ruby/gems/1.8
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h2 id=&#34;toc_15&#34;&gt;FPM 打包升级 python2.7&lt;/h2&gt;
+&lt;h2 id=&#34;toc_17&#34;&gt;FPM 打包升级 python2.7&lt;/h2&gt;
 
-&lt;h3 id=&#34;toc_16&#34;&gt;背景&lt;/h3&gt;
+&lt;h3 id=&#34;toc_18&#34;&gt;背景&lt;/h3&gt;
 
 &lt;p&gt;运维过 RHEL/CentOS 的同学基本上都知道CentOS 为了追求系统的稳定, 软件包相对来说是比较旧的. 大家抱怨比较多的是 python 的版本2.6.6 , 大家比较喜欢的是 python2.7, 因此大家迫切希望能够有python2.7 的 rpm , 一键进行升级.  其实之前升级过一次, 但是不小心把 yum 给搞坏了, 要知道 yum 其实也是 python 写的程序, 因此有一个原则需要遵守的是 python2.7 必须和 python 2.6 隔离开.&lt;/p&gt;
 
-&lt;h3 id=&#34;toc_17&#34;&gt;安装方法&lt;/h3&gt;
+&lt;h3 id=&#34;toc_19&#34;&gt;安装方法&lt;/h3&gt;
 
 &lt;p&gt;1: 下载 python2.7.9
 2:  tar xf Python-2.7.9.tgz&lt;br /&gt;
@@ -289,30 +303,30 @@ make install DESTDIR=${INTERMEDIATE_INSTALL_DIR}
     -C ${INTERMEDIATE_INSTALL_DIR} .
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h4 id=&#34;toc_18&#34;&gt;ChangeLog&lt;/h4&gt;
+&lt;h4 id=&#34;toc_20&#34;&gt;ChangeLog&lt;/h4&gt;
 
 &lt;p&gt;取消 &amp;ndash;enable-unicode=ucs4 编译选项, 该选项会导致 json decode 的时候出错.&lt;/p&gt;
 
-&lt;h4 id=&#34;toc_19&#34;&gt;refer&lt;/h4&gt;
+&lt;h4 id=&#34;toc_21&#34;&gt;refer&lt;/h4&gt;
 
 &lt;p&gt;&lt;a href=&#34;http://theo.im/blog/2014/05/16/use-fpm-to-create-python-rpm-packages/&#34;&gt;http://theo.im/blog/&lt;sup&gt;2014&lt;/sup&gt;&amp;frasl;&lt;sub&gt;05&lt;/sub&gt;/16/use-fpm-to-create-python-rpm-packages/&lt;/a&gt;
 &lt;a href=&#34;https://github.com/h2oai/h2o/wiki/Installing-python-2.7-on-centos-6.3.-Follow-this-sequence-exactly-for-centos-machine-only&#34;&gt;https://github.com/h2oai/h2o/wiki/Installing-python-2.7-on-centos-6.3.-Follow-this-sequence-exactly-for-centos-machine-only&lt;/a&gt;
 &lt;a href=&#34;http://toomuchdata.com/2014/02/16/how-to-install-python-on-centos/&#34;&gt;http://toomuchdata.com/&lt;sup&gt;2014&lt;/sup&gt;&amp;frasl;&lt;sub&gt;02&lt;/sub&gt;/16/how-to-install-python-on-centos/&lt;/a&gt;&lt;/p&gt;
 
-&lt;h3 id=&#34;toc_20&#34;&gt;python 2.7.9 福利&lt;/h3&gt;
+&lt;h3 id=&#34;toc_22&#34;&gt;python 2.7.9 福利&lt;/h3&gt;
 
 &lt;p&gt;python 2.7.9 之后就内置 pip 安装程序,  开启如下:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;python2.7 -m ensurepip
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h2 id=&#34;toc_21&#34;&gt;如何查看 RPM 包文件列表&lt;/h2&gt;
+&lt;h2 id=&#34;toc_23&#34;&gt;如何查看 RPM 包文件列表&lt;/h2&gt;
 
-&lt;h3 id=&#34;toc_22&#34;&gt;背景&lt;/h3&gt;
+&lt;h3 id=&#34;toc_24&#34;&gt;背景&lt;/h3&gt;
 
 &lt;p&gt;经常我们需要了解一个 rpm 包在安装完成之后, 会安装在什么路径下, 安装什么文件, 需要查看 rpm 内部的文件和路径.&lt;/p&gt;
 
-&lt;h3 id=&#34;toc_23&#34;&gt;常规方法&lt;/h3&gt;
+&lt;h3 id=&#34;toc_25&#34;&gt;常规方法&lt;/h3&gt;
 
 &lt;pre&gt;&lt;code&gt;rpm -qpl  pkg.RPM
 
@@ -329,7 +343,7 @@ rpm -qpl rubygem-fpm-1.3.3-1.noarch.rpm
 /usr/lib/ruby/gems/1.8/gems/fpm-1.3.3/lib/fpm/command.rb
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h3 id=&#34;toc_24&#34;&gt;比较巧妙的方法&lt;/h3&gt;
+&lt;h3 id=&#34;toc_26&#34;&gt;比较巧妙的方法&lt;/h3&gt;
 
 &lt;pre&gt;&lt;code&gt;less  pkg.RPM  #发现 less zip,tar.gz 文件也是可以的
 less rubygem-fpm-1.3.3-1.noarch.rpm
@@ -349,6 +363,15 @@ Convert directories, rpms, python eggs, rubygems, and more to rpms, debs, solari
 -rw-r--r--    1 root    root                   114176 Mar  3 13:46 /usr/lib/ruby/gems/1.8/cache/fpm-1.3.3.gem
 drwxr-xr-x    2 root    root                        0 Mar  3 13:46 /usr/lib/ruby/gems/1.8/doc
 -rw-r--r--    1 root    root                       12 Mar  3 13:46 /usr/lib/ruby/gems/1.8/gems/fpm-1.3.3/.require_paths
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;toc_27&#34;&gt;如何解压 RPM&lt;/h2&gt;
+
+&lt;h3 id=&#34;toc_28&#34;&gt;背景&lt;/h3&gt;
+
+&lt;p&gt;有时候我们需要定制化 RPM 包的内容, 比如说在已有的 RPM 包中增加一个配置, 或者增加一个启动脚本.  这时候就需要将rpm 包重新打开, 然后增加内容, 然后在重新打回去.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;rpm2cpio  pkg  |  cpio -idmv
 &lt;/code&gt;&lt;/pre&gt;
 </description>
     </item>
