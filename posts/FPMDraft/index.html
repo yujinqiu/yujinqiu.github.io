@@ -353,6 +353,42 @@ drwxr-xr-x    2 root    root                        0 Mar  3 13:46 /usr/lib/ruby
 <pre><code>rpm2cpio  pkg  |  cpio -idmv
 </code></pre>
 
+<h2 id="toc_29">yum 安装 pkg 的时候如何指定 repo</h2>
+
+<h3 id="toc_30">背景</h3>
+
+<p>最近公司使用 yum 来进行代码发布, 使用久之后, 发现一个问题就是 如果在一个 repo 下面有多个 repo 的 server , 比如有** puppet**, 然后你在<code>yum install -y</code> 的时候, 通常需要search 全部的 repo, 在执行的效率上慢了很多, 因此我们对于确定知道 pkg 的 在哪个 repo 的地方的时候, 希望直接从这个 repo 下载.</p>
+
+<pre><code>1. yum repolist   获取 repo id
+2. yum --disablerepo=&quot;*&quot; --enablerepo=&quot;${repo}&quot; install -y  pkg
+</code></pre>
+
+<h2 id="toc_31">yum 如何下载到最新的 pkg</h2>
+
+<h3 id="toc_32">背景</h3>
+
+<p>通常我们在 pack 最新的 package,  在使用</p>
+
+<pre><code>createrepo --update  ./
+</code></pre>
+
+<p>之后, 就希望在其它机器上就可以使用<code>yum install -y</code> 进行安装, 可是经常发现找不到最新的 pkg,  开始的时候有人提出来了,</p>
+
+<pre><code>yum make clean   
+</code></pre>
+
+<p>然后发现过了很久居然没有人质疑这件事情?  难道一定要这样 make clean ?<br />
+RTFM之后, 发现其实是有解决方案的.   在<code>yum.conf</code> 设置时间足够短就 ok.</p>
+
+<pre><code>metadata_expire Time (in seconds) 
+after which the metadata will expire. So that if the current metadata downloaded is less than this many
+          seconds old then yum will not update the metadata against the repository.  If you find that yum is not downloading information on updates
+          as often as you would like lower the value of this option. You can also change from the default of using seconds to using days, hours  or
+          minutes  by appending a d, h or m respectively.  The default is 6 hours, to compliment yum-updatesd running once an hour.  It’s also pos-
+          sible to use the word &quot;never&quot;, meaning that the metadata will never expire. Note that when using a metalink file the metalink must always
+          be newer than the metadata for the repository, due to the validation, so this timeout also applies to the metalink file.
+</code></pre>
+
         </section>
   
       
