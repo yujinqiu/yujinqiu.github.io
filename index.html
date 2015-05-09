@@ -72,7 +72,7 @@
       <div class="meta">Wed, Mar 25, 2015</div>
     </header>
 
-    Supervisord reload 配置 supervisorctl reread supervisorctl update
+    supervisord 背景 一个模块在运行的过程中可能遇到各种问题, 会导致它 crash, 如果 crash 之后, op 通常希望它能马上进行重启. supervisord 模块就是这个用途, 它在实时监测子进程模块的运行状态, 如果发现模块故障, 就会重新产生一个新实例. supervisord VS supervise 两个模块做的事情类似. 采用supervisord 的好处 开源广泛运用, 资料较多, 且具有源代码,可控性更好 supervisord 可以管理多个自己进程, 避免 supervise 需要 copy-paste 多份二进制程序. 支持 xml-rpc, 方便远程控制 资料 supervisord 安装 已经将 supervisord pack 到 yum server 中, 安装如下: yum install -y python-supervisord 服务启动 安装完成之后, 系统默认是自动启动的. 目前我们已经将python-supervisord 嵌入到系统 service 内部, 可以使用大家熟悉的service 来操作(正常情况下不需要, 重启可能会导致子服务都重启, 谨慎操作) service supervisord restart 随机启动 我们希望机器重启之后, supervisord 之后能自动启动, 最近python-supervisord 已经能够支持. 随机启动细节(不敢兴趣同学跳过) 主要步骤如下: 1: 创建随机启动脚本supervisord 2: chkconfig &ndash;add supervisord 3: chkconfig &ndash;level 2345 supervisord on 将 步骤1, 随机启动脚本放到 /etc/init.d/ 下面 将 步骤2,3 放入到安装后置脚本supervisord-after-install.sh 内 随机启动reference 打包具体命令 配置文件规范 supervisord 遵守 Unix 规范.
     <footer style="text-align:right; ">
         <a href='http://yujinqiu.github.io/posts/Supervisord/'><nobr>Read more →</nobr></a>
     </footer>

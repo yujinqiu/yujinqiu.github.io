@@ -389,6 +389,24 @@ after which the metadata will expire. So that if the current metadata downloaded
           be newer than the metadata for the repository, due to the validation, so this timeout also applies to the metalink file.
 </code></pre>
 
+<h2 id="toc_33">如何查看一个 rpm 的依赖</h2>
+
+<pre><code>rpm  -qpR PKG
+-q query
+-p package
+-R requires (List capabilities on which this package depends.)
+
+yum deplist PKG
+
+repoquery --requires  odin-agent
+</code></pre>
+
+<h2 id="toc_34">yum 下载某个包, 包括依赖</h2>
+
+<pre><code>repotrack PKG 下载全部依赖
+yumdownloader --resove  PKG 只下载本地确实 pkg
+</code></pre>
+
         </section>
   
       

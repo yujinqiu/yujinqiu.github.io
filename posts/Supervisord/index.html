@@ -1,0 +1,224 @@
+
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <base href="http://yujinqiu.github.io">
+    <title> Supervisord </title>
+    <link rel="canonical" href="http://yujinqiu.github.io/posts/Supervisord/">
+    
+
+<link rel="stylesheet" href="/css/poole.css">
+
+<link rel="stylesheet" href="/css/lanyon.css">
+
+</head>
+
+
+<body class="theme-base-0b">
+  
+
+
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+
+
+<div class="sidebar" id="sidebar">
+
+  <nav class="sidebar-nav">
+    <p><img src="img/logo.png" width="80"></p>
+    <a class="sidebar-nav-item" href="/">Home</a>
+
+    <a class="sidebar-nav-item" href="/posts">Blog</a>
+
+    <a class="sidebar-nav-item" href="https://github.com/yujinqiu">Github</a>
+  </nav>
+
+  <div class="sidebar-item">
+    <p>
+      Powered by <a href="http://hugo.spf13.com">Hugo</a>. Design reused from <a href="https://github.com/spencerlyon2">Spencer Lyon</a> which was modified from this Jekyl theme <a href="http://lanyon.getpoole.com">Lanyon</a> under this <a href="https://github.com/spencerlyon2/hugo_gh_blog/blob/master/LICENSE">licence</a>.
+    </p>
+  </div>
+</div>
+
+
+
+
+  
+  <div class="wrap">
+    <div class="masthead">
+      <div class="container">
+        <h3 class="masthead-title">
+          <a href="/posts" title="Blog">Blog Posts</a>
+        </h3>
+        <hr>
+      </div>
+    </div>
+
+    
+    <div class="container content">
+      <div class="post-tile-meta">
+        <h1 class="post-title">Supervisord</h1>
+        Wed Mar 25, 2015 
+<div class="container category">
+  <ul class="catlist">
+    <li><em>Categories: </em></li>
+    
+  </ul>
+</div>
+</p>
+      </div>
+        <section id="main">
+          
+
+<h3 id="toc_0">supervisord</h3>
+
+<h4 id="toc_1">背景</h4>
+
+<p>一个模块在运行的过程中可能遇到各种问题, 会导致它 crash, 如果 crash 之后, op 通常希望它能马上进行重启. supervisord 模块就是这个用途,  它在实时监测子进程模块的运行状态, 如果发现模块故障, 就会重新产生一个新实例.</p>
+
+<h4 id="toc_2">supervisord VS supervise</h4>
+
+<p>两个模块做的事情类似. 采用supervisord 的好处</p>
+
+<ol>
+<li>开源广泛运用, 资料较多, 且具有源代码,可控性更好<br /></li>
+<li>supervisord 可以管理多个自己进程, 避免 supervise 需要 copy-paste 多份二进制程序.<br /></li>
+<li>支持 xml-rpc, 方便远程控制<br /></li>
+</ol>
+
+<h4 id="toc_3">资料</h4>
+
+<p><a href="http://supervisord.org">supervisord</a></p>
+
+<h4 id="toc_4">安装</h4>
+
+<p>已经将 supervisord pack 到 yum server 中, 安装如下:</p>
+
+<pre><code>yum install  -y  python-supervisord
+</code></pre>
+
+<h4 id="toc_5">服务启动</h4>
+
+<p>安装完成之后, 系统默认是自动启动的. 目前我们已经将<code>python-supervisord</code> 嵌入到系统 service 内部, 可以使用大家熟悉的<code>service</code> 来操作(正常情况下不需要, 重启可能会导致子服务都重启, 谨慎操作)</p>
+
+<pre><code>service supervisord restart   
+</code></pre>
+
+<h4 id="toc_6">随机启动</h4>
+
+<p>我们希望机器重启之后, <code>supervisord</code> 之后能自动启动, 最近<code>python-supervisord</code> 已经能够支持.</p>
+
+<h4 id="toc_7">随机启动细节(不敢兴趣同学跳过)</h4>
+
+<p>主要步骤如下:<br />
+1: 创建随机启动脚本<a href="https://git.xiaojukeji.com/op/supervisord-pack/blob/master/etc/init.d/supervisord">supervisord</a><br />
+2: chkconfig &ndash;add supervisord<br />
+3: chkconfig &ndash;level 2345 supervisord on</p>
+
+<p>将 步骤1, 随机启动脚本放到 <code>/etc/init.d/</code> 下面<br />
+将 步骤2,3 放入到安装后置脚本<a href="https://git.xiaojukeji.com/op/supervisord-pack/blob/master/supervisord-after-install.sh">supervisord-after-install.sh</a> 内</p>
+
+<p><a href="http://unix.stackexchange.com/questions/20357/how-can-i-make-a-script-in-etc-init-d-start-at-boot">随机启动reference</a><br />
+<a href="https://git.xiaojukeji.com/op/supervisord-pack/tree/master">打包具体命令</a></p>
+
+<h4 id="toc_8">配置文件规范</h4>
+
+<p>supervisord 遵守 Unix 规范.</p>
+
+<pre><code> /etc/supervisord.conf
+ /etc/supervisord.d/
+</code></pre>
+
+<p><strong>其中各个模块的配置文件放在 /etc/supervisord.d/, 如果单个模块配置文件较多, 建议大家在/etc/supervisord.d/创建子目录</strong></p>
+
+<p>agent 为例:</p>
+
+<pre><code> [program:odin_agent]
+ command=odin_agent -addr=0.0.0.0:789 -mode=server -account=&quot;root&quot;
+ directory=/
+ autostart=true
+ startsecs=10
+ autorestart=true
+ startretries=8640
+ user=root
+</code></pre>
+
+<h3 id="toc_9">打包时候权衡(重要)</h3>
+
+<p>在打包的时候, 我们考虑在 upgrade 的时候, 是否需要自动重启.<br />
+考虑到如果自动重启的话, 会导致下面的子服务都全部重启, 这样会部分业务是不能接受的.<br />
+从业务影响和 supervisord 升级的频率(基本上不会升级)考虑, 我们目前的策略是 <code>yum upgrade</code> 只会替换 bin 程序, 不进行重启.<br />
+重启生效操作需要人工 <code>service supervisord restart</code> 来触发.<br />
+<code>yum remove</code> 的时候, 也需要人工进行 <code>service supervisord stop</code> 来进行停止.</p>
+
+<h3 id="toc_10">FAQ</h3>
+
+<h4 id="toc_11">为什么 odin agent 启动不了 ?</h4>
+
+<p>追查多次这个问题, 基本上大家在使用的时候直接 copy  <code>odin_agent.conf</code>, 然后**忘记修改第一行<code>program:odin_agent</code> 这个内容, 这个不能和 odin_agent 冲突, 否则会启动不了.</p>
+
+<h4 id="toc_12">为什么使用 supervisorctl 发现提示 backoff,  不断重启?</h4>
+
+<p>首先要明白 supervisor 的工作原理和适用场景. 工作原理:通过父进程 fork 出新子进程,  如果子进程退出重新 fork, 这样保证子进程挂掉可以重新拉起, 因此 supervisor <strong>只能用于管理非 daemon 程序</strong>,  daemon 程序在启动之后会从父进程 detatch 出来, 被 init 进程接管, 对于 php-fpm 正常情况下是不太适合的, 使用 <code>php-fpm -F</code> 来制定以非 daemon 形式启动</p>
+
+<h4 id="toc_13">supervisord 如何接管 daemon 程序?</h4>
+
+<p>对于 php-fpm/mysql 等启动之后就变成 daemon 程序, 如果使用 supervisord 管理 ?</p>
+
+<pre><code>[program:mysql]
+command=/path/to/pidproxy /path/to/pidfile /path/to/mysqld_safe
+</code></pre>
+
+<p>注意不能加上 <code>autostart=true, autorestart=true</code>, 原理如上面所讲. 那么这样做的好处就是: 和没有 supervisor 之前对比, 额外增加了可以集中管理所有的程序. 就是是 php-fpm, mysql 这类的重启也可以通过</p>
+
+<pre><code>supervisorctl restart app 来进行处理.
+</code></pre>
+
+<p>至于 php-fpm 的子进程还是由 fpm 来进行管理.</p>
+
+<h3 id="toc_14">Supervisord reload 配置</h3>
+
+<pre><code>supervisorctl reread
+supervisorctl update
+</code></pre>
+
+        </section>
+  
+      
+
+<div class="container">
+  <hr />
+  
+
+  
+    <span class="right">
+    <em>Next: </em><a class="next" href="http://yujinqiu.github.io/posts/Terminology/"> &nbsp; Terminology</a> &raquo;
+    </span>
+  
+</div>
+
+    </div>
+  </div>
+
+  <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+
+  <br />
+
+
+  
+  
+
+<div class="container content">
+<footer>
+</footer>
+</div>
+
+</body>
+</html>
+
+
+
+

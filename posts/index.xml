@@ -17,7 +17,113 @@
       <guid>http://yujinqiu.github.io/posts/Supervisord/</guid>
       <description>
 
-&lt;h2 id=&#34;toc_0&#34;&gt;Supervisord reload 配置&lt;/h2&gt;
+&lt;h3 id=&#34;toc_0&#34;&gt;supervisord&lt;/h3&gt;
+
+&lt;h4 id=&#34;toc_1&#34;&gt;背景&lt;/h4&gt;
+
+&lt;p&gt;一个模块在运行的过程中可能遇到各种问题, 会导致它 crash, 如果 crash 之后, op 通常希望它能马上进行重启. supervisord 模块就是这个用途,  它在实时监测子进程模块的运行状态, 如果发现模块故障, 就会重新产生一个新实例.&lt;/p&gt;
+
+&lt;h4 id=&#34;toc_2&#34;&gt;supervisord VS supervise&lt;/h4&gt;
+
+&lt;p&gt;两个模块做的事情类似. 采用supervisord 的好处&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;开源广泛运用, 资料较多, 且具有源代码,可控性更好&lt;br /&gt;&lt;/li&gt;
+&lt;li&gt;supervisord 可以管理多个自己进程, 避免 supervise 需要 copy-paste 多份二进制程序.&lt;br /&gt;&lt;/li&gt;
+&lt;li&gt;支持 xml-rpc, 方便远程控制&lt;br /&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h4 id=&#34;toc_3&#34;&gt;资料&lt;/h4&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://supervisord.org&#34;&gt;supervisord&lt;/a&gt;&lt;/p&gt;
+
+&lt;h4 id=&#34;toc_4&#34;&gt;安装&lt;/h4&gt;
+
+&lt;p&gt;已经将 supervisord pack 到 yum server 中, 安装如下:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;yum install  -y  python-supervisord
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;toc_5&#34;&gt;服务启动&lt;/h4&gt;
+
+&lt;p&gt;安装完成之后, 系统默认是自动启动的. 目前我们已经将&lt;code&gt;python-supervisord&lt;/code&gt; 嵌入到系统 service 内部, 可以使用大家熟悉的&lt;code&gt;service&lt;/code&gt; 来操作(正常情况下不需要, 重启可能会导致子服务都重启, 谨慎操作)&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;service supervisord restart   
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;toc_6&#34;&gt;随机启动&lt;/h4&gt;
+
+&lt;p&gt;我们希望机器重启之后, &lt;code&gt;supervisord&lt;/code&gt; 之后能自动启动, 最近&lt;code&gt;python-supervisord&lt;/code&gt; 已经能够支持.&lt;/p&gt;
+
+&lt;h4 id=&#34;toc_7&#34;&gt;随机启动细节(不敢兴趣同学跳过)&lt;/h4&gt;
+
+&lt;p&gt;主要步骤如下:&lt;br /&gt;
+1: 创建随机启动脚本&lt;a href=&#34;https://git.xiaojukeji.com/op/supervisord-pack/blob/master/etc/init.d/supervisord&#34;&gt;supervisord&lt;/a&gt;&lt;br /&gt;
+2: chkconfig &amp;ndash;add supervisord&lt;br /&gt;
+3: chkconfig &amp;ndash;level 2345 supervisord on&lt;/p&gt;
+
+&lt;p&gt;将 步骤1, 随机启动脚本放到 &lt;code&gt;/etc/init.d/&lt;/code&gt; 下面&lt;br /&gt;
+将 步骤2,3 放入到安装后置脚本&lt;a href=&#34;https://git.xiaojukeji.com/op/supervisord-pack/blob/master/supervisord-after-install.sh&#34;&gt;supervisord-after-install.sh&lt;/a&gt; 内&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://unix.stackexchange.com/questions/20357/how-can-i-make-a-script-in-etc-init-d-start-at-boot&#34;&gt;随机启动reference&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&#34;https://git.xiaojukeji.com/op/supervisord-pack/tree/master&#34;&gt;打包具体命令&lt;/a&gt;&lt;/p&gt;
+
+&lt;h4 id=&#34;toc_8&#34;&gt;配置文件规范&lt;/h4&gt;
+
+&lt;p&gt;supervisord 遵守 Unix 规范.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt; /etc/supervisord.conf
+ /etc/supervisord.d/
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;其中各个模块的配置文件放在 /etc/supervisord.d/, 如果单个模块配置文件较多, 建议大家在/etc/supervisord.d/创建子目录&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;agent 为例:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt; [program:odin_agent]
+ command=odin_agent -addr=0.0.0.0:789 -mode=server -account=&amp;quot;root&amp;quot;
+ directory=/
+ autostart=true
+ startsecs=10
+ autorestart=true
+ startretries=8640
+ user=root
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;toc_9&#34;&gt;打包时候权衡(重要)&lt;/h3&gt;
+
+&lt;p&gt;在打包的时候, 我们考虑在 upgrade 的时候, 是否需要自动重启.&lt;br /&gt;
+考虑到如果自动重启的话, 会导致下面的子服务都全部重启, 这样会部分业务是不能接受的.&lt;br /&gt;
+从业务影响和 supervisord 升级的频率(基本上不会升级)考虑, 我们目前的策略是 &lt;code&gt;yum upgrade&lt;/code&gt; 只会替换 bin 程序, 不进行重启.&lt;br /&gt;
+重启生效操作需要人工 &lt;code&gt;service supervisord restart&lt;/code&gt; 来触发.&lt;br /&gt;
+&lt;code&gt;yum remove&lt;/code&gt; 的时候, 也需要人工进行 &lt;code&gt;service supervisord stop&lt;/code&gt; 来进行停止.&lt;/p&gt;
+
+&lt;h3 id=&#34;toc_10&#34;&gt;FAQ&lt;/h3&gt;
+
+&lt;h4 id=&#34;toc_11&#34;&gt;为什么 odin agent 启动不了 ?&lt;/h4&gt;
+
+&lt;p&gt;追查多次这个问题, 基本上大家在使用的时候直接 copy  &lt;code&gt;odin_agent.conf&lt;/code&gt;, 然后**忘记修改第一行&lt;code&gt;program:odin_agent&lt;/code&gt; 这个内容, 这个不能和 odin_agent 冲突, 否则会启动不了.&lt;/p&gt;
+
+&lt;h4 id=&#34;toc_12&#34;&gt;为什么使用 supervisorctl 发现提示 backoff,  不断重启?&lt;/h4&gt;
+
+&lt;p&gt;首先要明白 supervisor 的工作原理和适用场景. 工作原理:通过父进程 fork 出新子进程,  如果子进程退出重新 fork, 这样保证子进程挂掉可以重新拉起, 因此 supervisor &lt;strong&gt;只能用于管理非 daemon 程序&lt;/strong&gt;,  daemon 程序在启动之后会从父进程 detatch 出来, 被 init 进程接管, 对于 php-fpm 正常情况下是不太适合的, 使用 &lt;code&gt;php-fpm -F&lt;/code&gt; 来制定以非 daemon 形式启动&lt;/p&gt;
+
+&lt;h4 id=&#34;toc_13&#34;&gt;supervisord 如何接管 daemon 程序?&lt;/h4&gt;
+
+&lt;p&gt;对于 php-fpm/mysql 等启动之后就变成 daemon 程序, 如果使用 supervisord 管理 ?&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;[program:mysql]
+command=/path/to/pidproxy /path/to/pidfile /path/to/mysqld_safe
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;注意不能加上 &lt;code&gt;autostart=true, autorestart=true&lt;/code&gt;, 原理如上面所讲. 那么这样做的好处就是: 和没有 supervisor 之前对比, 额外增加了可以集中管理所有的程序. 就是是 php-fpm, mysql 这类的重启也可以通过&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;supervisorctl restart app 来进行处理.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;至于 php-fpm 的子进程还是由 fpm 来进行管理.&lt;/p&gt;
+
+&lt;h3 id=&#34;toc_14&#34;&gt;Supervisord reload 配置&lt;/h3&gt;
 
 &lt;pre&gt;&lt;code&gt;supervisorctl reread
 supervisorctl update
@@ -408,6 +514,24 @@ after which the metadata will expire. So that if the current metadata downloaded
           minutes  by appending a d, h or m respectively.  The default is 6 hours, to compliment yum-updatesd running once an hour.  It’s also pos-
           sible to use the word &amp;quot;never&amp;quot;, meaning that the metadata will never expire. Note that when using a metalink file the metalink must always
           be newer than the metadata for the repository, due to the validation, so this timeout also applies to the metalink file.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;toc_33&#34;&gt;如何查看一个 rpm 的依赖&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code&gt;rpm  -qpR PKG
+-q query
+-p package
+-R requires (List capabilities on which this package depends.)
+
+yum deplist PKG
+
+repoquery --requires  odin-agent
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;toc_34&#34;&gt;yum 下载某个包, 包括依赖&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code&gt;repotrack PKG 下载全部依赖
+yumdownloader --resove  PKG 只下载本地确实 pkg
 &lt;/code&gt;&lt;/pre&gt;
 </description>
     </item>
@@ -1537,308 +1661,126 @@ read_only       On #这里应该为 OFF
     </item>
     
     <item>
-      <title>Git Draft</title>
-      <link>http://yujinqiu.github.io/posts/GitDraft/</link>
+      <title>Mac os X Draft</title>
+      <link>http://yujinqiu.github.io/posts/Mac/</link>
       <pubDate>Tue, 25 Nov 2014 21:36:12 CST</pubDate>
       
-      <guid>http://yujinqiu.github.io/posts/GitDraft/</guid>
+      <guid>http://yujinqiu.github.io/posts/Mac/</guid>
       <description>
 
-&lt;h1 id=&#34;toc_0&#34;&gt;Git&lt;/h1&gt;
+&lt;p&gt;#Mac os X
+##Yosemite 升级之后应该进行什么操作?&lt;br /&gt;
+1. 从 mavericks 升级到 mac os x 之后, 会遇到一些比较诡异的问题(比如找不到 clang), 下面的命令会帮助你提前避免一些问题.&lt;/p&gt;
 
-&lt;h2 id=&#34;toc_1&#34;&gt;原子提交&lt;/h2&gt;
-
-&lt;p&gt;在我们修改文件的时候, 通常是希望一次提交只包含该次功能修改相关的操作.&lt;br /&gt;
-但是如果一个文件包含多个操作该怎么办 ?&lt;br /&gt;
-或者你的一个程序文件里边,为了调试写了很多的log日志输出, 你不希望这些语句ci 到server上, 该怎么办 ?&lt;/p&gt;
-
-&lt;p&gt;&lt;code&gt;git add -p&lt;/code&gt; 能够解决上面的场景(虽然已经add 过,还是需要add 到 stage 进去).&lt;br /&gt;
-执行之后会提示:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;Stage this hunk [y,n,q,a,d,/,e,?]?
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;sudo xcode-select --install  
+sudo xcode-select --switch /Applications/Xcode.app   
+sudo xcodebuild -license  
+sudo gem update --system  
+sudo gem install xcodeproj   
+sudo brew update   
 &lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;hit &lt;code&gt;s&lt;/code&gt; to split whatever change into smaller chunks. This only works if there is at least one unchanged line in the &amp;ldquo;middle&amp;rdquo; of the hunk, which is where hunk will be split&lt;br /&gt;
-then hit &lt;code&gt;y&lt;/code&gt; to stage that chunk&lt;br /&gt;
-or &lt;code&gt;n&lt;/code&gt; to not stage that hunk&lt;br /&gt;
-or &lt;code&gt;e&lt;/code&gt; to manually edit the chunk (useful when git can&amp;rsquo;t split it automatically)&lt;br /&gt;
-and &lt;code&gt;d&lt;/code&gt; to exit or go to the next file.&lt;br /&gt;
-Use &lt;code&gt;?&lt;/code&gt; to get the whole list of available options.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_2&#34;&gt;Git checkout 某个tag分支&lt;/h2&gt;
-
-&lt;h3 id=&#34;toc_3&#34;&gt;背景&lt;/h3&gt;
-
-&lt;p&gt;在使用 git 的时候, 经常会使用第三方开发的程序/lib 的特定版本(兼容性问题) ,&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;git tag -l
-git checkout tags/&amp;lt;tag_name&amp;gt; 
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;toc_4&#34;&gt;Git 重命名分支&lt;/h2&gt;
-
-&lt;pre&gt;&lt;code&gt;git branch -m FROM TO
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;toc_5&#34;&gt;Git checkout 远程的一个分支&lt;/h2&gt;
-
-&lt;h3 id=&#34;toc_6&#34;&gt;背景&lt;/h3&gt;
-
-&lt;p&gt;在多人协作的开发场景下, Dev B 提交了一个分支, 需要拉到本地.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;git fetch origin 
-git branch -v -a 
-git checkout -b test origin/test   
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;toc_7&#34;&gt;删除远程的一个分支&lt;/h2&gt;
-
-&lt;pre&gt;&lt;code&gt;git push origin :NAME
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;toc_8&#34;&gt;删除一个已经提交的文件&lt;/h2&gt;
-
-&lt;h3 id=&#34;toc_9&#34;&gt;背景&lt;/h3&gt;
-
-&lt;p&gt;在开发的时候有可能会不小心将配置文件提交进去, 如何删除 repo 中的文件(保留 repo 的文件),  同时保证被其他地方 git pull 的时候不会删除库里边的问题.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;echo &amp;quot;*.config&amp;quot;&amp;gt;&amp;gt;.gitignore; 
-git rm --cached &amp;quot;*.config&amp;quot;; 
-git add .; 
-git commit -m &amp;quot;Ignoring and deleting config files.&amp;quot; ; 
-git push origin;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;toc_10&#34;&gt;本地分支和远程分支的 diff&lt;/h2&gt;
-
-&lt;h3 id=&#34;toc_11&#34;&gt;背景&lt;/h3&gt;
-
-&lt;p&gt;在多人协作的开发场景下, 我怎么知道我现在的分支和 upstream 的差异&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;git diff master..upstream/master
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;toc_12&#34;&gt;Git stash&lt;/h2&gt;
-
-&lt;p&gt;git stash save &amp;ldquo;YOUR MSG&amp;rdquo;&lt;br /&gt;
-git stash list&lt;br /&gt;
-git stash apply stash@{1}&lt;br /&gt;
-git stash drop&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_13&#34;&gt;Git 多人开发流程&lt;/h2&gt;
-
-&lt;h3 id=&#34;toc_14&#34;&gt;如何发 PR&lt;/h3&gt;
-
-&lt;p&gt;以下以 wiki-pages 为例&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;p&gt;把项目 fork 到自己名下，然后 clone 到本地&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;git clone git@git.xiaojukeji.com:yexiliang/wiki-pages.git
-&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;将原始项目加为上游&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;git remote add upstream git@git.xiaojukeji.com:op/wiki-pages.git
-&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;在本地项目建立分支并切换到该分支&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;git checkout -b dev
-&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;在 dev 分支上开发，提交&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;touch foo.txt
-git add foo.txt
-git commit
-&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;切换到 master 分支并合并上游&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;git checkout master
-git fetch upstream
-git merge upstream/master
-&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;切换到 dev 分支，合并 master，推送代码&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;git checkout dev
-git rebase master
-git push
-&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;到 github / gitlab 选 dev 分支发 pull request&lt;/p&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&#34;toc_15&#34;&gt;Git conflict 如何保持一方修改&lt;/h2&gt;
-
-&lt;h3 id=&#34;toc_16&#34;&gt;背景&lt;/h3&gt;
-
-&lt;p&gt;在多人协作的情况下, 经常会出现冲突, 有时候不想 merge conflict, 直接使用双方的修改内容.&lt;/p&gt;
-
-&lt;h4 id=&#34;toc_17&#34;&gt;保持本地修改, 放弃远程版本&lt;/h4&gt;
-
-&lt;pre&gt;&lt;code&gt;git checkout --ours filename.c
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h4 id=&#34;toc_18&#34;&gt;使用远程版本, 放弃本地修改&lt;/h4&gt;
-
-&lt;pre&gt;&lt;code&gt;git checkout --theirs filename.c
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;toc_19&#34;&gt;Git 回滚到上一个版本&lt;/h2&gt;
-
-&lt;p&gt;作为项目的负责人, 通过 code review 并不能保证其中提交内容ok, 如果出现异常, 需要仅限回滚.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;branch1    branch2
-    \        /
-     \      /
-      \    /
-       \  /
-       new branch (hashcode)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;假设用户提交的 branch2  有问题, 需要回滚回 branch1&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;git  revert  -m 1  hashcode
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;如何得到 &lt;code&gt;-m&lt;/code&gt; 之后对应的 branch  是  1 ? 2 ?&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;/go/src/ServiceTree$ git show af24b57a530adcf24d098676809bc88939336063  
-commit af24b57a530adcf24d098676809bc88939336063  
-Merge: 609bb8e d160c3f   #注意这里
-Date:   Sat Dec 27 11:30:37 2014 +0800   
-
-Merge branch &#39;dev&#39; of ssh://git.xiaojukeji.com:22/op/servicetree into dev
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;从 Merge 中可以选择 &lt;code&gt;-m&lt;/code&gt; 对应的选项.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_20&#34;&gt;Git 删除远程 repo 文件, 保留本地文件&lt;/h2&gt;
-
-&lt;h3 id=&#34;toc_21&#34;&gt;背景&lt;/h3&gt;
-
-&lt;p&gt;在项目开发过程中, 有一个策略文件, 由于经常需要变更不太适合进入 repo, 最开始的时候没有考虑清楚提交进去,  现在需要从远程 repo 删除, 但是需要保留本地文件, 因为项目运行需要依赖这个文件.&lt;/p&gt;
-
-&lt;h3 id=&#34;toc_22&#34;&gt;解决方案&lt;/h3&gt;
-
-&lt;pre&gt;&lt;code&gt;git rm --cached  FILE
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;toc_23&#34;&gt;Tortoise Git 免密码 Push 问题&lt;/h2&gt;
-
-&lt;h3 id=&#34;toc_24&#34;&gt;背景&lt;/h3&gt;
-
-&lt;p&gt;和 FE 同学进行合作, 为了提高协同工作的效率, 开始手把手教 FE 同学使用 Git, 其中为了避免 FE 同学在 git clone 和 push 的时候输入密码, 使用 Puttygen 生成对应的公钥和私钥对, 开始的时候一切都 ok.&lt;br /&gt;
-第二天 FE 同学反馈说需要输入密码. 考虑到 FE 同学进行重启, 将问题怀疑在ssh-agent 没有启动, search 之后, 常见的方案是:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;eval `ssh-agent -s` 
-ssh-add  $&amp;lt;path_to_private_key&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;发现没有效果.   继续 search 之后, 发现Puttygen 上面居然有一个 Pagent, 看名字应该是这个东西.  然后启动之后, 居然没有弹出窗体, 难道没有启动? 继续执行, 提示已经 running. WTF!!!. 无意间想到, 可能在 系统托盘(system tray)里边, 找到之后, 右键直接 add key 之后一切 ok.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_25&#34;&gt;Git tag&lt;/h2&gt;
-
-&lt;h3 id=&#34;toc_26&#34;&gt;背景&lt;/h3&gt;
-
-&lt;p&gt;在使用git的过程中, 我们通常喜欢利用 tag 来进行标记, 进行发布.&lt;/p&gt;
-
-&lt;h3 id=&#34;toc_27&#34;&gt;How to&lt;/h3&gt;
-
-&lt;pre&gt;&lt;code&gt;git tag -a  v1.0.0 #会提示对应输入, 要求输入 annotation
-git tag -l -n3  #注意-n 和 3 之间不能有空格. 
-# three lines of message for every tag
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;toc_28&#34;&gt;Git hook&lt;/h2&gt;
-
-&lt;p&gt;Git hooks are event-based. When you run certain git commands, the software will check the &lt;strong&gt;hooks directory&lt;/strong&gt; within the git repository to see if there is an associated script to run.&lt;/p&gt;
-
-&lt;p&gt;Some scripts run prior to an action taking place(pre-hook), which can be used to ensure code compliance to standars, for sanity checking, or to set up an environment.  Other scripts run after an event(post-hook) in order to deploy code, re-establish correct permissions, and so forth.&lt;/p&gt;
-
-&lt;p&gt;git hook 分为 client-side hook 和  server side hook.&lt;/p&gt;
-
-&lt;h3 id=&#34;toc_29&#34;&gt;client-side hook&lt;/h3&gt;
 
 &lt;ol&gt;
-&lt;li&gt;&lt;p&gt;Committing-Workflow hooks: commiting hooks are used to dictate actions that should be taken around when a commit is being made.  They are used to run sanity checks, pre-populate commit messages, and verify message details. You can also use this to provide notifications upon committing.&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;Email Workflow hooks: This category of hooks encompasses actions that are taken when working with emailed patches. Projects like the Linux kernel submit and review patches using an email method. These are in a similar vein as the commit hooks, but can be used by maintainers who are responsible for applying submitted code.&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;Other: Other client-side hooks include hooks that execute when merging, checking out code, rebasing, rewriting, and cleaning repos.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;同时 Yosemite 会收集用户的隐私数据, 建议通过&lt;a href=&#34;https://fix-macosx.com/&#34;&gt;fix-macosx&lt;/a&gt;进行修复&lt;/li&gt;
 &lt;/ol&gt;
 
-&lt;h3 id=&#34;toc_30&#34;&gt;server-side hook&lt;/h3&gt;
+&lt;h3 id=&#34;toc_0&#34;&gt;Mac os X 窗体最小化之后恢复&lt;/h3&gt;
 
-&lt;p&gt;钩子在 server 端运行&lt;/p&gt;
+&lt;p&gt;Mac os X 在最小化窗体之后, &lt;code&gt;command + tab&lt;/code&gt; 是不能够直接恢复, 具体操作如下&lt;br /&gt;
+command + tab 定位到对应的 Application 然后 &lt;code&gt;alt&lt;/code&gt; 然后同时放开 &lt;code&gt;alt command&lt;/code&gt;&lt;/p&gt;
 
-&lt;ol&gt;
-&lt;li&gt;Pre-receive and post-receive: These are executed on the server receiving a push to do things like check for project conformance and to deploy after a push.&lt;br /&gt;&lt;/li&gt;
-&lt;li&gt;Update: This is like a pre-receive, but operates on a branch-by-branch basis to execute code prior to each branch being accepted.&lt;/li&gt;
-&lt;/ol&gt;
+&lt;h3 id=&#34;toc_1&#34;&gt;Mac 禁用启动声音&lt;/h3&gt;
 
-&lt;h2 id=&#34;toc_31&#34;&gt;Git trick Skill&lt;/h2&gt;
+&lt;h4 id=&#34;toc_2&#34;&gt;背景&lt;/h4&gt;
 
-&lt;h3 id=&#34;toc_32&#34;&gt;背景&lt;/h3&gt;
+&lt;p&gt;每次 mac 重启或者启动的时候, 一直会有一声 bong 的声音, 在工作室或者其他人多的环境经常会影响到别人, 比较尴尬. 如何解决:&lt;/p&gt;
 
-&lt;p&gt;在生产环境中, 可能我们会有一个密码文件, 不想让大家看到, 当时自己又记不住.&lt;br /&gt;
-假设文件名: passwd&lt;/p&gt;
+&lt;h4 id=&#34;toc_3&#34;&gt;解决方案&lt;/h4&gt;
 
-&lt;pre&gt;&lt;code&gt;cat passed | git hash-object -w --stdin  #可以得到文件的 HASH
-git tag passwd HASH
-然后就可以删除 passwd 文件
-git cat-file blob passed
+&lt;p&gt;网上的各种方法其实都不是很靠谱,  经过自己的各种摸索之后, 终于找到靠谱的方案.&lt;br /&gt;
+&lt;strong&gt;注意&lt;/strong&gt;: 为了避免各种权限问题, 建议直接用 &lt;strong&gt;root&lt;/strong&gt; 权限操作. &lt;code&gt;sudo su - root&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;1: 在 &lt;code&gt;/usr/local/bin/silence.sh&lt;/code&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!/bin/bash
+
+nvram SystemAudioVolume=&amp;quot;%01&amp;quot;
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h3 id=&#34;toc_33&#34;&gt;git log&lt;/h3&gt;
+&lt;p&gt;2: 修改权限位, 让该脚本可以执行&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;git log FILE 查看某个人家的变化记录
-git log -S &amp;quot;LINE&amp;quot;  查看 LINE 这行出现的提交
-
-
-git reflog  其实有更好的替代方式:  git log -g 有更完整的信息.
+&lt;pre&gt;&lt;code&gt;chmod 755 /usr/local/bin/silence.sh
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h3 id=&#34;toc_34&#34;&gt;好习惯&lt;/h3&gt;
+&lt;p&gt;3: 设置系统关闭的时候执行的 hook.&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;git  pull --rebase 
-如果出现冲突, 解决冲突
-git add CONFLICT-FILE
-git rebase --continue
-git  diff HEAD FILE  #head working space 和 HEAD 区域对比
+&lt;pre&gt;&lt;code&gt;defaults write com.apple.loginwindow LogoutHook /usr/local/bin/silence.sh
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h2 id=&#34;toc_35&#34;&gt;有用比较生僻功能&lt;/h2&gt;
+&lt;h3 id=&#34;toc_4&#34;&gt;清除 DNS cache&lt;/h3&gt;
 
-&lt;h3 id=&#34;toc_36&#34;&gt;cherry-pick&lt;/h3&gt;
-
-&lt;p&gt;假设我们并行开发两个版本, 其中有一个版本2.0 是稳定版本,  其中版本3.0 是在开发版本,  3.0 引入了一个比较高级的功能或者比较重要的 bug, 我们迫切希望在2.0 中能够进行添加, 但是我们又不能够把3.0 和 2.0 直接 merge, 因为3.0 中还有很多其他的 feature 是我们目前不需要的. 这时候就可以使用 cherry-pick.&lt;br /&gt;
-cherry-pick 的本质功能是: 对一个 commit 在当前的 branch 中 重放.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;git checkout BRANCH
-git cherry-pick HASH
-如果正常就 ok, 如果冲突, 需要手工解决冲突, 然后按照提示
-
-Automatic cherry-pick failed.  After resolving the conflicts,
-mark the corrected paths with &#39;git add &amp;lt;paths&amp;gt;&#39; or &#39;git rm &amp;lt;paths&amp;gt;&#39;
-and commit the result with: 
-
-    git commit -c 15a2b6c61927e5aed6718de89ad9dafba939a90b
+&lt;pre&gt;&lt;code&gt;sudo dscacheutil -flushcache
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h2 id=&#34;toc_37&#34;&gt;Git clone 部分 repo&lt;/h2&gt;
+&lt;h3 id=&#34;toc_5&#34;&gt;mac os x 权限位问题&lt;/h3&gt;
 
-&lt;h3 id=&#34;toc_38&#34;&gt;背景&lt;/h3&gt;
+&lt;p&gt;在 mac os terminal 中我们经常可以看到 带有 &lt;code&gt;+&lt;/code&gt;  和  &lt;code&gt;@&lt;/code&gt;  的权限问题&lt;/p&gt;
 
-&lt;p&gt;如果你在 clone 整个 git repo 的时候, 发现这个 repo 特别大, 可以通过以下方式来进行优化:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;git clone --depth N  URL  
+&lt;pre&gt;&lt;code&gt;-rw-r--r--@  1 knight  staff      775 Feb 26  2014 Apple.md
+-rw-r--r--   1 knight  staff     3608 Oct 25 14:23 CliDraft.md
+-rw-r--r--@  1 knight  staff     1208 Nov 16  2013 EspeakDraft.md
+-rw-r--r--@  1 knight  staff     3470 Dec 31  2013 FPDraft.md
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;其中 N 表示 clone 下来几个版本.&lt;/p&gt;
+&lt;h4 id=&#34;toc_6&#34;&gt;@ 字符&lt;/h4&gt;
+
+&lt;p&gt;&lt;code&gt;@&lt;/code&gt; 表示这个文件拥有扩展的属性( additional attribute) , 可以通过&lt;code&gt;xattr&lt;/code&gt; 来查看详细信息:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;xattr -l  &amp;lt;filename&amp;gt; 
+
+➜  engineerdraft git:(master) ✗ xattr -l Apple.md
+com.apple.TextEncoding: utf-8;134217984
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;扩展的属性用途是: 定义一些打开文件的程序比如 Mou 打开 markdown 文件.&lt;/p&gt;
+
+&lt;h4 id=&#34;toc_7&#34;&gt;+ 字符&lt;/h4&gt;
+
+&lt;p&gt;+ 表示这个文件用户 ACL(Access Control List) 相对于文件的权限能够耕细粒度的控制.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;ls -le 可以查看文件的 acl 权限
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;##如何快速访问Menu或者mac访问Menu的快捷键
+在window的用户会有这样的习惯, 通过alt来快速访问菜单栏. 在mac 下怎么通过键盘来快速访问?
+终于在&lt;a href=&#34;http://lifehacker.com/321595/access-the-dock-and-menu-bar-from-your-keyboard&#34;&gt;access-the-dock-and-menu-bar-from-your-keyboard&lt;/a&gt; 找到方法.    
+其实很简单就是通过 &lt;code&gt;ctrl+F2&lt;/code&gt;(menubar) &lt;code&gt;ctrl+F3&lt;/code&gt;(dock), 然后直接输入对应的菜单名称. 比如:&lt;code&gt;View&lt;/code&gt;, 输入回车即可选择, 然后继续输入对应的名称,或者通过方向键即可选择.
+打开Menu的Help的快捷键是&lt;code&gt;command + shift + /&lt;/code&gt;, 可以这样记住: shift+/ = ?  快捷键就是command + ? == help&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_8&#34;&gt;mac 计算md5 值&lt;/h2&gt;
+
+&lt;p&gt;在linux 下有md5sum 这个命令, 在mac 下发现居然没有. 仔细查找之后发现原来叫md5. 运行之后发现和md5sum输出的结果不一样, 其实可以利用&lt;code&gt;md5 -r&lt;/code&gt;就可以得到一样的结果.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_9&#34;&gt;mac 版本管理&lt;/h2&gt;
+
+&lt;p&gt;mac 的 keynote, pages, numbers 和原始文本编辑器是具有版本管理的. 入口在&lt;code&gt;File-&amp;gt; revert to -&amp;gt; brow all version&lt;/code&gt;, 可以进入查看和 time machine 一样的界面.&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_10&#34;&gt;快速打开stikcy note 快捷键&lt;/h2&gt;
+
+&lt;p&gt;shift+ command + y ,  退出:  command + q&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_11&#34;&gt;屏幕放大&lt;/h2&gt;
+
+&lt;p&gt;ctrl + 鼠标放大,缩小&lt;/p&gt;
+
+&lt;h2 id=&#34;toc_12&#34;&gt;快速预览文件( quick look)&lt;/h2&gt;
+
+&lt;h3 id=&#34;toc_13&#34;&gt;背景&lt;/h3&gt;
+
+&lt;p&gt;经常我们在命令行里边,看到某个文件之后, 希望能够 quick look, 一般的做法是, open File 打开, 然后关闭, 其实我们只是希望能够简单看一下, 可以利用以下命令来实现 :&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;qlmanage -p  File
+&lt;/code&gt;&lt;/pre&gt;
 </description>
     </item>
     

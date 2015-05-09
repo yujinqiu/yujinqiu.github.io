@@ -239,6 +239,30 @@ search 之后发现原来是 kernel 2.6.13 开始引入 Inotify 导致.  需要�
  This specifies an upper limit on the number of watches that can be created per real user ID.
 </code></pre>
 
+<h3 id="toc_19">Linux 目录权限????</h3>
+
+<h4 id="toc_20">背景</h4>
+
+<p>今天在大规模升级Agent 到 2k+ 机器过程中, 发现一个比较诡异的问题.  追查之后发现有些机器的权限很诡异的权限</p>
+
+<pre><code>-????????? ? ?      ?             ?            ? tcollector.log
+</code></pre>
+
+<p>如果删除提示</p>
+
+<pre><code>rm: cannot remove `tcollector.log': Input/output error
+</code></pre>
+
+<p>查看<code>/var/log/message</code> 提示错误</p>
+
+<pre><code>May  9 12:11:30 fd-sec-siem00 kernel: [2486652.261872] EXT3-fs error (device sda1): ext3_lookup: deleted inode referenced: 542728
+</code></pre>
+
+<p>因此确定是文件系统故障, 对于根分区无法 umount, 因此可以通过下面方式, 然后重启, 这样系统启动之后会自动 fsck.</p>
+
+<pre><code>touch /forcefsck
+</code></pre>
+
         </section>
   
       
