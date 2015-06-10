@@ -7,7 +7,35 @@
     
     
     
-    <updated>Wed, 25 Mar 2015 17:17:50 CST</updated>
+    <updated>Wed, 10 Jun 2015 17:39:04 CST</updated>
+    
+    <item>
+      <title>Snippets</title>
+      <link>http://yujinqiu.github.io/posts/Snippets/</link>
+      <pubDate>Wed, 10 Jun 2015 17:39:04 CST</pubDate>
+      
+      <guid>http://yujinqiu.github.io/posts/Snippets/</guid>
+      <description>
+
+&lt;h2 id=&#34;toc_0&#34;&gt;背景&lt;/h2&gt;
+
+&lt;p&gt;记录常用的比较有技巧的&lt;code&gt;code snippets&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;toc_1&#34;&gt;如何保留float 制定的小数位数&lt;/h3&gt;
+
+&lt;h4 id=&#34;toc_2&#34;&gt;背景&lt;/h4&gt;
+
+&lt;p&gt;默认情况下线 float64 会有很长的小数, 在监控系统的展示中不是非常友好. 因此希望把&lt;strong&gt;0.3333333&lt;/strong&gt; 结果截取为 &lt;strong&gt;0.33&lt;/strong&gt; , 然后提交到 server.&lt;/p&gt;
+
+&lt;h4 id=&#34;toc_3&#34;&gt;实现&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code&gt;    func SetPrecision(from float64, precision int) float64 {
+        base := math.Pow10(precision)
+        return float64(int64(from*base)) / base
+    }
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
     
     <item>
       <title>Supervisord</title>
@@ -170,6 +198,99 @@ hbase-daemon.sh start regionserver #regionserver, stop 同理
 
 &lt;pre&gt;&lt;code&gt;hbase-daemon.sh start master 是用来启动单个 master
 ./bin/start-hbase.sh 会启动整个集群, 其中会读取 hbase-0.96.2-hadoop1/conf/regionservers 用来标记 regionservers 的列表, 扩容的时候不一定需要添加进去, 因为 regionserver 的机器存储在 zookeeper.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;toc_3&#34;&gt;如何下线 datanode&lt;/h2&gt;
+
+&lt;h3 id=&#34;toc_4&#34;&gt;背景&lt;/h3&gt;
+
+&lt;p&gt;所谓无知者无畏, 自己太想当然了, 以为hadoop 的 datanode 有三份冗余, 就可以毫无顾虑就把data node stop 就 ok了.  后来发现自己太天真了.&lt;/p&gt;
+
+&lt;h3 id=&#34;toc_5&#34;&gt;正确姿势&lt;/h3&gt;
+
+&lt;p&gt;1: 在namenode 的 &lt;code&gt;hdfs-site.xml&lt;/code&gt; 中新增(如果不存在)&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt; &amp;lt;property&amp;gt;                                                                                                                       
+    &amp;lt;name&amp;gt;dfs.hosts.exclude&amp;lt;/name&amp;gt;                                                                                             
+    &amp;lt;value&amp;gt;${path to exclude file}&amp;lt;/ value&amp;gt;                                                                                                    
+  &amp;lt;/property&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;2: 在&lt;code&gt;${path to exclude file}&lt;/code&gt; 文件中新增需要摘除的节点(机器名称)&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;机器名称(也可能是 IP)可以通过下面方式获得  
+
+    ./bin/hadoop dfsadmin -report
+
+正常情况下节点的信息
+    Name: 10.242.149.240:50010  (Name 这里的 name 后面的 名称就是写入 ${path to exclude file} 内)
+    Decommission Status : Normal (正常状态)
+    Configured Capacity: 0 (0 KB)
+    DFS Used: 0 (0 KB)
+    Non DFS Used: 0 (0 KB)
+    DFS Remaining: 0(0 KB)
+    DFS Used%: 100%
+    DFS Remaining%: 0%
+    Last contact: Wed May 13 15:40:10 CST 2015
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;3: 迁移节点数据&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;./bin/hadoop dfsadmin -refreshNodes
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;toc_6&#34;&gt;常见问题&lt;/h2&gt;
+
+&lt;ol&gt;
+&lt;li&gt;WARN org.apache.hadoop.util.NativeCodeLoader: Unable to load native-hadoop library for your platform&amp;hellip; using builtin-java classes where applicable&lt;br /&gt;
+原因:  默认下载的是32bit 上面的系统, 因此需要自己编译. 特别注意一下: file  lib/native 里边的 so 提示是64位, 感觉不对, 反正就是需要自己在64bit 上编译一套.&lt;br /&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&#34;toc_7&#34;&gt;编译方法&lt;/h3&gt;
+
+&lt;p&gt;整个编译过程比较长, 主要浪费在下载过程.  核心点&lt;br /&gt;
+1: 安装 protocol buffer&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;./configure &amp;amp;&amp;amp; make &amp;amp;&amp;amp; make install
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;1: 确认依赖都安装&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt; yum install -y gcc autoconf automake libtool zlib-devel bzip2-devel  openssl-devel ncurses-devel cmake
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;2: 安装 maven&lt;/p&gt;
+
+&lt;p&gt;3: 下载 hadoop, 并编译&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;mvn package -Pdist,native -Dskiptests -Dtar
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;4:  编译完成之后,把 &lt;strong&gt;hadoop-dist/target/hadoop-2.5.2/lib/native/&lt;/strong&gt; 下面的文件, 替换原来的32bit 的文件即可. 不需要像网上各种文章说需要设置各种环境变量.&lt;/p&gt;
+
+&lt;h4 id=&#34;toc_8&#34;&gt;特殊说明&lt;/h4&gt;
+
+&lt;p&gt;在安装的过程中, 有莫名的报错, 重复执行编译 &lt;code&gt;mvn package -Pdist,native -Dskiptests -Dtar&lt;/code&gt; 会成功&lt;/p&gt;
+
+&lt;h4 id=&#34;toc_9&#34;&gt;额外配置&lt;/h4&gt;
+
+&lt;p&gt;如果需要设置 codecs 的顺序, 可以在 &lt;code&gt;core-site.xml&lt;/code&gt; 里边配置 .&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    &amp;lt;property&amp;gt;
+        &amp;lt;name&amp;gt;io.compression.codecs&amp;lt;/name&amp;gt;
+        &amp;lt;value&amp;gt;
+                org.apache.hadoop.io.compress.BZip2Codec,
+                org.apache.hadoop.io.compress.GzipCodec,
+                org.apache.hadoop.io.compress.DefaultCodec,
+                com.hadoop.compression.lzo.LzoCodec,
+                com.hadoop.compression.lzo.LzopCodec
+        &amp;lt;/value&amp;gt;
+    &amp;lt;/property&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;toc_10&#34;&gt;如何校验是否成功&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;./bin/hadoop checknative -a
 &lt;/code&gt;&lt;/pre&gt;
 </description>
     </item>
@@ -532,6 +653,17 @@ repoquery --requires  odin-agent
 
 &lt;pre&gt;&lt;code&gt;repotrack PKG 下载全部依赖
 yumdownloader --resove  PKG 只下载本地确实 pkg
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;toc_35&#34;&gt;yum 按照远程的一个 pkg&lt;/h2&gt;
+
+&lt;h3 id=&#34;toc_36&#34;&gt;背景&lt;/h3&gt;
+
+&lt;p&gt;有时候只需要安装一个 repo 的一个 pkg, 因此不想要配置 repo 到 &lt;code&gt;/etc/yum.repo.d&lt;/code&gt; 下面, 希望安装的时候直接从 repo 下载安装&lt;/p&gt;
+
+&lt;h3 id=&#34;toc_37&#34;&gt;解决方案&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;yum install -y http://${repo server}/centos/os/6/x86_64/general_rpm/yum-local-repo-0.0.1-0.x86_64.rpm
 &lt;/code&gt;&lt;/pre&gt;
 </description>
     </item>
@@ -1656,130 +1788,6 @@ read_only       On #这里应该为 OFF
 &lt;p&gt;3: 设置 read_only = off&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;set GLOBAL read_only = false;  
-&lt;/code&gt;&lt;/pre&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Mac os X Draft</title>
-      <link>http://yujinqiu.github.io/posts/Mac/</link>
-      <pubDate>Tue, 25 Nov 2014 21:36:12 CST</pubDate>
-      
-      <guid>http://yujinqiu.github.io/posts/Mac/</guid>
-      <description>
-
-&lt;p&gt;#Mac os X
-##Yosemite 升级之后应该进行什么操作?&lt;br /&gt;
-1. 从 mavericks 升级到 mac os x 之后, 会遇到一些比较诡异的问题(比如找不到 clang), 下面的命令会帮助你提前避免一些问题.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;sudo xcode-select --install  
-sudo xcode-select --switch /Applications/Xcode.app   
-sudo xcodebuild -license  
-sudo gem update --system  
-sudo gem install xcodeproj   
-sudo brew update   
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;ol&gt;
-&lt;li&gt;同时 Yosemite 会收集用户的隐私数据, 建议通过&lt;a href=&#34;https://fix-macosx.com/&#34;&gt;fix-macosx&lt;/a&gt;进行修复&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h3 id=&#34;toc_0&#34;&gt;Mac os X 窗体最小化之后恢复&lt;/h3&gt;
-
-&lt;p&gt;Mac os X 在最小化窗体之后, &lt;code&gt;command + tab&lt;/code&gt; 是不能够直接恢复, 具体操作如下&lt;br /&gt;
-command + tab 定位到对应的 Application 然后 &lt;code&gt;alt&lt;/code&gt; 然后同时放开 &lt;code&gt;alt command&lt;/code&gt;&lt;/p&gt;
-
-&lt;h3 id=&#34;toc_1&#34;&gt;Mac 禁用启动声音&lt;/h3&gt;
-
-&lt;h4 id=&#34;toc_2&#34;&gt;背景&lt;/h4&gt;
-
-&lt;p&gt;每次 mac 重启或者启动的时候, 一直会有一声 bong 的声音, 在工作室或者其他人多的环境经常会影响到别人, 比较尴尬. 如何解决:&lt;/p&gt;
-
-&lt;h4 id=&#34;toc_3&#34;&gt;解决方案&lt;/h4&gt;
-
-&lt;p&gt;网上的各种方法其实都不是很靠谱,  经过自己的各种摸索之后, 终于找到靠谱的方案.&lt;br /&gt;
-&lt;strong&gt;注意&lt;/strong&gt;: 为了避免各种权限问题, 建议直接用 &lt;strong&gt;root&lt;/strong&gt; 权限操作. &lt;code&gt;sudo su - root&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;1: 在 &lt;code&gt;/usr/local/bin/silence.sh&lt;/code&gt;&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!/bin/bash
-
-nvram SystemAudioVolume=&amp;quot;%01&amp;quot;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;2: 修改权限位, 让该脚本可以执行&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;chmod 755 /usr/local/bin/silence.sh
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;3: 设置系统关闭的时候执行的 hook.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;defaults write com.apple.loginwindow LogoutHook /usr/local/bin/silence.sh
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;toc_4&#34;&gt;清除 DNS cache&lt;/h3&gt;
-
-&lt;pre&gt;&lt;code&gt;sudo dscacheutil -flushcache
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;toc_5&#34;&gt;mac os x 权限位问题&lt;/h3&gt;
-
-&lt;p&gt;在 mac os terminal 中我们经常可以看到 带有 &lt;code&gt;+&lt;/code&gt;  和  &lt;code&gt;@&lt;/code&gt;  的权限问题&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;-rw-r--r--@  1 knight  staff      775 Feb 26  2014 Apple.md
--rw-r--r--   1 knight  staff     3608 Oct 25 14:23 CliDraft.md
--rw-r--r--@  1 knight  staff     1208 Nov 16  2013 EspeakDraft.md
--rw-r--r--@  1 knight  staff     3470 Dec 31  2013 FPDraft.md
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h4 id=&#34;toc_6&#34;&gt;@ 字符&lt;/h4&gt;
-
-&lt;p&gt;&lt;code&gt;@&lt;/code&gt; 表示这个文件拥有扩展的属性( additional attribute) , 可以通过&lt;code&gt;xattr&lt;/code&gt; 来查看详细信息:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;xattr -l  &amp;lt;filename&amp;gt; 
-
-➜  engineerdraft git:(master) ✗ xattr -l Apple.md
-com.apple.TextEncoding: utf-8;134217984
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;扩展的属性用途是: 定义一些打开文件的程序比如 Mou 打开 markdown 文件.&lt;/p&gt;
-
-&lt;h4 id=&#34;toc_7&#34;&gt;+ 字符&lt;/h4&gt;
-
-&lt;p&gt;+ 表示这个文件用户 ACL(Access Control List) 相对于文件的权限能够耕细粒度的控制.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;ls -le 可以查看文件的 acl 权限
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;##如何快速访问Menu或者mac访问Menu的快捷键
-在window的用户会有这样的习惯, 通过alt来快速访问菜单栏. 在mac 下怎么通过键盘来快速访问?
-终于在&lt;a href=&#34;http://lifehacker.com/321595/access-the-dock-and-menu-bar-from-your-keyboard&#34;&gt;access-the-dock-and-menu-bar-from-your-keyboard&lt;/a&gt; 找到方法.    
-其实很简单就是通过 &lt;code&gt;ctrl+F2&lt;/code&gt;(menubar) &lt;code&gt;ctrl+F3&lt;/code&gt;(dock), 然后直接输入对应的菜单名称. 比如:&lt;code&gt;View&lt;/code&gt;, 输入回车即可选择, 然后继续输入对应的名称,或者通过方向键即可选择.
-打开Menu的Help的快捷键是&lt;code&gt;command + shift + /&lt;/code&gt;, 可以这样记住: shift+/ = ?  快捷键就是command + ? == help&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_8&#34;&gt;mac 计算md5 值&lt;/h2&gt;
-
-&lt;p&gt;在linux 下有md5sum 这个命令, 在mac 下发现居然没有. 仔细查找之后发现原来叫md5. 运行之后发现和md5sum输出的结果不一样, 其实可以利用&lt;code&gt;md5 -r&lt;/code&gt;就可以得到一样的结果.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_9&#34;&gt;mac 版本管理&lt;/h2&gt;
-
-&lt;p&gt;mac 的 keynote, pages, numbers 和原始文本编辑器是具有版本管理的. 入口在&lt;code&gt;File-&amp;gt; revert to -&amp;gt; brow all version&lt;/code&gt;, 可以进入查看和 time machine 一样的界面.&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_10&#34;&gt;快速打开stikcy note 快捷键&lt;/h2&gt;
-
-&lt;p&gt;shift+ command + y ,  退出:  command + q&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_11&#34;&gt;屏幕放大&lt;/h2&gt;
-
-&lt;p&gt;ctrl + 鼠标放大,缩小&lt;/p&gt;
-
-&lt;h2 id=&#34;toc_12&#34;&gt;快速预览文件( quick look)&lt;/h2&gt;
-
-&lt;h3 id=&#34;toc_13&#34;&gt;背景&lt;/h3&gt;
-
-&lt;p&gt;经常我们在命令行里边,看到某个文件之后, 希望能够 quick look, 一般的做法是, open File 打开, 然后关闭, 其实我们只是希望能够简单看一下, 可以利用以下命令来实现 :&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;qlmanage -p  File
 &lt;/code&gt;&lt;/pre&gt;
 </description>
     </item>

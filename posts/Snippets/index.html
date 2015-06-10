@@ -7,8 +7,8 @@
 <head>
     <meta charset="utf-8">
     <base href="http://yujinqiu.github.io">
-    <title> Categories </title>
-    <link rel="canonical" href="http://yujinqiu.github.io/categories/">
+    <title> Snippets </title>
+    <link rel="canonical" href="http://yujinqiu.github.io/posts/Snippets/">
     
 
 <link rel="stylesheet" href="/css/poole.css">
@@ -53,42 +53,66 @@
         <h3 class="masthead-title">
           <a href="/posts" title="Blog">Blog Posts</a>
         </h3>
+        <hr>
       </div>
     </div>
 
     
     <div class="container content">
+      <div class="post-tile-meta">
+        <h1 class="post-title">Snippets</h1>
+        Wed Jun 10, 2015 
+<div class="container category">
+  <ul class="catlist">
+    <li><em>Categories: </em></li>
+    
+  </ul>
+</div>
+</p>
+      </div>
         <section id="main">
-          <div>
-            <h1>Archive of Posts, by category</h1>
-            <ul class="category">
-              
-              
-              <li><a href="/categories/hugo"> hugo </a> (4 entries) </li>
-              
-              <li><a href="/categories/tech"> tech </a> (3 entries) </li>
-              
-              <li><a href="/categories/go"> go </a> (3 entries) </li>
-              
-              <li><a href="/categories/docker"> docker </a> (2 entries) </li>
-              
-              <li><a href="/categories/github"> github </a> (2 entries) </li>
-              
-              <li><a href="/categories/golang"> golang </a> (2 entries) </li>
-              
-              <li><a href="/categories/gists"> gists </a> (1 entries) </li>
-              
-              <li><a href="/categories/jquery"> jquery </a> (1 entries) </li>
-              
-              <li><a href="/categories/template"> template </a> (1 entries) </li>
-              
-            </ul>
-          </div>
+          
+
+<h2 id="toc_0">背景</h2>
+
+<p>记录常用的比较有技巧的<code>code snippets</code></p>
+
+<h3 id="toc_1">如何保留float 制定的小数位数</h3>
+
+<h4 id="toc_2">背景</h4>
+
+<p>默认情况下线 float64 会有很长的小数, 在监控系统的展示中不是非常友好. 因此希望把<strong>0.3333333</strong> 结果截取为 <strong>0.33</strong> , 然后提交到 server.</p>
+
+<h4 id="toc_3">实现</h4>
+
+<pre><code>    func SetPrecision(from float64, precision int) float64 {
+        base := math.Pow10(precision)
+        return float64(int64(from*base)) / base
+    }
+</code></pre>
+
         </section>
+  
+      
+
+<div class="container">
+  <hr />
+  
+
+  
+    <span class="right">
+    <em>Next: </em><a class="next" href="http://yujinqiu.github.io/posts/Supervisord/"> &nbsp; Supervisord</a> &raquo;
+    </span>
+  
+</div>
+
     </div>
   </div>
 
   <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+
+  <br />
+
 
   
   

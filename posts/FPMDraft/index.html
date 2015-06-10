@@ -407,6 +407,17 @@ repoquery --requires  odin-agent
 yumdownloader --resove  PKG 只下载本地确实 pkg
 </code></pre>
 
+<h2 id="toc_35">yum 按照远程的一个 pkg</h2>
+
+<h3 id="toc_36">背景</h3>
+
+<p>有时候只需要安装一个 repo 的一个 pkg, 因此不想要配置 repo 到 <code>/etc/yum.repo.d</code> 下面, 希望安装的时候直接从 repo 下载安装</p>
+
+<h3 id="toc_37">解决方案</h3>
+
+<pre><code>yum install -y http://${repo server}/centos/os/6/x86_64/general_rpm/yum-local-repo-0.0.1-0.x86_64.rpm
+</code></pre>
+
         </section>
   
       

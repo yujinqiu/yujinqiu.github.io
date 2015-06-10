@@ -68,6 +68,22 @@
 
 <article class="post">
     <header>
+      <h2><a href='http://yujinqiu.github.io/posts/Snippets/'> Snippets</a> </h2>
+      <div class="meta">Wed, Jun 10, 2015</div>
+    </header>
+
+    背景 记录常用的比较有技巧的code snippets 如何保留float 制定的小数位数 背景 默认情况下线 float64 会有很长的小数, 在监控系统的展示中不是非常友好. 因此希望把0.3333333 结果截取为 0.33 , 然后提交到 server. 实现 func SetPrecision(from float64, precision int) float64 { base := math.Pow10(precision) return float64(int64(from*base)) / base }
+    <footer style="text-align:right; ">
+        <a href='http://yujinqiu.github.io/posts/Snippets/'><nobr>Read more →</nobr></a>
+    </footer>
+    <hr/>
+</article>
+
+            
+            
+
+<article class="post">
+    <header>
       <h2><a href='http://yujinqiu.github.io/posts/Supervisord/'> Supervisord</a> </h2>
       <div class="meta">Wed, Mar 25, 2015</div>
     </header>
@@ -104,7 +120,7 @@
       <div class="meta">Mon, Feb 2, 2015</div>
     </header>
 
-    hbase 查看master hbase master 信息存储在zookeeper 中, 可以在 zookeeper 中查询. zkCli.sh -server myzoo get /hbase/master 如何启动 hmaster/regionserver hbase-daemon.sh start master #hmaster, stop 同理 hbase-daemon.sh start regionserver #regionserver, stop 同理 start master 和 ./bin/start-hbase.sh 有啥区别? hbase-daemon.sh start master 是用来启动单个 master ./bin/start-hbase.sh 会启动整个集群, 其中会读取 hbase-0.96.2-hadoop1/conf/regionservers 用来标记 regionservers 的列表, 扩容的时候不一定需要添加进去, 因为 regionserver 的机器存储在 zookeeper.
+    hbase 查看master hbase master 信息存储在zookeeper 中, 可以在 zookeeper 中查询. zkCli.sh -server myzoo get /hbase/master 如何启动 hmaster/regionserver hbase-daemon.sh start master #hmaster, stop 同理 hbase-daemon.sh start regionserver #regionserver, stop 同理 start master 和 ./bin/start-hbase.sh 有啥区别? hbase-daemon.sh start master 是用来启动单个 master ./bin/start-hbase.sh 会启动整个集群, 其中会读取 hbase-0.96.2-hadoop1/conf/regionservers 用来标记 regionservers 的列表, 扩容的时候不一定需要添加进去, 因为 regionserver 的机器存储在 zookeeper. 如何下线 datanode 背景 所谓无知者无畏, 自己太想当然了, 以为hadoop 的 datanode 有三份冗余, 就可以毫无顾虑就把data node stop 就 ok了. 后来发现自己太天真了. 正确姿势 1: 在namenode 的 hdfs-site.xml 中新增(如果不存在) &lt;property&gt; &lt;name&gt;dfs.hosts.exclude&lt;/name&gt; &lt;value&gt;${path to exclude file}&lt;/ value&gt; &lt;/property&gt; 2: 在${path to exclude file} 文件中新增需要摘除的节点(机器名称) 机器名称(也可能是 IP)可以通过下面方式获得 ./bin/hadoop dfsadmin -report 正常情况下节点的信息 Name: 10.242.149.240:50010 (Name 这里的 name 后面的 名称就是写入 ${path to exclude file} 内) Decommission Status : Normal (正常状态) Configured Capacity: 0 (0 KB) DFS Used: 0 (0 KB) Non DFS Used: 0 (0 KB) DFS Remaining: 0(0 KB) DFS Used%: 100% DFS Remaining%: 0% Last contact: Wed May 13 15:40:10 CST 2015 3: 迁移节点数据 ./bin/hadoop dfsadmin -refreshNodes 常见问题 WARN org.apache.hadoop.util.NativeCodeLoader: Unable to load native-hadoop library for your platform&hellip; using builtin-java classes where applicable 原因: 默认下载的是32bit 上面的系统, 因此需要自己编译.
     <footer style="text-align:right; ">
         <a href='http://yujinqiu.github.io/posts/BigDataDraft/'><nobr>Read more →</nobr></a>
     </footer>
@@ -280,36 +296,6 @@ ssh -D 的本质上是一个 sock5 的代理, 不是 http/https 代理, 所以�
 
     <footer style="text-align:right; ">
         <a href='http://yujinqiu.github.io/posts/FqDraft/'><nobr>Read more →</nobr></a>
-    </footer>
-    <hr/>
-</article>
-
-            
-            
-
-<article class="post">
-    <header>
-      <h2><a href='http://yujinqiu.github.io/posts/BeegoDraft/'> BeegoDraft</a> </h2>
-      <div class="meta">Sat, Dec 27, 2014</div>
-    </header>
-
-    <h2>beego session 失效时间</h2>
-
-<h3>背景</h3>
-
-<p>使用 beego 进行开发过程中为了减少大家登陆时间特定设置1个月有效期, 结果发现需要经常登陆</p>
-
-<h3>原因</h3>
-
-<p>session 的过期失效时间由两个方面决定</p>
-
-<ol>
-<li>存储sessionid 的 cookie (SessionCookieLifetime)</li>
-<li>存储在服务器端的 session 文件( SessionGCMaxLifetime 默认3600)</li>
-</ol>
-
-    <footer style="text-align:right; ">
-        <a href='http://yujinqiu.github.io/posts/BeegoDraft/'><nobr>Read more →</nobr></a>
     </footer>
     <hr/>
 </article>
